@@ -4,7 +4,7 @@
 yaspin.yaspin
 ~~~~~~~~~~~~~
 
-A lightweight spinner.
+A lightweight terminal spinner.
 """
 
 import functools
@@ -99,8 +99,34 @@ class Yaspin(object):
 
 
 def spinner(text='', sequence='', interval=None):
-    """Terminal spinner.
+    """Display spinner in stdout.
 
-    Can be used as a context manager or as decorator.
+    Can be used as a context manager or as a function decorator.
+
+    Arguments:
+        text (str): Text to show along with spinner.
+        sequence (str|unicode): Optional sequence of symbols to iterate
+            over to render the the spinner. Defaults to dots spinner.
+        interval (float): Interval between each symbol in sequence.
+
+    Example::
+
+        # Use as a context manager
+        with spinner():
+            some_operations()
+
+        # Context manager with text
+        with spinner(text="Processing..."):
+            some_operations()
+
+        # Context manager with custom sequence
+        with spinner(sequence='-\\|/', interval=0.15):
+            some_operations()
+
+        # As decorator
+        @spinner(text="Loading...")
+        def some_operations():
+            time.sleep(5)
+
     """
     return Yaspin(text=text, sequence=sequence, interval=interval)
