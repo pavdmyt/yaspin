@@ -1,0 +1,6 @@
+[flake8]
+exclude =
+    .git,
+    .tox,
+    .cache,
+    __pycache__
