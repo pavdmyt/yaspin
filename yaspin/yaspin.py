@@ -15,6 +15,7 @@ import time
 
 
 class Yaspin(object):
+    """Yet another terminal spinner."""
 
     _default_seq = u'⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
     _default_interval = 0.08
@@ -34,7 +35,7 @@ class Yaspin(object):
         self._spin_thread = None
 
     def __repr__(self):
-        repr_ = u'<Spinner cycle={0!s}>'.format(self._sequence)
+        repr_ = u'<Yaspin sequence={0!s}>'.format(self._sequence)
 
         if sys.version_info.major == 2:
             return repr_.encode(sys.stdout.encoding or 'utf-8')
