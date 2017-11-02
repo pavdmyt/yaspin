@@ -14,15 +14,32 @@ import threading
 import time
 
 
-class Yaspin(object):
-    """Yet another terminal spinner."""
+PY2 = sys.version_info.major == 2
+ENCODING = 'utf-8'
 
-    _default_seq = u'⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+
+def to_unicode(unicode_or_str, encoding=ENCODING):
+    if isinstance(unicode_or_str, str):
+        return unicode_or_str.decode(encoding)
+    return unicode_or_str
+
+
+class Yaspin(object):
+    """Implements a context manager that spawns a daemon thread
+    that writes spinner frames into a tty (stdout) during
+    context execution.
+
+    Arguments:
+        text (str): Text to show along with spinner.
+        sequence (str|unicode): Optional sequence of symbols to iterate
+            over to render the the spinner. Defaults to dots spinner.
+        interval (float): Interval between each symbol in sequence.
+
+    """
+    _default_seq = '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
     _default_interval = 0.08
 
     def __init__(self, text='', sequence='', interval=None):
-        self._text = text.strip()
-
         if sequence and interval:
             self._sequence = sequence
             self._interval = interval
@@ -30,15 +47,20 @@ class Yaspin(object):
             self._sequence = self._default_seq
             self._interval = self._default_interval
 
+        if PY2:
+            self._sequence = to_unicode(self._sequence)
+            self._text = to_unicode(text).strip()
+        else:
+            self._text = text.strip()
+
         self._cycle = itertools.cycle(self._sequence)
         self._stop_spin = None
         self._spin_thread = None
 
     def __repr__(self):
         repr_ = u'<Yaspin sequence={0!s}>'.format(self._sequence)
-
-        if sys.version_info.major == 2:
-            return repr_.encode(sys.stdout.encoding or 'utf-8')
+        if PY2:
+            return repr_.encode(ENCODING)
         return repr_
 
     def __enter__(self):
@@ -76,10 +98,20 @@ class Yaspin(object):
         if sys.stdout.isatty():
             self._show_cursor()
 
+    def compose_frame(self):
+        spin_phase = next(self._cycle)
+        if PY2:
+            spin_phase = spin_phase.encode(ENCODING)
+            text = self._text.encode(ENCODING)
+        else:
+            text = self._text
+
+        return "\r{0} {1}".format(spin_phase, text)
+
     def spin(self):
         while not self._stop_spin.is_set():
-            spin_phase = next(self._cycle)
-            sys.stdout.write(u"\r{0} {1}".format(spin_phase, self._text))
+            frame = self.compose_frame()
+            sys.stdout.write(frame)
             sys.stdout.flush()
             time.sleep(self._interval)
             sys.stdout.write('\b')
@@ -96,7 +128,7 @@ class Yaspin(object):
 
     @staticmethod
     def _clear_line():
-        sys.stdout.write('\033[K')
+        sys.stdout.write("\033[K")
 
 
 def spinner(text='', sequence='', interval=None):

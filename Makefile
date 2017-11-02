@@ -7,7 +7,7 @@ flake:
 
 lint:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
-	@pylint setup.py yaspin/ examples/ -rn -f colorized
+	@pylint setup.py yaspin/ -rn -f colorized
 
 isort-all:
 	isort -rc --atomic --verbose setup.py yaspin/

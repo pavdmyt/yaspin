@@ -14,7 +14,7 @@ def context_manager_line():
         time.sleep(3)
 
 
-@yaspin.spinner("Dots", u"⢄⢂⢁⡁⡈⡐⡠", 0.08)
+@yaspin.spinner("Dots", "⢄⢂⢁⡁⡈⡐⡠", 0.08)
 def decorated_function():
     time.sleep(3)
 
