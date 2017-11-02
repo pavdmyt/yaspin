@@ -30,3 +30,15 @@ coverage: clean-pyc
 	@echo "$(OK_COLOR)==> Calculating coverage...$(NO_COLOR)"
 	@py.test --cov-report term --cov-report html --cov yaspin tests/
 	@echo "open file://`pwd`/htmlcov/index.html"
+
+build:
+	@echo "$(OK_COLOR)==> Building...$(NO_COLOR)"
+	@rm -rf build dist .egg yaspin.egg-info
+	@python setup.py sdist
+	@python setup.py bdist_wheel --universal
+
+publish:
+	@echo "$(OK_COLOR)==> Publishing...$(NO_COLOR)"
+	@python setup.py sdist upload -r pypi
+	@python setup.py bdist_wheel --universal upload -r pypi
+	@rm -rf build dist .egg yaspin.egg-info

@@ -77,7 +77,7 @@ setup(
     packages=find_packages(exclude=('tests', 'docs', 'examples')),
     tests_require=tests_require,
     cmdclass={'test': PyTest},
-    classifiers=(
+    classifiers=[
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
         'Operating System :: MacOS',
@@ -96,5 +96,5 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
-    ),
+    ],
 )
