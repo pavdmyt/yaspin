@@ -50,10 +50,12 @@ with spinner(sequence='.oOo. ', interval=0.14):
 
 
 # As decorator
-@spinner(text="Loading...")
+@spinner(text="Загрузка...")
 def some_operations():
     time.sleep(3)
 ```
+
+More [examples](https://github.com/pavdmyt/yaspin/tree/master/examples).
 
 
 ## Development
@@ -76,6 +78,12 @@ Lint code:
 make lint
 ```
 
+Run tests:
+
+```
+make test
+```
+
 
 ## Contributing
 
@@ -84,7 +92,7 @@ make lint
 3. Commit your changes: `git commit -m 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request
-6. Make sure tests are passing (if any)
+6. Make sure tests are passing
 
 
 ## License
