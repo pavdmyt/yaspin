@@ -1,5 +1,4 @@
-yaspin
-======
+# yaspin [![travis][travis-image]][travis-url] [![pypi][pypi-image]][pypi-url] [![pyver][pyver-image]][pyver-url]
 
 **Y**et **A**nother Terminal Spinner for Python.
 
@@ -98,3 +97,13 @@ make test
 ## License
 
 MIT - Pavlo Dmytrenko
+
+
+[travis-image]: https://travis-ci.org/pavdmyt/yaspin.svg?branch=master
+[travis-url]: https://travis-ci.org/pavdmyt/yaspin
+
+[pypi-image]: https://img.shields.io/pypi/v/yaspin.svg
+[pypi-url]: https://pypi.python.org/pypi/yaspin
+
+[pyver-image]: https://img.shields.io/pypi/pyversions/yaspin.svg
+[pyver-url]: https://pypi.python.org/pypi/yaspin
