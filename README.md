@@ -1,4 +1,4 @@
-# yaspin [![travis][travis-image]][travis-url] [![pypi][pypi-image]][pypi-url] [![pyver][pyver-image]][pyver-url]
+# yaspin [![travis][travis-image]][travis-url] [![cov][cov-image]][cov-url] [![pypi][pypi-image]][pypi-url] [![pyver][pyver-image]][pyver-url]
 
 **Y**et **A**nother Terminal Spinner for Python.
 
@@ -101,6 +101,9 @@ MIT - Pavlo Dmytrenko
 
 [travis-image]: https://travis-ci.org/pavdmyt/yaspin.svg?branch=master
 [travis-url]: https://travis-ci.org/pavdmyt/yaspin
+
+[cov-image]: https://coveralls.io/repos/github/pavdmyt/yaspin/badge.svg?branch=master
+[cov-url]: https://coveralls.io/github/pavdmyt/yaspin?branch=master
 
 [pypi-image]: https://img.shields.io/pypi/v/yaspin.svg
 [pypi-url]: https://pypi.python.org/pypi/yaspin
