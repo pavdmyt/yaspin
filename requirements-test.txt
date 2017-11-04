@@ -1,2 +1,4 @@
 # Only Py26 compatible packages
 pytest
+pytest-cov
+python-coveralls
