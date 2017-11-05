@@ -1,2 +1,6 @@
 include README.md HISTORY.md LICENSE
 include requirements-dev.txt
+include requirements-test.txt
+
+include yaspin/data/*
+include tests/*

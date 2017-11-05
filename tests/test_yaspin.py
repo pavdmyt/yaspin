@@ -7,28 +7,15 @@ tests.test_yaspin
 Basic unittests.
 """
 
+from __future__ import absolute_import
+
 import os
 import sys
 
 import pytest
-
 from yaspin import spinner
 
-
-PY2 = sys.version_info[0] == 2
-
-
-#
-# Compatibility layer
-#
-if PY2:
-    builtin_str = str
-    bytes = str
-    str = unicode                # noqa
-else:
-    builtin_str = str
-    bytes = bytes
-    str = str
+from .compat import builtin_str, bytes, str
 
 
 #
