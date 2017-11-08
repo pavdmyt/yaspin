@@ -11,10 +11,12 @@ from __future__ import absolute_import
 
 import os
 import sys
+from collections import namedtuple
 
 import pytest
 
 from yaspin import Spinner, yaspin
+from yaspin.base_spinner import default_spinner
 from yaspin.compat import builtin_str, bytes, str
 from yaspin.constants import ENCODING
 
@@ -116,3 +118,30 @@ with yaspin('%s', Spinner('%s', %s)):
         pytest.fail(err)
     finally:
         teardown()
+
+
+@pytest.mark.parametrize("spinner, expected", [
+    # None
+    (None, default_spinner),
+
+    # hasattr(spinner, "frames") and not hasattr(spinner, "interval")
+    (namedtuple('Spinner', "frames")("-\\|/"), default_spinner),
+
+    # not hasattr(spinner, "frames") and hasattr(spinner, "interval")
+    (namedtuple('Spinner', "interval")(42), default_spinner),
+
+    # Both attrs, not set
+    (Spinner("", 0), default_spinner),
+
+    # Both attrs, not frames
+    (Spinner("", 42), default_spinner),
+
+    # Both attrs, not interval
+    (Spinner("-\\|/", 0), default_spinner),
+
+    # Both attrs, are set
+    (Spinner("-\\|/", 42), Spinner("-\\|/", 42)),
+])
+def test_set_spinner(spinner, expected):
+    swirl = yaspin(spinner=spinner)
+    assert swirl.spinner == expected
