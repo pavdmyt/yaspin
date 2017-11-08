@@ -21,7 +21,6 @@ from .constants import ENCODING
 from .helpers import to_unicode
 
 
-# TODO: update __doc__
 class Yaspin(object):
     """Implements a context manager that spawns a daemon thread
     that writes spinner frames into a tty (stdout) during
@@ -29,9 +28,7 @@ class Yaspin(object):
 
     Arguments:
         text (str): Text to show along with spinner.
-        sequence (str|unicode): Optional sequence of symbols to iterate
-            over to render the the spinner. Defaults to dots spinner.
-        interval (float): Interval between each symbol in sequence.
+        spinner (yaspin.Spinner): Spinner to use.
 
     """
     def __init__(self, text='', spinner=None):
@@ -140,7 +137,6 @@ class Yaspin(object):
         sys.stdout.write("\033[K")
 
 
-# TODO: rewrite __doc__
 def yaspin(text='', spinner=None):
     """Display spinner in stdout.
 
@@ -148,28 +144,28 @@ def yaspin(text='', spinner=None):
 
     Arguments:
         text (str): Text to show along with spinner.
-        sequence (str|unicode): Optional sequence of symbols to iterate
-            over to render the the spinner. Defaults to dots spinner.
-        interval (float): Interval between each symbol in sequence.
+        spinner (yaspin.Spinner): Spinner to use.
 
     Example::
 
         # Use as a context manager
-        with spinner():
+        with yaspin():
             some_operations()
 
         # Context manager with text
-        with spinner(text="Processing..."):
+        with yaspin(text="Processing..."):
             some_operations()
 
         # Context manager with custom sequence
-        with spinner(sequence='-\\|/', interval=0.15):
+        with yaspin(Spinner('-\\|/', 150)):
             some_operations()
 
         # As decorator
-        @spinner(text="Loading...")
-        def some_operations():
+        @yaspin(text="Loading...")
+        def foo():
             time.sleep(5)
+
+        foo()
 
     """
     return Yaspin(text=text, spinner=spinner)
