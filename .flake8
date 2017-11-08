@@ -3,4 +3,5 @@ exclude =
     .git,
     .tox,
     .cache,
+    dist,
     __pycache__
