@@ -27,11 +27,11 @@ class Yaspin(object):
     context execution.
 
     Arguments:
-        text (str): Text to show along with spinner.
         spinner (yaspin.Spinner): Spinner to use.
+        text (str): Text to show along with spinner.
 
     """
-    def __init__(self, text='', spinner=None):
+    def __init__(self, spinner=None, text=''):
         self.spinner = self._set_spinner(spinner)
 
         # Milliseconds to Seconds
@@ -137,14 +137,14 @@ class Yaspin(object):
         sys.stdout.write("\033[K")
 
 
-def yaspin(text='', spinner=None):
+def yaspin(spinner=None, text=''):
     """Display spinner in stdout.
 
     Can be used as a context manager or as a function decorator.
 
     Arguments:
-        text (str): Text to show along with spinner.
         spinner (yaspin.Spinner): Spinner to use.
+        text (str): Text to show along with spinner.
 
     Example::
 
@@ -168,4 +168,4 @@ def yaspin(text='', spinner=None):
         foo()
 
     """
-    return Yaspin(text=text, spinner=spinner)
+    return Yaspin(spinner=spinner, text=text)

@@ -60,7 +60,7 @@ test_cases = [
 @pytest.mark.parametrize("text, frames, interval", test_cases)
 def test_input_converted_to_unicode(text, frames, interval):
     sp = Spinner(frames, interval)
-    swirl = yaspin(text, sp)
+    swirl = yaspin(sp, text)
 
     assert isinstance(swirl._frames, str)
     assert isinstance(swirl._text, str)
@@ -69,7 +69,7 @@ def test_input_converted_to_unicode(text, frames, interval):
 @pytest.mark.parametrize("text, frames, interval", test_cases)
 def test_output_converted_to_builtin_str(text, frames, interval):
     sp = Spinner(frames, interval)
-    swirl = yaspin(text, sp)
+    swirl = yaspin(sp, text)
 
     for _ in range(20):             # test 20 frames
         out = swirl.compose_frame()
@@ -79,7 +79,7 @@ def test_output_converted_to_builtin_str(text, frames, interval):
 @pytest.mark.parametrize("text, frames, interval", test_cases)
 def test_repr(text, frames, interval):
     sp = Spinner(frames, interval)
-    swirl = yaspin(text, sp)
+    swirl = yaspin(sp, text)
 
     assert isinstance(repr(swirl), builtin_str)
 
@@ -99,7 +99,7 @@ def test_piping_output(text, frames, interval):
 import time
 from yaspin import yaspin, Spinner
 
-with yaspin('%s', Spinner('%s', %s)):
+with yaspin(Spinner('%s', %s), '%s'):
     time.sleep(0.5)
 """
 
@@ -108,7 +108,7 @@ with yaspin('%s', Spinner('%s', %s)):
         frames = to_unicode(frames)
         interval = to_unicode(interval)
         code = to_unicode(code)
-        res = code % (text, frames, interval)
+        res = code % (frames, interval, text)
         f.write(to_bytes(res))
 
     try:
@@ -143,5 +143,5 @@ with yaspin('%s', Spinner('%s', %s)):
     (Spinner("-\\|/", 42), Spinner("-\\|/", 42)),
 ])
 def test_set_spinner(spinner, expected):
-    swirl = yaspin(spinner=spinner)
+    swirl = yaspin(spinner)
     assert swirl.spinner == expected
