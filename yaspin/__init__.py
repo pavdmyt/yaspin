@@ -2,7 +2,8 @@
 
 from __future__ import absolute_import
 
-from .yaspin import spinner
+from .base_spinner import Spinner
+from .yaspin import yaspin
 
 
-__all__ = ('spinner',)
+__all__ = ('yaspin', 'Spinner',)

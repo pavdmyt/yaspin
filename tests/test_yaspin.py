@@ -13,21 +13,22 @@ import os
 import sys
 
 import pytest
-from yaspin import spinner
 
-from .compat import builtin_str, bytes, str
+from yaspin import Spinner, yaspin
+from yaspin.compat import builtin_str, bytes, str
+from yaspin.constants import ENCODING
 
 
 #
 # Helpers
 #
-def to_bytes(str_or_bytes, encoding='utf-8'):
+def to_bytes(str_or_bytes, encoding=ENCODING):
     if isinstance(str_or_bytes, str):
         return str_or_bytes.encode(encoding)
     return str_or_bytes
 
 
-def to_unicode(str_or_bytes, encoding='utf-8'):
+def to_unicode(str_or_bytes, encoding=ENCODING):
     if isinstance(str_or_bytes, bytes):
         return str_or_bytes.decode(encoding)
     return str_or_bytes
@@ -37,49 +38,52 @@ def to_unicode(str_or_bytes, encoding='utf-8'):
 # Tests
 #
 test_cases = [
-    # Default sequence and interval
+    # Default frames and interval
     ("", "", None),
 
-    # str text, str sequence
-    ("Loading", "+x*", 0.08),
+    # str text, str frames
+    ("Loading", "+x*", 80),
 
-    # unicode text, unicode sequence (marked as unicode)
-    (u"Загрузка", u"⢄⢂⢁⡁⡈⡐⡠", 0.08),
+    # unicode text, unicode frames (marked as unicode)
+    (u"Загрузка", u"⢄⢂⢁⡁⡈⡐⡠", 80),
 
-    # unicode text, str sequence
-    ("Загрузка", "+x*", 0.08),
+    # unicode text, str frames
+    ("Загрузка", "+x*", 80),
 
-    # str text, unicode sequence
-    ("Loading", "⢄⢂⢁⡁⡈⡐⡠", 0.08),
+    # str text, unicode frames
+    ("Loading", "⢄⢂⢁⡁⡈⡐⡠", 80),
 ]
 
 
-@pytest.mark.parametrize("text, sequence, interval", test_cases)
-def test_input_converted_to_unicode(text, sequence, interval):
-    sp = spinner(text, sequence, interval)
+@pytest.mark.parametrize("text, frames, interval", test_cases)
+def test_input_converted_to_unicode(text, frames, interval):
+    sp = Spinner(frames, interval)
+    swirl = yaspin(text, sp)
 
-    assert isinstance(sp._sequence, str)
-    assert isinstance(sp._text, str)
+    assert isinstance(swirl._frames, str)
+    assert isinstance(swirl._text, str)
 
 
-@pytest.mark.parametrize("text, sequence, interval", test_cases)
-def test_output_converted_to_builtin_str(text, sequence, interval):
-    sp = spinner(text, sequence, interval)
+@pytest.mark.parametrize("text, frames, interval", test_cases)
+def test_output_converted_to_builtin_str(text, frames, interval):
+    sp = Spinner(frames, interval)
+    swirl = yaspin(text, sp)
 
     for _ in range(20):             # test 20 frames
-        out = sp.compose_frame()
+        out = swirl.compose_frame()
         assert isinstance(out, builtin_str)
 
 
-@pytest.mark.parametrize("text, sequence, interval", test_cases)
-def test_repr(text, sequence, interval):
-    sp = spinner(text, sequence, interval)
+@pytest.mark.parametrize("text, frames, interval", test_cases)
+def test_repr(text, frames, interval):
+    sp = Spinner(frames, interval)
+    swirl = yaspin(text, sp)
 
-    assert isinstance(repr(sp), builtin_str)
+    assert isinstance(repr(swirl), builtin_str)
 
 
-@pytest.mark.parametrize("text, sequence, interval", test_cases)
-def test_piping_output(text, sequence, interval):
+@pytest.mark.parametrize("text, frames, interval", test_cases)
+def test_piping_output(text, frames, interval):
     py_fname = "spin.py"
     fname = "out.txt"
 
@@ -91,18 +95,18 @@ def test_piping_output(text, sequence, interval):
 # -*- coding: utf-8 -*-
 
 import time
-from yaspin import spinner
+from yaspin import yaspin, Spinner
 
-with spinner('%s', '%s', %s):
+with yaspin('%s', Spinner('%s', %s)):
     time.sleep(0.5)
 """
 
     with open(py_fname, 'wb') as f:
         text = to_unicode(text)
-        sequence = to_unicode(sequence)
+        frames = to_unicode(frames)
         interval = to_unicode(interval)
         code = to_unicode(code)
-        res = code % (text, sequence, interval)
+        res = code % (text, frames, interval)
         f.write(to_bytes(res))
 
     try:

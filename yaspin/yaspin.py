@@ -7,23 +7,21 @@ yaspin.yaspin
 A lightweight terminal spinner.
 """
 
+from __future__ import absolute_import
+
 import functools
 import itertools
 import sys
 import threading
 import time
 
-
-PY2 = sys.version_info[0] == 2
-ENCODING = 'utf-8'
-
-
-def to_unicode(unicode_or_str, encoding=ENCODING):
-    if isinstance(unicode_or_str, str):
-        return unicode_or_str.decode(encoding)
-    return unicode_or_str
+from .base_spinner import default_spinner
+from .compat import PY2
+from .constants import ENCODING
+from .helpers import to_unicode
 
 
+# TODO: update __doc__
 class Yaspin(object):
     """Implements a context manager that spawns a daemon thread
     that writes spinner frames into a tty (stdout) during
@@ -36,29 +34,25 @@ class Yaspin(object):
         interval (float): Interval between each symbol in sequence.
 
     """
-    _default_seq = '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
-    _default_interval = 0.08
+    def __init__(self, text='', spinner=None):
+        self.spinner = self._set_spinner(spinner)
 
-    def __init__(self, text='', sequence='', interval=None):
-        if sequence and interval:
-            self._sequence = sequence
-            self._interval = interval
-        else:
-            self._sequence = self._default_seq
-            self._interval = self._default_interval
+        # Milliseconds to Seconds
+        self._interval = self.spinner.interval * 0.001
 
         if PY2:
-            self._sequence = to_unicode(self._sequence)
+            self._frames = to_unicode(self.spinner.frames)
             self._text = to_unicode(text).strip()
         else:
+            self._frames = self.spinner.frames
             self._text = text.strip()
 
-        self._cycle = itertools.cycle(self._sequence)
+        self._cycle = itertools.cycle(self._frames)
         self._stop_spin = None
         self._spin_thread = None
 
     def __repr__(self):
-        repr_ = u'<Yaspin sequence={0!s}>'.format(self._sequence)
+        repr_ = u'<Yaspin frames={0!s}>'.format(self._frames)
         if PY2:
             return repr_.encode(ENCODING)
         return repr_
@@ -117,6 +111,21 @@ class Yaspin(object):
             sys.stdout.write('\b')
 
     @staticmethod
+    def _set_spinner(spinner):
+        if not spinner:
+            sp = default_spinner
+
+        if hasattr(spinner, "frames") and hasattr(spinner, "interval"):
+            if not spinner.frames or not spinner.interval:
+                sp = default_spinner
+            else:
+                sp = spinner
+        else:
+            sp = default_spinner
+
+        return sp
+
+    @staticmethod
     def _hide_cursor():
         sys.stdout.write("\033[?25l")
         sys.stdout.flush()
@@ -131,7 +140,8 @@ class Yaspin(object):
         sys.stdout.write("\033[K")
 
 
-def spinner(text='', sequence='', interval=None):
+# TODO: rewrite __doc__
+def yaspin(text='', spinner=None):
     """Display spinner in stdout.
 
     Can be used as a context manager or as a function decorator.
@@ -162,4 +172,4 @@ def spinner(text='', sequence='', interval=None):
             time.sleep(5)
 
     """
-    return Yaspin(text=text, sequence=sequence, interval=interval)
+    return Yaspin(text=text, spinner=spinner)

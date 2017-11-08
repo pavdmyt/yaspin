@@ -13,9 +13,9 @@ import codecs
 import json
 
 import pytest
-from yaspin.spinners import SPINNERS_PATH, Spinners
 
-from .compat import iteritems
+from yaspin.compat import iteritems
+from yaspin.spinners import SPINNERS_PATH, Spinners
 
 
 with codecs.open(SPINNERS_PATH, encoding='utf-8') as f:
