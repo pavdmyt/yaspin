@@ -1,23 +1,25 @@
 # -*- coding: utf-8 -*-
 
+"""
+Run all spinners from yaspin.spinners.Spinners
+sorted alphabetically.
+"""
+
 import time
-import yaspin
+
+from yaspin import yaspin
+from yaspin.spinners import Spinners
 
 
-# Refer here for more spinner examples
-# https://github.com/sindresorhus/cli-spinners
 def main():
-    params = [
-        ("Braille",  "",             None),
-        ("Line",     "-\\|/",        0.15),
-        ("Flip",     "___-``'´-___", 0.07),
-        ("Dot",      "⠁⠂⠄⠂",        0.12),
-        ("Dots",     "⢄⢂⢁⡁⡈⡐⡠",     0.08),
-        ("Balloon",  ".oOo. ",       0.14),
-        ("Star",     "+x*",          0.08),
+    names = [
+        attr for attr in dir(Spinners)
+        if not callable(getattr(Spinners, attr))
+        if not attr.startswith("_")
     ]
-    for p in params:
-        with yaspin.spinner(*p):
+    for name in sorted(names):
+        spinner = getattr(Spinners, name)
+        with yaspin(spinner, text=name):
             time.sleep(3)
 
 
