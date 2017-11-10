@@ -7,21 +7,18 @@ yaspin.yaspin
 A lightweight terminal spinner.
 """
 
+from __future__ import absolute_import
+
 import functools
 import itertools
 import sys
 import threading
 import time
 
-
-PY2 = sys.version_info[0] == 2
-ENCODING = 'utf-8'
-
-
-def to_unicode(unicode_or_str, encoding=ENCODING):
-    if isinstance(unicode_or_str, str):
-        return unicode_or_str.decode(encoding)
-    return unicode_or_str
+from .base_spinner import default_spinner
+from .compat import PY2
+from .constants import ENCODING
+from .helpers import to_unicode
 
 
 class Yaspin(object):
@@ -30,35 +27,29 @@ class Yaspin(object):
     context execution.
 
     Arguments:
+        spinner (yaspin.Spinner): Spinner to use.
         text (str): Text to show along with spinner.
-        sequence (str|unicode): Optional sequence of symbols to iterate
-            over to render the the spinner. Defaults to dots spinner.
-        interval (float): Interval between each symbol in sequence.
 
     """
-    _default_seq = '⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
-    _default_interval = 0.08
+    def __init__(self, spinner=None, text=''):
+        self.spinner = self._set_spinner(spinner)
 
-    def __init__(self, text='', sequence='', interval=None):
-        if sequence and interval:
-            self._sequence = sequence
-            self._interval = interval
-        else:
-            self._sequence = self._default_seq
-            self._interval = self._default_interval
+        # Milliseconds to Seconds
+        self._interval = self.spinner.interval * 0.001
 
         if PY2:
-            self._sequence = to_unicode(self._sequence)
+            self._frames = to_unicode(self.spinner.frames)
             self._text = to_unicode(text).strip()
         else:
+            self._frames = self.spinner.frames
             self._text = text.strip()
 
-        self._cycle = itertools.cycle(self._sequence)
+        self._cycle = itertools.cycle(self._frames)
         self._stop_spin = None
         self._spin_thread = None
 
     def __repr__(self):
-        repr_ = u'<Yaspin sequence={0!s}>'.format(self._sequence)
+        repr_ = u'<Yaspin frames={0!s}>'.format(self._frames)
         if PY2:
             return repr_.encode(ENCODING)
         return repr_
@@ -117,6 +108,21 @@ class Yaspin(object):
             sys.stdout.write('\b')
 
     @staticmethod
+    def _set_spinner(spinner):
+        if not spinner:
+            sp = default_spinner
+
+        if hasattr(spinner, "frames") and hasattr(spinner, "interval"):
+            if not spinner.frames or not spinner.interval:
+                sp = default_spinner
+            else:
+                sp = spinner
+        else:
+            sp = default_spinner
+
+        return sp
+
+    @staticmethod
     def _hide_cursor():
         sys.stdout.write("\033[?25l")
         sys.stdout.flush()
@@ -131,35 +137,35 @@ class Yaspin(object):
         sys.stdout.write("\033[K")
 
 
-def spinner(text='', sequence='', interval=None):
+def yaspin(spinner=None, text=''):
     """Display spinner in stdout.
 
     Can be used as a context manager or as a function decorator.
 
     Arguments:
+        spinner (yaspin.Spinner): Spinner to use.
         text (str): Text to show along with spinner.
-        sequence (str|unicode): Optional sequence of symbols to iterate
-            over to render the the spinner. Defaults to dots spinner.
-        interval (float): Interval between each symbol in sequence.
 
     Example::
 
         # Use as a context manager
-        with spinner():
+        with yaspin():
             some_operations()
 
         # Context manager with text
-        with spinner(text="Processing..."):
+        with yaspin(text="Processing..."):
             some_operations()
 
         # Context manager with custom sequence
-        with spinner(sequence='-\\|/', interval=0.15):
+        with yaspin(Spinner('-\\|/', 150)):
             some_operations()
 
         # As decorator
-        @spinner(text="Loading...")
-        def some_operations():
+        @yaspin(text="Loading...")
+        def foo():
             time.sleep(5)
 
+        foo()
+
     """
-    return Yaspin(text=text, sequence=sequence, interval=interval)
+    return Yaspin(spinner=spinner, text=text)

@@ -75,6 +75,7 @@ setup(
     long_description=LONG_DESCR + "\n\n" + history,
     url=URL,
     packages=find_packages(exclude=('tests', 'docs', 'examples')),
+    include_package_data=True,
     tests_require=tests_require,
     cmdclass={'test': PyTest},
     classifiers=[

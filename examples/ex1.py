@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
 
 import time
-import yaspin
+
+from yaspin import Spinner, yaspin
 
 
 def context_manager_default():
-    with yaspin.spinner(text="Braille"):
+    with yaspin(text="Braille"):
         time.sleep(3)
 
 
 def context_manager_line():
-    with yaspin.spinner("Line", '-\\|/', 0.15):
+    line_spinner = Spinner('-\\|/', 150)
+    with yaspin(line_spinner, "line"):
         time.sleep(3)
 
 
-@yaspin.spinner("Dots", "⢄⢂⢁⡁⡈⡐⡠", 0.08)
+@yaspin(Spinner("⢄⢂⢁⡁⡈⡐⡠", 80), text="Dots")
 def decorated_function():
     time.sleep(3)
 

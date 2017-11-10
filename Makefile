@@ -1,6 +1,8 @@
 OK_COLOR=\033[32;01m
 NO_COLOR=\033[0m
 
+.PHONY: build
+
 flake:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
 	@flake8 .
