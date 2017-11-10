@@ -2,6 +2,6 @@ include README.md HISTORY.md LICENSE
 include requirements-dev.txt
 include requirements-test.txt
 
-include examples/*
-include yaspin/data/*
-include tests/*
+include examples/*.py
+include yaspin/data/*.json
+include tests/*.py
