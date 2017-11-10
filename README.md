@@ -11,6 +11,14 @@
 Convert any character sequence you like in a spinner!
 
 
+## Features
+
+* Supports all (60+) spinners from [cli-spinners](https://github.com/sindresorhus/cli-spinners)
+* Runs at all major CPython versions (_2.6_, _2.7_, _3.3_, _3.4_, _3.5_, _3.6_), PyPy and PyPy3
+* No external dependencies
+* Flexible API, easy to integrate with existing code
+
+
 ## Installation
 
 From [PyPI](https://pypi.python.org/pypi) using `pip` package manager:
@@ -28,31 +36,75 @@ pip install https://github.com/pavdmyt/yaspin/archive/master.zip
 
 ## Usage
 
+Context manager:
+
 ```python
 import time
-from yaspin import spinner
+from yaspin import yaspin
 
-
-# Use as a context manager
-with spinner():
-    time_consuming_code()
-
+with yaspin():
+    # time consuming code
+    time.sleep(3)
 
 # Context manager with text
-with spinner(text="Processing..."):
-    time_consuming_code()
-
-
-# Context manager with custom sequence
-with spinner(sequence='.oOo. ', interval=0.14):
-    time_consuming_code()
-
-
-# As decorator
-@spinner(text="Загрузка...")
-def some_operations():
+with yaspin(text="Processing..."):
+    # time consuming code
     time.sleep(3)
 ```
+
+Function decorator:
+
+```python
+import time
+from yaspin import yaspin
+
+@yaspin(text="Loading...")
+def some_operations():
+    # time consuming code
+    time.sleep(3)
+
+some_operations()
+```
+
+It is also possible to control spinner manually:
+
+```python
+import time
+from yaspin import yaspin
+
+spinner = yaspin()
+spinner.start()
+
+# time consuming tasks
+time.sleep(3)
+
+spinner.stop()
+```
+
+Run any spinner from [cli-spinners](https://github.com/sindresorhus/cli-spinners):
+
+```python
+import time
+from yaspin import yaspin
+from yaspin.spinners import Spinners
+
+with yaspin(Spinners.earth):
+    # time consuming code
+    time.sleep(3)
+```
+
+Run any spinner you want:
+
+```python
+import time
+from yaspin import yaspin, Spinner
+
+sp = Spinner(["😸", "😹", "😺", "😻", "😼", "😽", "😾", "😿", "🙀"], 200)
+with yaspin(sp, text="Cat!"):
+    # cat consuming code :)
+    time.sleep(5)
+```
+
 
 More [examples](https://github.com/pavdmyt/yaspin/tree/master/examples).
 
@@ -96,7 +148,8 @@ make test
 
 ## License
 
-MIT - Pavlo Dmytrenko
+* MIT - Pavlo Dmytrenko; https://twitter.com/pavdmyt
+* Contains data from [cli-spinners](https://github.com/sindresorhus/cli-spinners): MIT License, Copyright (C) Sindre Sorhus sindresorhus@gmail.com (sindresorhus.com)
 
 
 [travis-image]: https://travis-ci.org/pavdmyt/yaspin.svg?branch=master
