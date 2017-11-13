@@ -36,11 +36,7 @@ class Yaspin(object):
         self._frames = self._set_frames(self._spinner)
         self._interval = self._set_interval(self._spinner)
         self._cycle = self._set_cycle(self._frames)
-
-        if PY2:
-            self._text = to_unicode(text).strip()
-        else:
-            self._text = text.strip()
+        self._text = self._set_text(text)
 
         self._stop_spin = None
         self._spin_thread = None
@@ -77,6 +73,14 @@ class Yaspin(object):
         self._interval = self._set_interval(self._spinner)
         self._cycle = self._set_cycle(self._frames)
 
+    @property
+    def text(self):
+        return self._text
+
+    @text.setter
+    def text(self, txt):
+        self._text = self._set_text(txt)
+
     def start(self):
         if sys.stdout.isatty():
             self._hide_cursor()
@@ -111,6 +115,7 @@ class Yaspin(object):
         while not self._stop_spin.is_set():
             frame = self.compose_frame()
             sys.stdout.write(frame)
+            self._clear_line()
             sys.stdout.flush()
             time.sleep(self._interval)
             sys.stdout.write('\b')
@@ -144,6 +149,12 @@ class Yaspin(object):
     @staticmethod
     def _set_cycle(frames):
         return itertools.cycle(frames)
+
+    @staticmethod
+    def _set_text(text):
+        if PY2:
+            return to_unicode(text).strip()
+        return text.strip()
 
     @staticmethod
     def _hide_cursor():

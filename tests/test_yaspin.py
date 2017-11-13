@@ -171,3 +171,14 @@ def test_spinner_setter(_, frames, interval):
     assert isinstance(swirl._frames, str)
     assert swirl._interval == swirl._spinner.interval * 0.001
     assert isinstance(repr(swirl), builtin_str)
+
+
+@pytest.mark.parametrize("case_data", test_cases)
+def test_text_property(case_data):
+    text = case_data[0]
+
+    swirl = yaspin()
+    assert swirl.text == ""
+
+    swirl.text = text
+    assert isinstance(swirl.text, str)
