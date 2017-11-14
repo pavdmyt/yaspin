@@ -105,6 +105,22 @@ with yaspin(sp, text="Cat!"):
     time.sleep(5)
 ```
 
+Change spinner properties on the fly:
+
+```python
+import time
+from yaspin import yaspin
+from yaspin.spinners import Spinners
+
+with yaspin(Spinners.noise, text="Noise spinner") as sp:
+    time.sleep(2)
+
+    sp.spinner = Spinners.arc
+    sp.text = "Arc spinner"
+
+    time.sleep(2)
+```
+
 
 More [examples](https://github.com/pavdmyt/yaspin/tree/master/examples).
 
