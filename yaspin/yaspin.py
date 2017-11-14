@@ -32,19 +32,12 @@ class Yaspin(object):
 
     """
     def __init__(self, spinner=None, text=''):
-        self.spinner = self._set_spinner(spinner)
+        self._spinner = self._set_spinner(spinner)
+        self._frames = self._set_frames(self._spinner)
+        self._interval = self._set_interval(self._spinner)
+        self._cycle = self._set_cycle(self._frames)
+        self._text = self._set_text(text)
 
-        # Milliseconds to Seconds
-        self._interval = self.spinner.interval * 0.001
-
-        if PY2:
-            self._frames = to_unicode(self.spinner.frames)
-            self._text = to_unicode(text).strip()
-        else:
-            self._frames = self.spinner.frames
-            self._text = text.strip()
-
-        self._cycle = itertools.cycle(self._frames)
         self._stop_spin = None
         self._spin_thread = None
 
@@ -68,6 +61,25 @@ class Yaspin(object):
             with self:
                 return fn(*args, **kwargs)
         return inner
+
+    @property
+    def spinner(self):
+        return self._spinner
+
+    @spinner.setter
+    def spinner(self, sp):
+        self._spinner = self._set_spinner(sp)
+        self._frames = self._set_frames(self._spinner)
+        self._interval = self._set_interval(self._spinner)
+        self._cycle = self._set_cycle(self._frames)
+
+    @property
+    def text(self):
+        return self._text
+
+    @text.setter
+    def text(self, txt):
+        self._text = self._set_text(txt)
 
     def start(self):
         if sys.stdout.isatty():
@@ -103,6 +115,7 @@ class Yaspin(object):
         while not self._stop_spin.is_set():
             frame = self.compose_frame()
             sys.stdout.write(frame)
+            self._clear_line()
             sys.stdout.flush()
             time.sleep(self._interval)
             sys.stdout.write('\b')
@@ -121,6 +134,27 @@ class Yaspin(object):
             sp = default_spinner
 
         return sp
+
+    @staticmethod
+    def _set_frames(spinner):
+        if PY2:
+            return to_unicode(spinner.frames)
+        return spinner.frames
+
+    @staticmethod
+    def _set_interval(spinner):
+        # Milliseconds to Seconds
+        return spinner.interval * 0.001
+
+    @staticmethod
+    def _set_cycle(frames):
+        return itertools.cycle(frames)
+
+    @staticmethod
+    def _set_text(text):
+        if PY2:
+            return to_unicode(text).strip()
+        return text.strip()
 
     @staticmethod
     def _hide_cursor():

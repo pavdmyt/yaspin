@@ -1,6 +1,12 @@
 Release History
 ===============
 
+0.3.0 / 2017-11-14
+------------------
+
+* Support for changing spinner properties on the fly
+
+
 0.2.0 / 2017-11-10
 ------------------
 
