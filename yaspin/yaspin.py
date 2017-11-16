@@ -16,7 +16,7 @@ import threading
 import time
 
 from .base_spinner import default_spinner
-from .compat import PY2
+from .compat import PY2, builtin_str, str
 from .constants import ENCODING
 from .helpers import to_unicode
 
@@ -31,6 +31,21 @@ class Yaspin(object):
         text (str): Text to show along with spinner.
 
     """
+
+    # When Python finds its output attached to a terminal,
+    # it sets the sys.stdout.encoding attribute to the terminal's encoding.
+    # The print statement's handler will automatically encode unicode
+    # arguments into bytes.
+    #
+    # In Py2 when piping or redirecting output, Python does not detect
+    # the desired character set of the output, it sets sys.stdout.encoding
+    # to None, and print will invoke the default "ascii" codec.
+    #
+    # Py3 invokes "UTF-8" codec by default.
+    #
+    # Thats why in Py2, output should be encoded manually with desired
+    # encoding in order to support pipes and redirects.
+
     def __init__(self, spinner=None, text=''):
         self._spinner = self._set_spinner(spinner)
         self._frames = self._set_frames(self._spinner)
@@ -40,6 +55,7 @@ class Yaspin(object):
 
         self._stop_spin = None
         self._spin_thread = None
+        self._last_frame = None
 
     def __repr__(self):
         repr_ = u'<Yaspin frames={0!s}>'.format(self._frames)
@@ -86,7 +102,7 @@ class Yaspin(object):
             self._hide_cursor()
 
         self._stop_spin = threading.Event()
-        self._spin_thread = threading.Thread(target=self.spin)
+        self._spin_thread = threading.Thread(target=self._spin)
         self._spin_thread.setDaemon(True)
         self._spin_thread.start()
 
@@ -98,27 +114,62 @@ class Yaspin(object):
         sys.stdout.write("\r")
         self._clear_line()
 
+        if self._last_frame:
+            sys.stdout.write(self._last_frame)
+
         if sys.stdout.isatty():
             self._show_cursor()
 
-    def compose_frame(self):
-        spin_phase = next(self._cycle)
+    def ok(self, text="OK"):
+        """Set Ok (success) finalizer to a spinner."""
+        self._freeze(text)
+
+    def fail(self, text="FAIL"):
+        """Set fail finalizer to a spinner."""
+        self._freeze(text)
+
+    def _freeze(self, final_text):
         if PY2:
-            spin_phase = spin_phase.encode(ENCODING)
-            text = self._text.encode(ENCODING)
-        else:
-            text = self._text
+            final_text = to_unicode(final_text).strip()
 
-        return "\r{0} {1}".format(spin_phase, text)
+        self._last_frame = self._compose_out(final_text,
+                                             self._text,
+                                             mode="last")
 
-    def spin(self):
+    def _spin(self):
         while not self._stop_spin.is_set():
-            frame = self.compose_frame()
-            sys.stdout.write(frame)
+            # Compose output
+            spin_phase = next(self._cycle)
+            out = self._compose_out(spin_phase, self._text)
+
+            # Write
+            sys.stdout.write(out)
             self._clear_line()
             sys.stdout.flush()
+
+            # Wait
             time.sleep(self._interval)
             sys.stdout.write('\b')
+
+    @staticmethod
+    def _compose_out(frame, text, mode=None):
+        # Ensure Unicode input
+        assert isinstance(frame, str)
+        assert isinstance(text, str)
+
+        if PY2:
+            frame = frame.encode(ENCODING)
+            text = text.encode(ENCODING)
+
+        if not mode:
+            out = "\r{0} {1}".format(frame, text)
+        else:
+            out = "{0} {1}\n".format(frame, text)
+
+        # Ensure output is bytes for Py2 and Unicode for Py3
+        assert isinstance(out, builtin_str)
+
+        return out
 
     @staticmethod
     def _set_spinner(spinner):
