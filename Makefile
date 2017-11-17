@@ -33,14 +33,20 @@ coverage: clean-pyc
 	@py.test --cov-report term --cov-report html --cov yaspin tests/
 	@echo "open file://`pwd`/htmlcov/index.html"
 
-build:
-	@echo "$(OK_COLOR)==> Building...$(NO_COLOR)"
+rm-build:
 	@rm -rf build dist .egg yaspin.egg-info
+
+# requires docutils and pygments to be installed
+# -s stands for strict (raises errors instead of warnings)
+check-rst:
+	@python setup.py check --restructuredtext -s
+
+build: rm-build
+	@echo "$(OK_COLOR)==> Building...$(NO_COLOR)"
 	@python setup.py sdist
 	@python setup.py bdist_wheel --universal
 
-publish:
+publish: check-rst rm-build
 	@echo "$(OK_COLOR)==> Publishing...$(NO_COLOR)"
 	@python setup.py sdist upload -r pypi
 	@python setup.py bdist_wheel --universal upload -r pypi
-	@rm -rf build dist .egg yaspin.egg-info
