@@ -13,10 +13,16 @@ Convert any character sequence you like in a spinner!
 
 ## Features
 
-* Supports all (60+) spinners from [cli-spinners](https://github.com/sindresorhus/cli-spinners)
-* Runs at all major CPython versions (_2.6_, _2.7_, _3.3_, _3.4_, _3.5_, _3.6_), PyPy and PyPy3
 * No external dependencies
+* Runs at all major __CPython__ versions (_2.6_, _2.7_, _3.3_, _3.4_, _3.5_, _3.6_), __PyPy__ and __PyPy3__
+* Supports all (60+) spinners from [cli-spinners](https://github.com/sindresorhus/cli-spinners)
 * Flexible API, easy to integrate with existing code
+* Safe __pipes__ and __redirects__:
+
+```
+$ python script_that_uses_yaspin.py > script.log
+$ python script_that_uses_yaspin.py | grep ERROR
+```
 
 
 ## Installation
@@ -121,6 +127,24 @@ with yaspin(Spinners.noise, text="Noise spinner") as sp:
     time.sleep(2)
 ```
 
+Success and Failure finalizers:
+
+```python
+import time
+from random import randint
+from yaspin import yaspin
+
+with yaspin(text="ℙƴ☂ℌøἤ") as sp:
+    time.sleep(2)
+    success = randint(0, 1)
+
+    if success:
+        # can also be called with arguments: sp.ok("✅")
+        sp.ok()
+    else:
+        # can also be called with arguments: sp.fail("💥")
+        sp.fail()
+```
 
 More [examples](https://github.com/pavdmyt/yaspin/tree/master/examples).
 

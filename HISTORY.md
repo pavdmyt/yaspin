@@ -1,6 +1,12 @@
 Release History
 ===============
 
+0.4.0 / 2017-11-17
+------------------
+
+* Support for success and failure finalizers
+
+
 0.3.0 / 2017-11-14
 ------------------
 

@@ -50,7 +50,7 @@ test_cases = [
     (u"Загрузка", u"⢄⢂⢁⡁⡈⡐⡠", 80),
 
     # unicode text, str frames
-    ("Загрузка", "+x*", 80),
+    ("ℙƴ☂ℌøἤ", "+x*", 80),
 
     # str text, unicode frames
     ("Loading", "⢄⢂⢁⡁⡈⡐⡠", 80),
@@ -72,7 +72,8 @@ def test_output_converted_to_builtin_str(text, frames, interval):
     swirl = yaspin(sp, text)
 
     for _ in range(20):             # test 20 frames
-        out = swirl.compose_frame()
+        frame = next(swirl._cycle)
+        out = swirl._compose_out(frame, swirl.text)
         assert isinstance(out, builtin_str)
 
 
@@ -99,8 +100,9 @@ def test_piping_output(text, frames, interval):
 import time
 from yaspin import yaspin, Spinner
 
-with yaspin(Spinner('%s', %s), '%s'):
+with yaspin(Spinner('%s', %s), '%s') as sp:
     time.sleep(0.5)
+    sp.fail('🙀')
 """
 
     with open(py_fname, 'wb') as f:
@@ -182,3 +184,38 @@ def test_text_property(case_data):
 
     swirl.text = text
     assert isinstance(swirl.text, str)
+
+
+@pytest.mark.parametrize("final_text", [
+    "", u"",
+
+    "OK", u"OK",
+
+    "✔", u"✔",
+
+    "☀️", u"☀️",
+
+    "💥", u"💥",
+])
+def test_freeze(final_text):
+    swirl = yaspin()
+    swirl._freeze(final_text)
+
+    assert isinstance(swirl._last_frame, builtin_str)
+    assert swirl._last_frame[-1] == "\n"
+
+
+def test_ok():
+    swirl = yaspin()
+    swirl.ok()
+
+    assert isinstance(swirl._last_frame, builtin_str)
+    assert swirl._last_frame[-1] == "\n"
+
+
+def test_fail():
+    swirl = yaspin()
+    swirl.fail()
+
+    assert isinstance(swirl._last_frame, builtin_str)
+    assert swirl._last_frame[-1] == "\n"
