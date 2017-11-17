@@ -1,6 +1,18 @@
 Release History
 ===============
 
+0.4.2 / 2017-11-17
+------------------
+
+* RST vs PyPI episode 2
+
+
+0.4.1 / 2017-11-17
+------------------
+
+* RST vs PyPI episode 1
+
+
 0.4.0 / 2017-11-17
 ------------------
 
@@ -16,7 +28,7 @@ Release History
 0.2.0 / 2017-11-10
 ------------------
 
-* Support all spinners from [cli-spinners](https://github.com/sindresorhus/cli-spinners)
+* Support all spinners from `cli-spinners`_
 * API changes:
     - `yaspin.spinner` -> `yaspin.yaspin`
 
@@ -25,3 +37,6 @@ Release History
 ------------------
 
 * First version
+
+
+.. _cli-spinners: https://github.com/sindresorhus/cli-spinners

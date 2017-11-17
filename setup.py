@@ -56,7 +56,7 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-with codecs.open('HISTORY.md', encoding='utf-8') as fd:
+with codecs.open('HISTORY.rst', encoding='utf-8') as fd:
     history = fd.read()
 with codecs.open('Features.rst', encoding='utf-8') as fd:
     features = fd.read()

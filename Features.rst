@@ -7,10 +7,7 @@ Features
 - Flexible API, easy to integrate with existing code
 - Safe **pipes** and **redirects**:
 
-.. code-block:: none
+.. code-block:: bash
 
     $ python script_that_uses_yaspin.py > script.log
     $ python script_that_uses_yaspin.py | grep ERROR
-
-
-.. _cli-spinners: https://github.com/sindresorhus/cli-spinners
