@@ -68,7 +68,9 @@ class Yaspin(object):
         return self
 
     def __exit__(self, exc_type, exc_val, traceback):
-        self.stop()
+        # Avoid stop() execution for the 2nd time
+        if self._spin_thread.is_alive():
+            self.stop()
         return False  # nothing is handled
 
     def __call__(self, fn):
@@ -103,7 +105,6 @@ class Yaspin(object):
 
         self._stop_spin = threading.Event()
         self._spin_thread = threading.Thread(target=self._spin)
-        self._spin_thread.setDaemon(True)
         self._spin_thread.start()
 
     def stop(self):
@@ -113,9 +114,6 @@ class Yaspin(object):
 
         sys.stdout.write("\r")
         self._clear_line()
-
-        if self._last_frame:
-            sys.stdout.write(self._last_frame)
 
         if sys.stdout.isatty():
             self._show_cursor()
@@ -129,12 +127,18 @@ class Yaspin(object):
         self._freeze(text)
 
     def _freeze(self, final_text):
+        """Stop spinner, compose last frame and 'freeze' it."""
         if PY2:
             final_text = to_unicode(final_text).strip()
 
         self._last_frame = self._compose_out(final_text,
                                              self._text,
                                              mode="last")
+
+        # Should be stopped here, otherwise prints after
+        # self._freeze call will mess up the spinner
+        self.stop()
+        sys.stdout.write(self._last_frame)
 
     def _spin(self):
         while not self._stop_spin.is_set():
