@@ -127,7 +127,7 @@ with yaspin(Spinners.noise, text="Noise spinner") as sp:
     time.sleep(2)
 ```
 
-Success and Failures finalizers:
+Success and Failure finalizers:
 
 ```python
 import time
