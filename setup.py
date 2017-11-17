@@ -58,6 +58,8 @@ class PyTest(TestCommand):
 
 with codecs.open('HISTORY.md', encoding='utf-8') as fd:
     history = fd.read()
+with codecs.open('Features.rst', encoding='utf-8') as fd:
+    features = fd.read()
 
 
 tests_require = [
@@ -72,7 +74,7 @@ setup(
     author_email=EMAIL,
     license=LICENSE,
     description=DESCRIPTION,
-    long_description=LONG_DESCR + "\n\n" + history,
+    long_description=LONG_DESCR + "\n\n" + features + "\n\n" + history,
     url=URL,
     packages=find_packages(exclude=('tests', 'docs', 'examples')),
     include_package_data=True,
