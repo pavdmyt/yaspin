@@ -39,8 +39,18 @@ def to_unicode(str_or_bytes, encoding=ENCODING):
 #
 # Tests
 #
+
+ids = [
+    "default frames and interval",
+    "str text, str frames",
+    "unicode text, unicode frames (marked as unicode)",
+    "unicode text, str frames",
+    "str text, unicode frames",
+]
+
+
 test_cases = [
-    # Default frames and interval
+    # default frames and interval
     ("", "", None),
 
     # str text, str frames
@@ -57,7 +67,7 @@ test_cases = [
 ]
 
 
-@pytest.mark.parametrize("text, frames, interval", test_cases)
+@pytest.mark.parametrize("text, frames, interval", test_cases, ids=ids)
 def test_input_converted_to_unicode(text, frames, interval):
     sp = Spinner(frames, interval)
     swirl = yaspin(sp, text)
@@ -66,7 +76,7 @@ def test_input_converted_to_unicode(text, frames, interval):
     assert isinstance(swirl._text, str)
 
 
-@pytest.mark.parametrize("text, frames, interval", test_cases)
+@pytest.mark.parametrize("text, frames, interval", test_cases, ids=ids)
 def test_output_converted_to_builtin_str(text, frames, interval):
     sp = Spinner(frames, interval)
     swirl = yaspin(sp, text)
@@ -77,7 +87,7 @@ def test_output_converted_to_builtin_str(text, frames, interval):
         assert isinstance(out, builtin_str)
 
 
-@pytest.mark.parametrize("text, frames, interval", test_cases)
+@pytest.mark.parametrize("text, frames, interval", test_cases, ids=ids)
 def test_repr(text, frames, interval):
     sp = Spinner(frames, interval)
     swirl = yaspin(sp, text)
@@ -85,7 +95,7 @@ def test_repr(text, frames, interval):
     assert isinstance(repr(swirl), builtin_str)
 
 
-@pytest.mark.parametrize("text, frames, interval", test_cases)
+@pytest.mark.parametrize("text, frames, interval", test_cases, ids=ids)
 def test_piping_output(text, frames, interval):
     py_fname = "spin.py"
     fname = "out.txt"
@@ -149,7 +159,7 @@ def test_set_spinner(spinner, expected):
     assert swirl.spinner == expected
 
 
-@pytest.mark.parametrize("_, frames, interval", test_cases)
+@pytest.mark.parametrize("_, frames, interval", test_cases, ids=ids)
 def test_spinner_getter(_, frames, interval):
     swirl = yaspin()
     assert swirl.spinner == default_spinner
@@ -159,7 +169,7 @@ def test_spinner_getter(_, frames, interval):
     assert swirl.spinner == swirl._set_spinner(new_spinner)
 
 
-@pytest.mark.parametrize("_, frames, interval", test_cases)
+@pytest.mark.parametrize("_, frames, interval", test_cases, ids=ids)
 def test_spinner_setter(_, frames, interval):
     swirl = yaspin()
     assert swirl._spinner == default_spinner
@@ -175,7 +185,7 @@ def test_spinner_setter(_, frames, interval):
     assert isinstance(repr(swirl), builtin_str)
 
 
-@pytest.mark.parametrize("case_data", test_cases)
+@pytest.mark.parametrize("case_data", test_cases, ids=ids)
 def test_text_property(case_data):
     text = case_data[0]
 
