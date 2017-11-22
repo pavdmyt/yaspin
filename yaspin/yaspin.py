@@ -19,8 +19,10 @@ from .base_spinner import default_spinner
 from .compat import PY2, builtin_str, str
 from .constants import ENCODING
 from .helpers import to_unicode
+from .termcolor import colored
 
 
+# TODO: update docstring
 class Yaspin(object):
     """Implements a context manager that spawns a daemon thread
     that writes spinner frames into a tty (stdout) during
@@ -46,12 +48,13 @@ class Yaspin(object):
     # Thats why in Py2, output should be encoded manually with desired
     # encoding in order to support pipes and redirects.
 
-    def __init__(self, spinner=None, text=''):
+    def __init__(self, spinner=None, text='', color=None):
         self._spinner = self._set_spinner(spinner)
         self._frames = self._set_frames(self._spinner)
         self._interval = self._set_interval(self._spinner)
         self._cycle = self._set_cycle(self._frames)
         self._text = self._set_text(text)
+        self._color = self._set_color(color) if color else color
 
         self._stop_spin = None
         self._spin_thread = None
@@ -99,6 +102,14 @@ class Yaspin(object):
     def text(self, txt):
         self._text = self._set_text(txt)
 
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, value):
+        self._color = self._set_color(value) if value else value
+
     def start(self):
         if sys.stdout.isatty():
             self._hide_cursor()
@@ -133,6 +144,7 @@ class Yaspin(object):
 
         self._last_frame = self._compose_out(final_text,
                                              self._text,
+                                             self._color,
                                              mode="last")
 
         # Should be stopped here, otherwise prints after
@@ -144,7 +156,7 @@ class Yaspin(object):
         while not self._stop_spin.is_set():
             # Compose output
             spin_phase = next(self._cycle)
-            out = self._compose_out(spin_phase, self._text)
+            out = self._compose_out(spin_phase, self._text, self._color)
 
             # Write
             sys.stdout.write(out)
@@ -156,7 +168,7 @@ class Yaspin(object):
             sys.stdout.write('\b')
 
     @staticmethod
-    def _compose_out(frame, text, mode=None):
+    def _compose_out(frame, text, color, mode=None):
         # Ensure Unicode input
         assert isinstance(frame, str)
         assert isinstance(text, str)
@@ -164,6 +176,9 @@ class Yaspin(object):
         if PY2:
             frame = frame.encode(ENCODING)
             text = text.encode(ENCODING)
+
+        if color:
+            frame = colored(frame, color)
 
         if not mode:
             out = "\r{0} {1}".format(frame, text)
@@ -212,6 +227,23 @@ class Yaspin(object):
         return text.strip()
 
     @staticmethod
+    def _set_color(color):
+        available_text_colors = (
+            "red", "green", "yellow", "blue", "magenta", "cyan", "white",
+        )
+
+        c_lower = color.lower()
+
+        if c_lower not in available_text_colors:
+            raise ValueError(
+                "{0}: unsupported text color. Use on of the: {1}"
+                .format(c_lower, available_text_colors)
+            )
+
+        return c_lower
+
+
+    @staticmethod
     def _hide_cursor():
         sys.stdout.write("\033[?25l")
         sys.stdout.flush()
@@ -226,7 +258,8 @@ class Yaspin(object):
         sys.stdout.write("\033[K")
 
 
-def yaspin(spinner=None, text=''):
+# TODO: update docstring
+def yaspin(spinner=None, text='', color=None):
     """Display spinner in stdout.
 
     Can be used as a context manager or as a function decorator.
@@ -257,4 +290,4 @@ def yaspin(spinner=None, text=''):
         foo()
 
     """
-    return Yaspin(spinner=spinner, text=text)
+    return Yaspin(spinner=spinner, text=text, color=color)

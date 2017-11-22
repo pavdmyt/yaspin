@@ -83,7 +83,7 @@ def test_output_converted_to_builtin_str(text, frames, interval):
 
     for _ in range(20):             # test 20 frames
         frame = next(swirl._cycle)
-        out = swirl._compose_out(frame, swirl.text)
+        out = swirl._compose_out(frame, swirl.text, color=None)
         assert isinstance(out, builtin_str)
 
 
@@ -229,3 +229,68 @@ def test_fail():
 
     assert isinstance(swirl._last_frame, builtin_str)
     assert swirl._last_frame[-1] == "\n"
+
+
+#
+# Test colors
+#
+colors_test_cases = [
+    # Empty values
+    ("", ""),
+    (None, None),
+
+    # Supported text colors
+    ("red", "red"),
+    ("green", "green"),
+    ("yellow", "yellow"),
+    ("blue", "blue"),
+    ("magenta", "magenta"),
+    ("cyan", "cyan"),
+    ("white", "white"),
+
+    # Unsupported text colors
+    ("black", ValueError()),
+    ("brown", ValueError()),
+    ("orange", ValueError()),
+
+    # Uppercase handling
+    ("Red", "red"),
+    ("grEEn", "green"),
+    ("BlacK", ValueError()),
+]
+
+
+@pytest.mark.parametrize("color, expected", colors_test_cases)
+def test_color_argument(color, expected):
+    if isinstance(expected, Exception):
+        with pytest.raises(type(expected)):
+            yaspin(color=color)
+    else:
+        assert yaspin(color=color)._color == expected
+
+
+@pytest.mark.parametrize("color, expected", colors_test_cases)
+def test_color_property(color, expected):
+    swirl = yaspin()
+
+    if isinstance(expected, Exception):
+        with pytest.raises(type(expected)):
+            swirl.color = color
+    else:
+        swirl.color = color
+        assert swirl.color == expected
+
+
+@pytest.mark.parametrize("color, expected", colors_test_cases)
+def test_compose_out_with_color_arg(color, expected):
+    swirl = yaspin()
+
+    # Skip non relevant cases
+    if not expected:
+        return
+    if isinstance(expected, Exception):
+        return
+
+    out = swirl._compose_out(frame=u'/', text=u'foo', color=color.lower())
+    assert out.startswith('\r\033')
+    assert isinstance(out, builtin_str)
