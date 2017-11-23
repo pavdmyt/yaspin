@@ -12,6 +12,7 @@ from __future__ import absolute_import
 import os
 import sys
 from collections import namedtuple
+from inspect import getsource
 
 import pytest
 
@@ -19,6 +20,7 @@ from yaspin import Spinner, yaspin
 from yaspin.base_spinner import default_spinner
 from yaspin.compat import builtin_str, bytes, str
 from yaspin.constants import ENCODING
+from yaspin.termcolor import colored
 
 
 #
@@ -257,14 +259,31 @@ colors_test_cases = [
     ("Red", "red"),
     ("grEEn", "green"),
     ("BlacK", ValueError()),
+
+    # Callables
+    (
+        lambda frame: colored(frame, 'red', attrs=['bold']),
+        lambda frame: colored(frame, 'red', attrs=['bold']),
+    )
 ]
 
 
 @pytest.mark.parametrize("color, expected", colors_test_cases)
 def test_color_argument(color, expected):
+
+    # Exception
     if isinstance(expected, Exception):
         with pytest.raises(type(expected)):
             yaspin(color=color)
+
+    # Callable arg
+    elif callable(color):
+        # Compare source code to check funcs equality
+        fn1 = yaspin(color=color)._color
+        fn2 = expected
+        assert getsource(fn1) == getsource(fn2)
+
+    # Common arg
     else:
         assert yaspin(color=color)._color == expected
 
@@ -273,9 +292,18 @@ def test_color_argument(color, expected):
 def test_color_property(color, expected):
     swirl = yaspin()
 
+    # Exception
     if isinstance(expected, Exception):
         with pytest.raises(type(expected)):
             swirl.color = color
+
+    # Callable arg
+    elif callable(color):
+        # Compare source code to check funcs equality
+        swirl.color = color
+        assert getsource(swirl.color) == getsource(expected)
+
+    # Common arg
     else:
         swirl.color = color
         assert swirl.color == expected
@@ -291,6 +319,10 @@ def test_compose_out_with_color_arg(color, expected):
     if isinstance(expected, Exception):
         return
 
-    out = swirl._compose_out(frame=u'/', text=u'foo', color=color.lower())
+    # Sanitize input
+    if hasattr(color, 'lower'):
+        color = color.lower()
+
+    out = swirl._compose_out(frame=u'/', text=u'foo', color=color)
     assert out.startswith('\r\033')
     assert isinstance(out, builtin_str)

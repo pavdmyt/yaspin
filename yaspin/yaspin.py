@@ -177,7 +177,9 @@ class Yaspin(object):
             frame = frame.encode(ENCODING)
             text = text.encode(ENCODING)
 
-        if color:
+        if color and callable(color):
+            frame = color(frame)
+        if color and not callable(color):
             frame = colored(frame, color)
 
         if not mode:
@@ -228,6 +230,10 @@ class Yaspin(object):
 
     @staticmethod
     def _set_color(color):
+
+        if callable(color):
+            return color
+
         available_text_colors = (
             "red", "green", "yellow", "blue", "magenta", "cyan", "white",
         )
@@ -241,7 +247,6 @@ class Yaspin(object):
             )
 
         return c_lower
-
 
     @staticmethod
     def _hide_cursor():
