@@ -22,16 +22,10 @@ from .helpers import to_unicode
 from .termcolor import colored
 
 
-# TODO: update docstring
 class Yaspin(object):
-    """Implements a context manager that spawns a daemon thread
-    that writes spinner frames into a tty (stdout) during
+    """Implements a context manager that spawns a thread
+    to write spinner frames into a tty (stdout) during
     context execution.
-
-    Arguments:
-        spinner (yaspin.Spinner): Spinner to use.
-        text (str): Text to show along with spinner.
-
     """
 
     # When Python finds its output attached to a terminal,
@@ -263,15 +257,21 @@ class Yaspin(object):
         sys.stdout.write("\033[K")
 
 
-# TODO: update docstring
 def yaspin(spinner=None, text='', color=None):
     """Display spinner in stdout.
 
     Can be used as a context manager or as a function decorator.
 
     Arguments:
-        spinner (yaspin.Spinner): Spinner to use.
-        text (str): Text to show along with spinner.
+        spinner (yaspin.Spinner, optional): Spinner to use.
+        text (str, optional): Text to show along with spinner.
+        color (str, callable, optional): Color or color style of the spinner.
+
+    Returns:
+        yaspin.Yaspin: instance of the Yaspin class.
+
+    Raises:
+        ValueError: If unsupported `color` is specified.
 
     Example::
 
