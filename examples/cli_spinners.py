@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 
 """
-Run all spinners from yaspin.spinners.Spinners
-sorted alphabetically.
+examples.cli_spinners
+~~~~~~~~~~~~~~~~~~~~~
+
+Run all spinners from cli-spinners library:
+https://github.com/sindresorhus/cli-spinners
+
+Spinners are sorted alphabetically.
 """
 
 import time

@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+"""
+examples.spinner_properties
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Updating spinner on the fly.
+"""
+
 import time
 
 from yaspin import yaspin
@@ -14,6 +21,7 @@ def manual_setup():
 
     swirl.spinner = Spinners.arc
     swirl.text = "Arc spinner"
+    swirl.color = "yellow"
 
     time.sleep(2)
 
@@ -26,6 +34,7 @@ def context_mngr_setup():
 
         swirl.spinner = Spinners.simpleDotsScrolling
         swirl.text = "Scrolling Dots spinner"
+        swirl.color = "magenta"
 
         time.sleep(2)
 

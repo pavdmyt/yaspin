@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+"""
+examples.basic_usage
+~~~~~~~~~~~~~~~~~~~~
+
+Common usage patterns for the yaspin spinner.
+"""
+
 import time
 
 from yaspin import Spinner, yaspin

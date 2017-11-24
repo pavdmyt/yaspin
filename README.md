@@ -1,6 +1,6 @@
 # yaspin [![travis][travis-image]][travis-url] [![cov][cov-image]][cov-url] [![pypi][pypi-image]][pypi-url] [![pyver][pyver-image]][pyver-url]
 
-**Y**et **A**nother Terminal Spinner for Python.
+**Y**et **A**nother Terminal **Spin**ner for Python.
 
 **Yaspin** provides a lightweight and configurable spinner to show some progress during long-hanging operations. It is easy to integrate into existing codebase by using it as a *context manager* or as a function *decorator*.
 
@@ -16,6 +16,7 @@ Convert any character sequence you like in a spinner!
 * No external dependencies
 * Runs at all major __CPython__ versions (_2.6_, _2.7_, _3.3_, _3.4_, _3.5_, _3.6_), __PyPy__ and __PyPy3__
 * Supports all (60+) spinners from [cli-spinners](https://github.com/sindresorhus/cli-spinners)
+* Supports all _colors_, _highlights_, _attributes_ and their mixes from [termcolor](https://pypi.python.org/pypi/termcolor) library
 * Flexible API, easy to integrate with existing code
 * Safe __pipes__ and __redirects__:
 
@@ -99,6 +100,33 @@ with yaspin(Spinners.earth):
     time.sleep(3)
 ```
 
+Any Colour You Like [🌈](https://en.wikipedia.org/wiki/Any_Colour_You_Like)
+
+```python
+import time
+from yaspin import yaspin
+
+with yaspin(text="Colors!") as sp:
+    colors = ("red", "green", "yellow", "blue", "magenta", "cyan", "white")
+    for color in colors:
+        sp.color = color
+        sp.text = color
+        time.sleep(2)
+```
+
+```python
+import time
+from termcolor import colored
+from yaspin import yaspin
+from yaspin.spinners import Spinners
+
+text = "Bold blink magenta spinner on cyan color"
+color_fn = lambda frame: colored(frame, "magenta", "on_cyan", attrs=["bold", "blink"])
+
+with yaspin(Spinners.bouncingBall, text=text, color=color_fn):
+    time.sleep(3)
+```
+
 Run any spinner you want:
 
 ```python
@@ -123,6 +151,7 @@ with yaspin(Spinners.noise, text="Noise spinner") as sp:
 
     sp.spinner = Spinners.arc
     sp.text = "Arc spinner"
+    sp.color = "magenta"
 
     time.sleep(2)
 ```
@@ -189,7 +218,8 @@ make test
 ## License
 
 * MIT - Pavlo Dmytrenko; https://twitter.com/pavdmyt
-* Contains data from [cli-spinners](https://github.com/sindresorhus/cli-spinners): MIT License, Copyright (C) Sindre Sorhus sindresorhus@gmail.com (sindresorhus.com)
+* Contains [termcolor](https://pypi.python.org/pypi/termcolor) package: MIT License, Copyright (c) 2008-2011 Volvox Development Team
+* Contains data from [cli-spinners](https://github.com/sindresorhus/cli-spinners): MIT License, Copyright (c) Sindre Sorhus sindresorhus@gmail.com (sindresorhus.com)
 
 
 [travis-image]: https://travis-ci.org/pavdmyt/yaspin.svg?branch=master

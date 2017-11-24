@@ -12,6 +12,7 @@ from __future__ import absolute_import
 import os
 import sys
 from collections import namedtuple
+from inspect import getsource
 
 import pytest
 
@@ -19,6 +20,7 @@ from yaspin import Spinner, yaspin
 from yaspin.base_spinner import default_spinner
 from yaspin.compat import builtin_str, bytes, str
 from yaspin.constants import ENCODING
+from yaspin.termcolor import colored
 
 
 #
@@ -83,7 +85,7 @@ def test_output_converted_to_builtin_str(text, frames, interval):
 
     for _ in range(20):             # test 20 frames
         frame = next(swirl._cycle)
-        out = swirl._compose_out(frame, swirl.text)
+        out = swirl._compose_out(frame, swirl.text, color=None)
         assert isinstance(out, builtin_str)
 
 
@@ -229,3 +231,98 @@ def test_fail():
 
     assert isinstance(swirl._last_frame, builtin_str)
     assert swirl._last_frame[-1] == "\n"
+
+
+#
+# Test colors
+#
+colors_test_cases = [
+    # Empty values
+    ("", ""),
+    (None, None),
+
+    # Supported text colors
+    ("red", "red"),
+    ("green", "green"),
+    ("yellow", "yellow"),
+    ("blue", "blue"),
+    ("magenta", "magenta"),
+    ("cyan", "cyan"),
+    ("white", "white"),
+
+    # Unsupported text colors
+    ("black", ValueError()),
+    ("brown", ValueError()),
+    ("orange", ValueError()),
+
+    # Uppercase handling
+    ("Red", "red"),
+    ("grEEn", "green"),
+    ("BlacK", ValueError()),
+
+    # Callables
+    (
+        lambda frame: colored(frame, 'red', attrs=['bold']),
+        lambda frame: colored(frame, 'red', attrs=['bold']),
+    )
+]
+
+
+@pytest.mark.parametrize("color, expected", colors_test_cases)
+def test_color_argument(color, expected):
+
+    # Exception
+    if isinstance(expected, Exception):
+        with pytest.raises(type(expected)):
+            yaspin(color=color)
+
+    # Callable arg
+    elif callable(color):
+        # Compare source code to check funcs equality
+        fn1 = yaspin(color=color)._color
+        fn2 = expected
+        assert getsource(fn1) == getsource(fn2)
+
+    # Common arg
+    else:
+        assert yaspin(color=color)._color == expected
+
+
+@pytest.mark.parametrize("color, expected", colors_test_cases)
+def test_color_property(color, expected):
+    swirl = yaspin()
+
+    # Exception
+    if isinstance(expected, Exception):
+        with pytest.raises(type(expected)):
+            swirl.color = color
+
+    # Callable arg
+    elif callable(color):
+        # Compare source code to check funcs equality
+        swirl.color = color
+        assert getsource(swirl.color) == getsource(expected)
+
+    # Common arg
+    else:
+        swirl.color = color
+        assert swirl.color == expected
+
+
+@pytest.mark.parametrize("color, expected", colors_test_cases)
+def test_compose_out_with_color_arg(color, expected):
+    swirl = yaspin()
+
+    # Skip non relevant cases
+    if not expected:
+        return
+    if isinstance(expected, Exception):
+        return
+
+    # Sanitize input
+    if hasattr(color, 'lower'):
+        color = color.lower()
+
+    out = swirl._compose_out(frame=u'/', text=u'foo', color=color)
+    assert out.startswith('\r\033')
+    assert isinstance(out, builtin_str)
