@@ -4,7 +4,7 @@
 examples.colors
 ~~~~~~~~~~~~~~~
 
-Demonstration of the basic usage of color argument.
+Basic usage of the color argument.
 """
 
 import time

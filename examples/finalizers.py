@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+"""
+examples.finalizers
+~~~~~~~~~~~~~~~~~~~
+
+Success and Failure finalizers.
+"""
+
 import time
 
 from yaspin import yaspin
