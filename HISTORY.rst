@@ -1,6 +1,12 @@
 Release History
 ===============
 
+0.5.0 / 2017-11-24
+------------------
+
+* Colors support
+
+
 0.4.2 / 2017-11-17
 ------------------
 
@@ -40,3 +46,4 @@ Release History
 
 
 .. _cli-spinners: https://github.com/sindresorhus/cli-spinners
+.. _termcolor: https://pypi.python.org/pypi/termcolor
