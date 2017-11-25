@@ -4,5 +4,6 @@ exclude =
     .tox,
     .cache,
     dist,
+    build,
     __pycache__,
     yaspin/termcolor.py
