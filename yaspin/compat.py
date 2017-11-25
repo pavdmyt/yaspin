@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-tests.compat
+yaspin.compat
 ~~~~~~~~~~~~~
 
 Compatibility layer.
