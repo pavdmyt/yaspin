@@ -265,7 +265,6 @@ class Yaspin(object):
         sys.stdout.write("\033[K")
 
 
-# TODO: update dockstring
 def yaspin(spinner=None, text='', color=None, right=False):
     """Display spinner in stdout.
 
@@ -275,6 +274,7 @@ def yaspin(spinner=None, text='', color=None, right=False):
         spinner (yaspin.Spinner, optional): Spinner to use.
         text (str, optional): Text to show along with spinner.
         color (str, callable, optional): Color or color style of the spinner.
+        right (bool, optional): Place spinner to the right end of the text string.
 
     Returns:
         yaspin.Yaspin: instance of the Yaspin class.
