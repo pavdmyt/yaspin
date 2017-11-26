@@ -85,7 +85,7 @@ def test_output_converted_to_builtin_str(text, frames, interval):
 
     for _ in range(20):             # test 20 frames
         frame = next(swirl._cycle)
-        out = swirl._compose_out(frame, swirl.text, color=None)
+        out = swirl._compose_out(frame)
         assert isinstance(out, builtin_str)
 
 
@@ -310,9 +310,7 @@ def test_color_property(color, expected):
 
 
 @pytest.mark.parametrize("color, expected", colors_test_cases)
-def test_compose_out_with_color_arg(color, expected):
-    swirl = yaspin()
-
+def test_compose_out_with_color(color, expected):
     # Skip non relevant cases
     if not expected:
         return
@@ -323,6 +321,7 @@ def test_compose_out_with_color_arg(color, expected):
     if hasattr(color, 'lower'):
         color = color.lower()
 
-    out = swirl._compose_out(frame=u'/', text=u'foo', color=color)
+    swirl = yaspin(color=color)
+    out = swirl._compose_out(frame=u'/')
     assert out.startswith('\r\033')
     assert isinstance(out, builtin_str)

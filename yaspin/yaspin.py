@@ -136,10 +136,7 @@ class Yaspin(object):
         if PY2:
             final_text = to_unicode(final_text).strip()
 
-        self._last_frame = self._compose_out(final_text,
-                                             self._text,
-                                             self._color,
-                                             mode="last")
+        self._last_frame = self._compose_out(final_text, mode="last")
 
         # Should be stopped here, otherwise prints after
         # self._freeze call will mess up the spinner
@@ -150,7 +147,7 @@ class Yaspin(object):
         while not self._stop_spin.is_set():
             # Compose output
             spin_phase = next(self._cycle)
-            out = self._compose_out(spin_phase, self._text, self._color)
+            out = self._compose_out(spin_phase)
 
             # Write
             sys.stdout.write(out)
@@ -161,20 +158,19 @@ class Yaspin(object):
             time.sleep(self._interval)
             sys.stdout.write('\b')
 
-    @staticmethod
-    def _compose_out(frame, text, color, mode=None):
+    def _compose_out(self, frame, mode=None):
         # Ensure Unicode input
         assert isinstance(frame, str)
-        assert isinstance(text, str)
+        assert isinstance(self._text, str)
 
-        if PY2:
-            frame = frame.encode(ENCODING)
-            text = text.encode(ENCODING)
+        frame = frame.encode(ENCODING) if PY2 else frame
+        text = self._text.encode(ENCODING) if PY2 else self._text
 
-        if color and callable(color):
-            frame = color(frame)
-        if color and not callable(color):
-            frame = colored(frame, color)
+        if self._color and callable(self._color):
+            color_fn = self._color
+            frame = color_fn(frame)
+        if self._color and not callable(self._color):
+            frame = colored(frame, self._color)
 
         if not mode:
             out = "\r{0} {1}".format(frame, text)
