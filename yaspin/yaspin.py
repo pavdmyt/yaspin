@@ -42,13 +42,14 @@ class Yaspin(object):
     # Thats why in Py2, output should be encoded manually with desired
     # encoding in order to support pipes and redirects.
 
-    def __init__(self, spinner=None, text='', color=None):
+    def __init__(self, spinner=None, text='', color=None, right=False):
         self._spinner = self._set_spinner(spinner)
         self._frames = self._set_frames(self._spinner)
         self._interval = self._set_interval(self._spinner)
         self._cycle = self._set_cycle(self._frames)
         self._text = self._set_text(text)
         self._color = self._set_color(color) if color else color
+        self._right = right
 
         self._stop_spin = None
         self._spin_thread = None
@@ -103,6 +104,14 @@ class Yaspin(object):
     @color.setter
     def color(self, value):
         self._color = self._set_color(value) if value else value
+
+    @property
+    def right(self):
+        return self._right
+
+    @right.setter
+    def right(self, value):
+        self._right = value
 
     def start(self):
         if sys.stdout.isatty():
@@ -171,6 +180,9 @@ class Yaspin(object):
             frame = color_fn(frame)
         if self._color and not callable(self._color):
             frame = colored(frame, self._color)
+
+        if self._right:
+            frame, text = text, frame
 
         if not mode:
             out = "\r{0} {1}".format(frame, text)
@@ -253,7 +265,8 @@ class Yaspin(object):
         sys.stdout.write("\033[K")
 
 
-def yaspin(spinner=None, text='', color=None):
+# TODO: update dockstring
+def yaspin(spinner=None, text='', color=None, right=False):
     """Display spinner in stdout.
 
     Can be used as a context manager or as a function decorator.
@@ -291,4 +304,4 @@ def yaspin(spinner=None, text='', color=None):
         foo()
 
     """
-    return Yaspin(spinner=spinner, text=text, color=color)
+    return Yaspin(spinner=spinner, text=text, color=color, right=right)

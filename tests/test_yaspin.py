@@ -79,9 +79,10 @@ def test_input_converted_to_unicode(text, frames, interval):
 
 
 @pytest.mark.parametrize("text, frames, interval", test_cases, ids=ids)
-def test_output_converted_to_builtin_str(text, frames, interval):
+@pytest.mark.parametrize("right", [False, True])
+def test_output_converted_to_builtin_str(text, frames, interval, right):
     sp = Spinner(frames, interval)
-    swirl = yaspin(sp, text)
+    swirl = yaspin(sp, text, right=right)
 
     for _ in range(20):             # test 20 frames
         frame = next(swirl._cycle)
@@ -325,3 +326,20 @@ def test_compose_out_with_color(color, expected):
     out = swirl._compose_out(frame=u'/')
     assert out.startswith('\r\033')
     assert isinstance(out, builtin_str)
+
+
+#
+# Test right properties
+#
+
+@pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+def test_right_property_getter(right):
+    swirl = yaspin(right=right)
+    assert swirl.right == right
+
+
+@pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+def test_right_property_setter(right):
+    swirl = yaspin()
+    swirl.right = right
+    assert swirl.right == right
