@@ -149,9 +149,10 @@ from yaspin.spinners import Spinners
 with yaspin(Spinners.noise, text="Noise spinner") as sp:
     time.sleep(2)
 
-    sp.spinner = Spinners.arc
-    sp.text = "Arc spinner"
-    sp.color = "magenta"
+    sp.spinner = Spinners.arc  # spinner type
+    sp.text = "Arc spinner"    # text along with spinner
+    sp.color = "magenta"       # spinner color
+    sp.right = True            # put spinner to the right
 
     time.sleep(2)
 ```

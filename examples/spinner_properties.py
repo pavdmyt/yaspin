@@ -20,8 +20,9 @@ def manual_setup():
     time.sleep(2)
 
     swirl.spinner = Spinners.arc
-    swirl.text = "Arc spinner"
+    swirl.text = "Right arc spinner"
     swirl.color = "yellow"
+    swirl.right = True
 
     time.sleep(2)
 
