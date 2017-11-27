@@ -70,19 +70,22 @@ test_cases = [
 
 
 @pytest.mark.parametrize("text, frames, interval", test_cases, ids=ids)
-def test_input_converted_to_unicode(text, frames, interval):
+@pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+@pytest.mark.parametrize("reverse", [False, True], ids=["default", "reverse"])
+def test_input_converted_to_unicode(text, frames, interval, right, reverse):
     sp = Spinner(frames, interval)
-    swirl = yaspin(sp, text)
+    swirl = yaspin(sp, text, right=right, reverse=reverse)
 
     assert isinstance(swirl._frames, str)
     assert isinstance(swirl._text, str)
 
 
 @pytest.mark.parametrize("text, frames, interval", test_cases, ids=ids)
-@pytest.mark.parametrize("right", [False, True])
-def test_output_converted_to_builtin_str(text, frames, interval, right):
+@pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
+@pytest.mark.parametrize("reverse", [False, True], ids=["default", "reverse"])
+def test_out_converted_to_builtin_str(text, frames, interval, right, reverse):
     sp = Spinner(frames, interval)
-    swirl = yaspin(sp, text, right=right)
+    swirl = yaspin(sp, text, right=right, reverse=reverse)
 
     for _ in range(20):             # test 20 frames
         frame = next(swirl._cycle)
@@ -343,3 +346,22 @@ def test_right_property_setter(right):
     swirl = yaspin()
     swirl.right = right
     assert swirl.right == right
+
+
+#
+# Test reverse properties
+#
+
+@pytest.mark.parametrize("reverse", [False, True], ids=["default", "reversed"])
+def test_reverse_property_getter(reverse):
+    swirl = yaspin(reverse=reverse)
+    assert swirl.reverse == reverse
+
+
+@pytest.mark.parametrize("reverse", [False, True], ids=["default", "reversed"])
+def test_reverse_property_setter(reverse):
+    swirl = yaspin()
+    swirl.reverse = reverse
+
+    assert swirl.reverse == reverse
+    assert isinstance(swirl._frames, str)
