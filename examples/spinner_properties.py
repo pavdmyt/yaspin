@@ -24,7 +24,12 @@ def manual_setup():
     swirl.color = "yellow"
     swirl.right = True
 
-    time.sleep(2)
+    time.sleep(3)
+
+    swirl.text = "Resersed arc spinner"
+    swirl.reverse = True
+
+    time.sleep(3)
 
     swirl.stop()
 
