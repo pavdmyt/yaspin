@@ -58,6 +58,9 @@ class Yaspin(object):
         self._spin_thread = None
         self._last_frame = None
 
+    #
+    # Dunders
+    #
     def __repr__(self):
         repr_ = u'<Yaspin frames={0!s}>'.format(self._frames)
         if PY2:
@@ -81,6 +84,9 @@ class Yaspin(object):
                 return fn(*args, **kwargs)
         return inner
 
+    #
+    # Properties
+    #
     @property
     def spinner(self):
         return self._spinner
@@ -126,6 +132,9 @@ class Yaspin(object):
         self._frames = self._set_frames(self._spinner, self._reverse)
         self._cycle = self._set_cycle(self._frames)
 
+    #
+    # Public
+    #
     def start(self):
         if sys.stdout.isatty():
             self._hide_cursor()
@@ -153,6 +162,9 @@ class Yaspin(object):
         """Set fail finalizer to a spinner."""
         self._freeze(text)
 
+    #
+    # Protected
+    #
     def _freeze(self, final_text):
         """Stop spinner, compose last frame and 'freeze' it."""
         if PY2:
@@ -207,6 +219,9 @@ class Yaspin(object):
 
         return out
 
+    #
+    # Static
+    #
     @staticmethod
     def _set_spinner(spinner):
         if not spinner:
