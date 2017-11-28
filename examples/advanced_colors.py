@@ -8,18 +8,11 @@ Use familiar API of the `termcolor.colored` function to apply any
 color, highlight, attribute or their mix to your yaspin spinner.
 """
 
-import sys
 import time
 
 from yaspin import yaspin
 from yaspin.spinners import Spinners
-
-try:
-    from termcolor import colored
-except ImportError:
-    print("termcolor should be installed to run this example.\n"
-          "Run 'pip install termcolor' and try again.")
-    sys.exit(1)
+from yaspin.termcolor import colored
 
 
 def test_highlights():
