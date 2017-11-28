@@ -153,6 +153,7 @@ with yaspin(Spinners.noise, text="Noise spinner") as sp:
     sp.text = "Arc spinner"    # text along with spinner
     sp.color = "magenta"       # spinner color
     sp.right = True            # put spinner to the right
+    sp.reverse = True          # reverse spin direction
 
     time.sleep(2)
 ```

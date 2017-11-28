@@ -42,19 +42,25 @@ class Yaspin(object):
     # Thats why in Py2, output should be encoded manually with desired
     # encoding in order to support pipes and redirects.
 
-    def __init__(self, spinner=None, text='', color=None, right=False):
+    def __init__(self, spinner=None, text='',
+                 color=None, right=False, reverse=False):
         self._spinner = self._set_spinner(spinner)
-        self._frames = self._set_frames(self._spinner)
+        self._frames = self._set_frames(self._spinner, reverse)
         self._interval = self._set_interval(self._spinner)
         self._cycle = self._set_cycle(self._frames)
         self._text = self._set_text(text)
         self._color = self._set_color(color) if color else color
+
         self._right = right
+        self._reverse = reverse
 
         self._stop_spin = None
         self._spin_thread = None
         self._last_frame = None
 
+    #
+    # Dunders
+    #
     def __repr__(self):
         repr_ = u'<Yaspin frames={0!s}>'.format(self._frames)
         if PY2:
@@ -78,6 +84,9 @@ class Yaspin(object):
                 return fn(*args, **kwargs)
         return inner
 
+    #
+    # Properties
+    #
     @property
     def spinner(self):
         return self._spinner
@@ -85,7 +94,7 @@ class Yaspin(object):
     @spinner.setter
     def spinner(self, sp):
         self._spinner = self._set_spinner(sp)
-        self._frames = self._set_frames(self._spinner)
+        self._frames = self._set_frames(self._spinner, self._reverse)
         self._interval = self._set_interval(self._spinner)
         self._cycle = self._set_cycle(self._frames)
 
@@ -113,6 +122,19 @@ class Yaspin(object):
     def right(self, value):
         self._right = value
 
+    @property
+    def reverse(self):
+        return self._reverse
+
+    @reverse.setter
+    def reverse(self, value):
+        self._reverse = value
+        self._frames = self._set_frames(self._spinner, self._reverse)
+        self._cycle = self._set_cycle(self._frames)
+
+    #
+    # Public
+    #
     def start(self):
         if sys.stdout.isatty():
             self._hide_cursor()
@@ -140,6 +162,9 @@ class Yaspin(object):
         """Set fail finalizer to a spinner."""
         self._freeze(text)
 
+    #
+    # Protected
+    #
     def _freeze(self, final_text):
         """Stop spinner, compose last frame and 'freeze' it."""
         if PY2:
@@ -194,6 +219,9 @@ class Yaspin(object):
 
         return out
 
+    #
+    # Static
+    #
     @staticmethod
     def _set_spinner(spinner):
         if not spinner:
@@ -210,10 +238,16 @@ class Yaspin(object):
         return sp
 
     @staticmethod
-    def _set_frames(spinner):
-        if PY2:
-            return to_unicode(spinner.frames)
-        return spinner.frames
+    def _set_frames(spinner, reverse):
+        unicode_frames = to_unicode(spinner.frames) if PY2 else spinner.frames
+
+        # Builtin reversed returns reverse iterator,
+        # which adds unnecessary difficulty for returning
+        # unicode value;
+        # Hence using [::-1] syntax
+        frames = unicode_frames[::-1] if reverse else unicode_frames
+
+        return frames
 
     @staticmethod
     def _set_interval(spinner):
@@ -265,7 +299,7 @@ class Yaspin(object):
         sys.stdout.write("\033[K")
 
 
-def yaspin(spinner=None, text='', color=None, right=False):
+def yaspin(spinner=None, text='', color=None, right=False, reverse=False):
     """Display spinner in stdout.
 
     Can be used as a context manager or as a function decorator.
@@ -274,7 +308,9 @@ def yaspin(spinner=None, text='', color=None, right=False):
         spinner (yaspin.Spinner, optional): Spinner to use.
         text (str, optional): Text to show along with spinner.
         color (str, callable, optional): Color or color style of the spinner.
-        right (bool, optional): Place spinner to the right end of the text string.
+        right (bool, optional): Place spinner to the right end
+            of the text string.
+        reverse (bool, optional): Reverse spin direction.
 
     Returns:
         yaspin.Yaspin: instance of the Yaspin class.
@@ -304,4 +340,10 @@ def yaspin(spinner=None, text='', color=None, right=False):
         foo()
 
     """
-    return Yaspin(spinner=spinner, text=text, color=color, right=right)
+    return Yaspin(
+        spinner=spinner,
+        text=text,
+        color=color,
+        right=right,
+        reverse=reverse,
+    )
