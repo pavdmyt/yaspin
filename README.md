@@ -59,7 +59,7 @@ pip install https://github.com/pavdmyt/yaspin/archive/master.zip
 
 ## Usage
 
-Basic example:
+### Basic example:
 
 ![basic](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/basic_example.gif)
 
@@ -94,7 +94,7 @@ time.sleep(3)  # time consuming tasks
 spinner.stop()
 ```
 
-Run any spinner from [cli-spinners](https://github.com/sindresorhus/cli-spinners):
+### Run any spinner from [cli-spinners](https://github.com/sindresorhus/cli-spinners):
 
 ![cli-sp](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/cli_spinners.gif)
 
@@ -114,7 +114,7 @@ with yaspin(Spinners.earth, text="Earth") as sp:
     time.sleep(2)                # time consuming code
 ```
 
-Any Colour You Like [🌈](https://en.wikipedia.org/wiki/Any_Colour_You_Like):
+### Any Colour You Like [🌈](https://en.wikipedia.org/wiki/Any_Colour_You_Like):
 
 ![colors](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/basic_colors.gif)
 
@@ -132,7 +132,7 @@ with yaspin(text="Colors!") as sp:
         time.sleep(1)
 ```
 
-Advanced colors usage:
+### Advanced colors usage:
 
 ![adv-colors](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/advanced_colors.gif)
 
@@ -151,7 +151,7 @@ with yaspin(Spinners.bouncingBall, text=text, color=color_fn):
     time.sleep(3)
 ```
 
-Run any spinner you want:
+### Run any spinner you want:
 
 ![custom](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/custom_spinners.gif)
 
@@ -167,7 +167,7 @@ with yaspin(sp, text="Cat!"):
     time.sleep(3)  # cat consuming code :)
 ```
 
-Change spinner properties on the fly:
+### Change spinner properties on the fly:
 
 ![properties](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/sp_properties.gif)
 
