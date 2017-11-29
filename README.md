@@ -1,14 +1,30 @@
-# yaspin [![travis][travis-image]][travis-url] [![cov][cov-image]][cov-url] [![pypi][pypi-image]][pypi-url] [![pyver][pyver-image]][pyver-url]
+# yaspin [![travis][travis-image]][travis-url] [![cov][cov-image]][cov-url] [![examples][examples-image]][examples-url] [![pypi][pypi-image]][pypi-url] [![pyver][pyver-image]][pyver-url]
 
 **Y**et **A**nother Terminal **Spin**ner for Python.
 
-**Yaspin** provides a lightweight and configurable spinner to show some progress during long-hanging operations. It is easy to integrate into existing codebase by using it as a *context manager* or as a function *decorator*.
+**Yaspin** provides a full-featured terminal spinner to show some progress during long-hanging operations.
 
-*Lightweight* means that **yaspin** does not have any external dependencies.
+![demo](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/demo.gif)
 
-![yaspin](https://raw.githubusercontent.com/pavdmyt/yaspin/master/demo.gif)
+It is easy to integrate into existing codebase by using it as a [context manager](https://docs.python.org/3/reference/datamodel.html#context-managers) or as a function [decorator](https://www.thecodeship.com/patterns/guide-to-python-function-decorators/):
 
-Convert any character sequence you like in a spinner!
+```python
+import time
+from yaspin import yaspin
+
+
+# Context manager:
+with yaspin():
+    time.sleep(3)  # time consuming code
+
+
+# Function decorator:
+@yaspin(text="Loading...")
+def some_operations():
+    time.sleep(3)  # time consuming code
+
+some_operations()
+```
 
 
 ## Features
@@ -43,84 +59,92 @@ pip install https://github.com/pavdmyt/yaspin/archive/master.zip
 
 ## Usage
 
-Context manager:
+Basic example:
+
+![basic](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/basic_example.gif)
 
 ```python
+# -*- coding: utf-8 -*-
 import time
+from random import randint
 from yaspin import yaspin
 
-with yaspin():
-    # time consuming code
-    time.sleep(3)
+with yaspin(text="Loading", color="yellow") as spinner:
+    time.sleep(2)  # time consuming code
 
-# Context manager with text
-with yaspin(text="Processing..."):
-    # time consuming code
-    time.sleep(3)
-```
-
-Function decorator:
-
-```python
-import time
-from yaspin import yaspin
-
-@yaspin(text="Loading...")
-def some_operations():
-    # time consuming code
-    time.sleep(3)
-
-some_operations()
+    success = randint(0, 1)
+    if success:
+        spinner.ok("✅ ")
+    else:
+        spinner.fail("💥 ")
 ```
 
 It is also possible to control spinner manually:
 
 ```python
+# -*- coding: utf-8 -*-
 import time
 from yaspin import yaspin
 
 spinner = yaspin()
 spinner.start()
 
-# time consuming tasks
-time.sleep(3)
+time.sleep(3)  # time consuming tasks
 
 spinner.stop()
 ```
 
 Run any spinner from [cli-spinners](https://github.com/sindresorhus/cli-spinners):
 
+![cli-sp](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/cli_spinners.gif)
+
 ```python
+# -*- coding: utf-8 -*-
 import time
 from yaspin import yaspin
 from yaspin.spinners import Spinners
 
-with yaspin(Spinners.earth):
-    # time consuming code
-    time.sleep(3)
+with yaspin(Spinners.earth, text="Earth") as sp:
+    time.sleep(2)                # time consuming code
+
+    # change spinner
+    sp.spinner = Spinners.moon
+    sp.text = "Moon"
+
+    time.sleep(2)                # time consuming code
 ```
 
-Any Colour You Like [🌈](https://en.wikipedia.org/wiki/Any_Colour_You_Like)
+Any Colour You Like [🌈](https://en.wikipedia.org/wiki/Any_Colour_You_Like):
+
+![colors](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/basic_colors.gif)
 
 ```python
+# -*- coding: utf-8 -*-
 import time
 from yaspin import yaspin
 
 with yaspin(text="Colors!") as sp:
+    # Support all basic termcolor text colors
     colors = ("red", "green", "yellow", "blue", "magenta", "cyan", "white")
+
     for color in colors:
-        sp.color = color
-        sp.text = color
-        time.sleep(2)
+        sp.color, sp.text = color, color
+        time.sleep(1)
 ```
 
+Advanced colors usage:
+
+![adv-colors](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/advanced_colors.gif)
+
 ```python
+# -*- coding: utf-8 -*-
 import time
-from termcolor import colored
 from yaspin import yaspin
 from yaspin.spinners import Spinners
+from yaspin.termcolor import colored
 
 text = "Bold blink magenta spinner on cyan color"
+# Support all termcolor features via simple closure
 color_fn = lambda frame: colored(frame, "magenta", "on_cyan", attrs=["bold", "blink"])
 
 with yaspin(Spinners.bouncingBall, text=text, color=color_fn):
@@ -129,19 +153,26 @@ with yaspin(Spinners.bouncingBall, text=text, color=color_fn):
 
 Run any spinner you want:
 
+![custom](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/custom_spinners.gif)
+
 ```python
+# -*- coding: utf-8 -*-
 import time
 from yaspin import yaspin, Spinner
 
+# Compose new spinners with custom frame sequence and interval value
 sp = Spinner(["😸", "😹", "😺", "😻", "😼", "😽", "😾", "😿", "🙀"], 200)
+
 with yaspin(sp, text="Cat!"):
-    # cat consuming code :)
-    time.sleep(5)
+    time.sleep(3)  # cat consuming code :)
 ```
 
 Change spinner properties on the fly:
 
+![properties](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/sp_properties.gif)
+
 ```python
+# -*- coding: utf-8 -*-
 import time
 from yaspin import yaspin
 from yaspin.spinners import Spinners
@@ -151,30 +182,11 @@ with yaspin(Spinners.noise, text="Noise spinner") as sp:
 
     sp.spinner = Spinners.arc  # spinner type
     sp.text = "Arc spinner"    # text along with spinner
-    sp.color = "magenta"       # spinner color
+    sp.color = "green"         # spinner color
     sp.right = True            # put spinner to the right
     sp.reverse = True          # reverse spin direction
 
     time.sleep(2)
-```
-
-Success and Failure finalizers:
-
-```python
-import time
-from random import randint
-from yaspin import yaspin
-
-with yaspin(text="ℙƴ☂ℌøἤ") as sp:
-    time.sleep(2)
-    success = randint(0, 1)
-
-    if success:
-        # can also be called with arguments: sp.ok("✅")
-        sp.ok()
-    else:
-        # can also be called with arguments: sp.fail("💥")
-        sp.fail()
 ```
 
 More [examples](https://github.com/pavdmyt/yaspin/tree/master/examples).
@@ -229,6 +241,9 @@ make test
 
 [cov-image]: https://coveralls.io/repos/github/pavdmyt/yaspin/badge.svg?branch=master
 [cov-url]: https://coveralls.io/github/pavdmyt/yaspin?branch=master
+
+[examples-image]: https://img.shields.io/badge/learn%20by-examples-0077b3.svg
+[examples-url]: https://github.com/pavdmyt/yaspin/tree/master/examples
 
 [pypi-image]: https://img.shields.io/pypi/v/yaspin.svg
 [pypi-url]: https://pypi.python.org/pypi/yaspin
