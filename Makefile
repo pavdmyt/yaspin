@@ -46,7 +46,7 @@ build: rm-build
 	@python setup.py sdist
 	@python setup.py bdist_wheel --universal
 
-publish: check-rst rm-build
+publish: flake check-rst rm-build
 	@echo "$(OK_COLOR)==> Publishing...$(NO_COLOR)"
 	@python setup.py sdist upload -r pypi
 	@python setup.py bdist_wheel --universal upload -r pypi

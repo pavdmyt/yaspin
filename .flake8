@@ -3,7 +3,9 @@ exclude =
     .git,
     .tox,
     .cache,
+    __pycache__,
     dist,
     build,
-    __pycache__,
-    yaspin/termcolor.py
+    # project specific
+    yaspin/termcolor.py,
+    gif-compose
