@@ -1,4 +1,10 @@
-# yaspin [![travis][travis-image]][travis-url] [![cov][cov-image]][cov-url] [![examples][examples-image]][examples-url] [![pypi][pypi-image]][pypi-url] [![pyver][pyver-image]][pyver-url]
+# yaspin
+
+[![travis][travis-image]][travis-url] [![cov][cov-image]][cov-url] [![codacy][codacy-image]][codacy-url]
+
+[![pypi][pypi-image]][pypi-url] [![pyver][pyver-image]][pyver-url]
+
+[![examples][examples-image]][examples-url]
 
 **Y**et **A**nother Terminal **Spin**ner for Python.
 
@@ -241,6 +247,9 @@ make test
 
 [cov-image]: https://coveralls.io/repos/github/pavdmyt/yaspin/badge.svg?branch=master
 [cov-url]: https://coveralls.io/github/pavdmyt/yaspin?branch=master
+
+[codacy-image]: https://api.codacy.com/project/badge/Grade/797c7772d0d3467c88a5e2e9dc79ec98
+[codacy-url]: https://www.codacy.com/app/pavdmyt/yaspin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pavdmyt/yaspin&amp;utm_campaign=Badge_Grade
 
 [examples-image]: https://img.shields.io/badge/learn%20by-examples-0077b3.svg
 [examples-url]: https://github.com/pavdmyt/yaspin/tree/master/examples
