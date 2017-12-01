@@ -16,7 +16,7 @@ import threading
 import time
 
 from .base_spinner import default_spinner
-from .compat import PY2, builtin_str, str
+from .compat import PY2, basestring, builtin_str, bytes, str
 from .constants import ENCODING
 from .helpers import to_unicode
 from .termcolor import colored
@@ -239,13 +239,33 @@ class Yaspin(object):
 
     @staticmethod
     def _set_frames(spinner, reverse):
-        unicode_frames = to_unicode(spinner.frames) if PY2 else spinner.frames
+        # type: (base_spinner.Spinner, bool) -> Union[str, List]
+        uframes = None      # unicode frames
+        uframes_seq = None  # sequence of unicode frames
+
+        if isinstance(spinner.frames, basestring):
+            uframes = to_unicode(spinner.frames) if PY2 else spinner.frames
+
+        # TODO (pavdmyt): support any type that implements iterable
+        if isinstance(spinner.frames, (list, tuple)):
+
+            # Empty spinner.frames is handled by Yaspin._set_spinner
+            if spinner.frames and isinstance(spinner.frames[0], bytes):
+                uframes_seq = [to_unicode(frame) for frame in spinner.frames]
+            else:
+                uframes_seq = spinner.frames
+
+        _frames = uframes or uframes_seq
+        if not _frames:
+            raise ValueError(
+                "{0!r}: no frames found in spinner".format(spinner)
+            )
 
         # Builtin reversed returns reverse iterator,
         # which adds unnecessary difficulty for returning
         # unicode value;
         # Hence using [::-1] syntax
-        frames = unicode_frames[::-1] if reverse else unicode_frames
+        frames = _frames[::-1] if reverse else _frames
 
         return frames
 
