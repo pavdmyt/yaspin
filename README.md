@@ -8,7 +8,7 @@
 
 **Y**et **A**nother Terminal **Spin**ner for Python.
 
-**Yaspin** provides a full-featured terminal spinner to show some progress during long-hanging operations.
+**Yaspin** provides a full-featured terminal spinner to show the progress during long-hanging operations.
 
 ![demo](https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/demo.gif)
 

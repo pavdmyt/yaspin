@@ -18,7 +18,7 @@ import pytest
 
 from yaspin import Spinner, yaspin
 from yaspin.base_spinner import default_spinner
-from yaspin.compat import builtin_str, bytes, str
+from yaspin.compat import builtin_str, bytes, str, basestring
 from yaspin.constants import ENCODING
 from yaspin.termcolor import colored
 
@@ -48,6 +48,12 @@ ids = [
     "unicode text, unicode frames (marked as unicode)",
     "unicode text, str frames",
     "str text, unicode frames",
+    "str text, List[] frames",
+    "str text, List[bytes] frames",
+    "str text, List[unicode] frames",
+    "str text, Tuple[] frames",
+    "str text, Tuple[bytes] frames",
+    "str text, Tuple[unicode] frames",
 ]
 
 
@@ -66,6 +72,33 @@ test_cases = [
 
     # str text, unicode frames
     ("Loading", "⢄⢂⢁⡁⡈⡐⡠", 80),
+
+    #
+    # Iter frames
+    #
+
+    # TODO: add custom type that Implements iterable
+    #
+    # XXX: this is Bad, because different text inputs should
+    #      combine with different frames input
+
+    # str text, List[] frames
+    ("Empty list", [], 400),
+
+    # str text, List[bytes] frames
+    ("Bytes list", [b"\xf0\x9f\x8c\xb2", b"\xf0\x9f\x8e\x84"], 400),
+
+    # str text, List[unicode] frames
+    ("Unicode list", [u"🌲", u"🎄"], 400),
+
+    # str text, Tuple[] frames
+    ("Empty tuple", (), 400),
+
+    # str text, Tuple[bytes] frames
+    ("Bytes tuple", (b"\xf0\x9f\x8c\xb2", b"\xf0\x9f\x8e\x84"), 400),
+
+    # str text, Tuple[unicode] frames
+    ("Unicode tuple", (u"🌲", u"🎄"), 400),
 ]
 
 
@@ -76,7 +109,12 @@ def test_input_converted_to_unicode(text, frames, interval, right, reverse):
     sp = Spinner(frames, interval)
     swirl = yaspin(sp, text, right=right, reverse=reverse)
 
-    assert isinstance(swirl._frames, str)
+    if isinstance(swirl._frames, basestring):
+        assert isinstance(swirl._frames, str)
+
+    if isinstance(swirl._frames, (list, tuple)):
+        assert isinstance(swirl._frames[0], str)
+
     assert isinstance(swirl._text, str)
 
 
@@ -186,7 +224,13 @@ def test_spinner_setter(_, frames, interval):
     new_spinner = Spinner(frames, interval)
     swirl.spinner = new_spinner
     assert swirl._spinner == swirl._set_spinner(new_spinner)
-    assert isinstance(swirl._frames, str)
+
+    if isinstance(swirl._frames, basestring):
+        assert isinstance(swirl._frames, str)
+
+    if isinstance(swirl._frames, (list, tuple)):
+        assert isinstance(swirl._frames[0], str)
+
     assert swirl._interval == swirl._spinner.interval * 0.001
     assert isinstance(repr(swirl), builtin_str)
 

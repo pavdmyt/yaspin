@@ -1,6 +1,12 @@
 Release History
 ===============
 
+0.7.1 / 2017-12-02
+------------------
+
+* fix(#7): handling bytes sequences in `Spinner.frames`
+
+
 0.7.0 / 2017-11-28
 ------------------
 
