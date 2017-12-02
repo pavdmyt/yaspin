@@ -23,9 +23,9 @@ from setuptools.command.test import test as TestCommand
 # Package meta-data
 NAME = 'yaspin'
 LICENSE = 'MIT'
-DESCRIPTION = 'Yet Another terminal Spinner'
-LONG_DESCR = ('Lightweight and easy to use terminal spinner. '
-              'No external dependencies. '
+DESCRIPTION = '**Y**et **A**nother Terminal **Spin**ner'
+LONG_DESCR = ('Full-featured terminal spinner to show the progress during '
+              'long-hanging operations.'
               'Find documentation here: https://github.com/pavdmyt/yaspin')
 URL = 'https://github.com/pavdmyt/yaspin'
 EMAIL = 'mail@pavdmyt.com'
