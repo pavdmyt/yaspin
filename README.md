@@ -1,8 +1,12 @@
 # yaspin
 
-[![travis][travis-image]][travis-url] [![cov][cov-image]][cov-url] [![codacy][codacy-image]][codacy-url]
+[![travis][travis-image]][travis-url]
+[![cov][cov-image]][cov-url]
+[![codacy][codacy-image]][codacy-url]
 
-[![pypi][pypi-image]][pypi-url] [![pyver][pyver-image]][pyver-url]
+[![pypi][pypi-image]][pypi-url]
+[![wheel][wheel-image]][wheel-url]
+[![pyver][pyver-image]][pyver-url]
 
 [![examples][examples-image]][examples-url]
 
@@ -259,3 +263,6 @@ make test
 
 [pyver-image]: https://img.shields.io/pypi/pyversions/yaspin.svg
 [pyver-url]: https://pypi.python.org/pypi/yaspin
+
+[wheel-image]: https://img.shields.io/pypi/wheel/yaspin.svg
+[wheel-url]: https://pypi.python.org/pypi/yaspin
