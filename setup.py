@@ -23,7 +23,7 @@ from setuptools.command.test import test as TestCommand
 # Package meta-data
 NAME = 'yaspin'
 LICENSE = 'MIT'
-DESCRIPTION = '**Y**et **A**nother Terminal **Spin**ner'
+DESCRIPTION = 'Yet Another Terminal Spinner'
 LONG_DESCR = ('Full-featured terminal spinner to show the progress during '
               'long-hanging operations.'
               'Find documentation here: https://github.com/pavdmyt/yaspin')
@@ -85,7 +85,7 @@ setup(
         'Intended Audience :: System Administrators',
         'Operating System :: MacOS',
         'Operating System :: POSIX :: Linux',
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Natural Language :: English',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.6',
