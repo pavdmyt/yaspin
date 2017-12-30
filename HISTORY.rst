@@ -1,6 +1,12 @@
 Release History
 ===============
 
+0.8.0 / 2017-12-31
+------------------
+
+* Speedup reading spinners collection with simplejson
+
+
 0.7.1 / 2017-12-02
 ------------------
 
