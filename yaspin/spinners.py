@@ -8,9 +8,13 @@ A collection of cli spinners.
 """
 
 import codecs
-import json
 import os
 from collections import namedtuple
+
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
