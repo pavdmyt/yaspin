@@ -9,8 +9,6 @@ Basic unittests.
 
 from __future__ import absolute_import
 
-import os
-import sys
 from collections import namedtuple
 from inspect import getsource
 
@@ -18,29 +16,9 @@ import pytest
 
 from yaspin import Spinner, yaspin
 from yaspin.base_spinner import default_spinner
-from yaspin.compat import builtin_str, bytes, str, basestring
-from yaspin.constants import ENCODING
+from yaspin.compat import basestring, builtin_str, str
 from yaspin.termcolor import colored
 
-
-#
-# Helpers
-#
-def to_bytes(str_or_bytes, encoding=ENCODING):
-    if isinstance(str_or_bytes, str):
-        return str_or_bytes.encode(encoding)
-    return str_or_bytes
-
-
-def to_unicode(str_or_bytes, encoding=ENCODING):
-    if isinstance(str_or_bytes, bytes):
-        return str_or_bytes.decode(encoding)
-    return str_or_bytes
-
-
-#
-# Tests
-#
 
 ids = [
     "default frames and interval",
@@ -100,43 +78,6 @@ test_cases = [
     # str text, Tuple[unicode] frames
     ("Unicode tuple", (u"🌲", u"🎄"), 400),
 ]
-
-
-@pytest.mark.parametrize("text, frames, interval", test_cases, ids=ids)
-def test_piping_output(text, frames, interval):
-    py_fname = "spin.py"
-    fname = "out.txt"
-
-    def teardown():
-        os.remove(py_fname)
-        os.remove(fname)
-
-    code = """\
-# -*- coding: utf-8 -*-
-
-import time
-from yaspin import yaspin, Spinner
-
-with yaspin(Spinner('%s', %s), '%s') as sp:
-    time.sleep(0.5)
-    sp.fail('🙀')
-"""
-
-    with open(py_fname, 'wb') as f:
-        text = to_unicode(text)
-        frames = to_unicode(frames)
-        interval = to_unicode(interval)
-        code = to_unicode(code)
-        res = code % (frames, interval, text)
-        f.write(to_bytes(res))
-
-    try:
-        # $ python spin.py > out.txt
-        os.system("{0} {1} > {2}".format(sys.executable, py_fname, fname))
-    except UnicodeEncodeError as err:
-        pytest.fail(err)
-    finally:
-        teardown()
 
 
 @pytest.mark.parametrize("spinner, expected", [
