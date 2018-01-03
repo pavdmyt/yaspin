@@ -281,8 +281,8 @@ class Yaspin(object):
     @staticmethod
     def _set_text(text):
         if PY2:
-            return to_unicode(text).strip()
-        return text.strip()
+            return to_unicode(text)
+        return text
 
     @staticmethod
     def _set_color(color):
