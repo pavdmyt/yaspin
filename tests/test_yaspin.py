@@ -16,7 +16,7 @@ import pytest
 
 from yaspin import Spinner, yaspin
 from yaspin.base_spinner import default_spinner
-from yaspin.compat import basestring, builtin_str, str
+from yaspin.compat import builtin_str, str
 from yaspin.termcolor import colored
 
 
@@ -105,49 +105,6 @@ test_cases = [
 def test_set_spinner(spinner, expected):
     swirl = yaspin(spinner)
     assert swirl.spinner == expected
-
-
-@pytest.mark.parametrize("_, frames, interval", test_cases, ids=ids)
-def test_spinner_getter(_, frames, interval):
-    swirl = yaspin()
-    assert swirl.spinner == default_spinner
-
-    new_spinner = Spinner(frames, interval)
-    swirl.spinner = new_spinner
-    assert swirl.spinner == swirl._set_spinner(new_spinner)
-
-
-@pytest.mark.parametrize("_, frames, interval", test_cases, ids=ids)
-def test_spinner_setter(_, frames, interval):
-    swirl = yaspin()
-    assert swirl._spinner == default_spinner
-    assert isinstance(swirl._frames, str)
-    assert swirl._interval == swirl._spinner.interval * 0.001
-    assert isinstance(repr(swirl), builtin_str)
-
-    new_spinner = Spinner(frames, interval)
-    swirl.spinner = new_spinner
-    assert swirl._spinner == swirl._set_spinner(new_spinner)
-
-    if isinstance(swirl._frames, basestring):
-        assert isinstance(swirl._frames, str)
-
-    if isinstance(swirl._frames, (list, tuple)):
-        assert isinstance(swirl._frames[0], str)
-
-    assert swirl._interval == swirl._spinner.interval * 0.001
-    assert isinstance(repr(swirl), builtin_str)
-
-
-@pytest.mark.parametrize("case_data", test_cases, ids=ids)
-def test_text_property(case_data):
-    text = case_data[0]
-
-    swirl = yaspin()
-    assert swirl.text == ""
-
-    swirl.text = text
-    assert isinstance(swirl.text, str)
 
 
 @pytest.mark.parametrize("final_text", [
