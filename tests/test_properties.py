@@ -48,7 +48,6 @@ def test_spinner_setter(frames, interval):
 #
 # Yaspin.text
 #
-
 def test_text_getter(text):
     swirl = yaspin(text=text)
     assert swirl.text == text
@@ -59,3 +58,17 @@ def test_text_setter(text):
     swirl.text = text
     assert isinstance(swirl._text, str)
     assert swirl._text == text
+
+
+#
+# Yaspin.right
+#
+def test_right_getter(right):
+    swirl = yaspin(right=right)
+    assert swirl.right == right
+
+
+def test_right_setter(right):
+    swirl = yaspin()
+    swirl.right = right
+    assert swirl._right == right

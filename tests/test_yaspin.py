@@ -237,23 +237,6 @@ def test_compose_out_with_color(color, expected):
 
 
 #
-# Test right properties
-#
-
-@pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
-def test_right_property_getter(right):
-    swirl = yaspin(right=right)
-    assert swirl.right == right
-
-
-@pytest.mark.parametrize("right", [False, True], ids=["left", "right"])
-def test_right_property_setter(right):
-    swirl = yaspin()
-    swirl.right = right
-    assert swirl.right == right
-
-
-#
 # Test reverse properties
 #
 
