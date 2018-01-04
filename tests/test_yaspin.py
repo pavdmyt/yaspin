@@ -16,7 +16,7 @@ import pytest
 
 from yaspin import Spinner, yaspin
 from yaspin.base_spinner import default_spinner
-from yaspin.compat import builtin_str, str
+from yaspin.compat import builtin_str
 from yaspin.termcolor import colored
 
 
@@ -234,22 +234,3 @@ def test_compose_out_with_color(color, expected):
     out = swirl._compose_out(frame=u'/')
     assert out.startswith('\r\033')
     assert isinstance(out, builtin_str)
-
-
-#
-# Test reverse properties
-#
-
-@pytest.mark.parametrize("reverse", [False, True], ids=["default", "reversed"])
-def test_reverse_property_getter(reverse):
-    swirl = yaspin(reverse=reverse)
-    assert swirl.reverse == reverse
-
-
-@pytest.mark.parametrize("reverse", [False, True], ids=["default", "reversed"])
-def test_reverse_property_setter(reverse):
-    swirl = yaspin()
-    swirl.reverse = reverse
-
-    assert swirl.reverse == reverse
-    assert isinstance(swirl._frames, str)

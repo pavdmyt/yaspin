@@ -72,3 +72,18 @@ def test_right_setter(right):
     swirl = yaspin()
     swirl.right = right
     assert swirl._right == right
+
+
+#
+# Yaspin.reverse
+#
+def test_reverse_getter(reverse):
+    swirl = yaspin(reverse=reverse)
+    assert swirl.reverse == reverse
+
+
+def test_reverse_setter(reverse):
+    swirl = yaspin()
+    swirl.reverse = reverse
+    assert isinstance(swirl._frames, str)
+    assert swirl._reverse == reverse
