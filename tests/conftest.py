@@ -106,8 +106,21 @@ def reverse(request):
     return request.param
 
 
-# TODO: add ids
-@pytest.fixture(scope="session", params=[
+def color_id_func(case):
+    if isinstance(case, tuple):
+        color, _ = case
+    else:
+        color = case
+
+    if not color or callable(color):
+        val = repr(color)
+    else:
+        val = color
+
+    return val
+
+
+@pytest.fixture(scope="session", ids=color_id_func, params=[
     # Empty values
     ("", ""),
     (None, None),
@@ -141,7 +154,7 @@ def colors_test_cases(request):
     return request.param
 
 
-@pytest.fixture(scope="session", params=[
+@pytest.fixture(scope="session", ids=color_id_func, params=[
     "red",
     "green",
     "yellow",
