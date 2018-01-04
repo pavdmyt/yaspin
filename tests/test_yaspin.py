@@ -10,14 +10,12 @@ Basic unittests.
 from __future__ import absolute_import
 
 from collections import namedtuple
-from inspect import getsource
 
 import pytest
 
 from yaspin import Spinner, yaspin
 from yaspin.base_spinner import default_spinner
 from yaspin.compat import builtin_str
-from yaspin.termcolor import colored
 
 
 ids = [
@@ -142,84 +140,9 @@ def test_fail():
     assert swirl._last_frame[-1] == "\n"
 
 
-#
-# Test colors
-#
-colors_test_cases = [
-    # Empty values
-    ("", ""),
-    (None, None),
+def test_compose_out_with_color(colors_test_cases):
+    color, expected = colors_test_cases
 
-    # Supported text colors
-    ("red", "red"),
-    ("green", "green"),
-    ("yellow", "yellow"),
-    ("blue", "blue"),
-    ("magenta", "magenta"),
-    ("cyan", "cyan"),
-    ("white", "white"),
-
-    # Unsupported text colors
-    ("black", ValueError()),
-    ("brown", ValueError()),
-    ("orange", ValueError()),
-
-    # Uppercase handling
-    ("Red", "red"),
-    ("grEEn", "green"),
-    ("BlacK", ValueError()),
-
-    # Callables
-    (
-        lambda frame: colored(frame, 'red', attrs=['bold']),
-        lambda frame: colored(frame, 'red', attrs=['bold']),
-    )
-]
-
-
-@pytest.mark.parametrize("color, expected", colors_test_cases)
-def test_color_argument(color, expected):
-
-    # Exception
-    if isinstance(expected, Exception):
-        with pytest.raises(type(expected)):
-            yaspin(color=color)
-
-    # Callable arg
-    elif callable(color):
-        # Compare source code to check funcs equality
-        fn1 = yaspin(color=color)._color
-        fn2 = expected
-        assert getsource(fn1) == getsource(fn2)
-
-    # Common arg
-    else:
-        assert yaspin(color=color)._color == expected
-
-
-@pytest.mark.parametrize("color, expected", colors_test_cases)
-def test_color_property(color, expected):
-    swirl = yaspin()
-
-    # Exception
-    if isinstance(expected, Exception):
-        with pytest.raises(type(expected)):
-            swirl.color = color
-
-    # Callable arg
-    elif callable(color):
-        # Compare source code to check funcs equality
-        swirl.color = color
-        assert getsource(swirl.color) == getsource(expected)
-
-    # Common arg
-    else:
-        swirl.color = color
-        assert swirl.color == expected
-
-
-@pytest.mark.parametrize("color, expected", colors_test_cases)
-def test_compose_out_with_color(color, expected):
     # Skip non relevant cases
     if not expected:
         return

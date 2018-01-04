@@ -9,6 +9,8 @@ Tests data.
 
 import pytest
 
+from yaspin.termcolor import colored
+
 
 frame_cases = [
     # XXX: try byte strings
@@ -101,4 +103,53 @@ def right(request):
     ids=["default", "reverse"]
 )
 def reverse(request):
+    return request.param
+
+
+# TODO: add ids
+@pytest.fixture(scope="session", params=[
+    # Empty values
+    ("", ""),
+    (None, None),
+
+    # Supported text colors
+    ("red", "red"),
+    ("green", "green"),
+    ("yellow", "yellow"),
+    ("blue", "blue"),
+    ("magenta", "magenta"),
+    ("cyan", "cyan"),
+    ("white", "white"),
+
+    # Unsupported text colors
+    ("black", ValueError()),
+    ("brown", ValueError()),
+    ("orange", ValueError()),
+
+    # Uppercase handling
+    ("Red", "red"),
+    ("grEEn", "green"),
+    ("BlacK", ValueError()),
+
+    # Callables
+    (
+        lambda frame: colored(frame, 'red', attrs=['bold']),
+        lambda frame: colored(frame, 'red', attrs=['bold']),
+    ),
+])
+def colors_test_cases(request):
+    return request.param
+
+
+@pytest.fixture(scope="session", params=[
+    "red",
+    "green",
+    "yellow",
+    "blue",
+    "magenta",
+    "cyan",
+    "white",
+    lambda frame: colored(frame, 'red', attrs=['bold']),
+])
+def supported_colors(request):
     return request.param
