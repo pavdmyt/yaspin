@@ -138,22 +138,3 @@ def test_fail():
 
     assert isinstance(swirl._last_frame, builtin_str)
     assert swirl._last_frame[-1] == "\n"
-
-
-def test_compose_out_with_color(colors_test_cases):
-    color, expected = colors_test_cases
-
-    # Skip non relevant cases
-    if not expected:
-        return
-    if isinstance(expected, Exception):
-        return
-
-    # Sanitize input
-    if hasattr(color, 'lower'):
-        color = color.lower()
-
-    swirl = yaspin(color=color)
-    out = swirl._compose_out(frame=u'/')
-    assert out.startswith('\r\033')
-    assert isinstance(out, builtin_str)

@@ -8,6 +8,8 @@ Checks that all input data is converted to unicode.
 And all output data is converted to builtin str type.
 """
 
+import pytest
+
 from yaspin import Spinner, yaspin
 from yaspin.compat import builtin_str, str, basestring
 
@@ -40,3 +42,21 @@ def test_repr(text, frames, interval):
     swirl = yaspin(sp, text)
 
     assert isinstance(repr(swirl), builtin_str)
+
+
+def test_compose_out_with_color(colors_test_cases):
+    color, expected = colors_test_cases
+
+    # Skip non relevant cases
+    empty = not expected
+    is_exc = isinstance(expected, Exception)
+    func = callable(expected)
+
+    if empty or is_exc or func:
+        pytest.skip("{0} - unsupported case".format(repr(expected)))
+
+    # Actual test
+    swirl = yaspin(color=color)
+    out = swirl._compose_out(frame=u'/')
+    assert out.startswith('\r\033')
+    assert isinstance(out, builtin_str)
