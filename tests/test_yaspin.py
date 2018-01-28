@@ -15,7 +15,6 @@ import pytest
 
 from yaspin import Spinner, yaspin
 from yaspin.base_spinner import default_spinner
-from yaspin.compat import builtin_str
 
 
 ids = [
@@ -103,19 +102,3 @@ test_cases = [
 def test_set_spinner(spinner, expected):
     swirl = yaspin(spinner)
     assert swirl.spinner == expected
-
-
-def test_ok():
-    swirl = yaspin()
-    swirl.ok()
-
-    assert isinstance(swirl._last_frame, builtin_str)
-    assert swirl._last_frame[-1] == "\n"
-
-
-def test_fail():
-    swirl = yaspin()
-    swirl.fail()
-
-    assert isinstance(swirl._last_frame, builtin_str)
-    assert swirl._last_frame[-1] == "\n"

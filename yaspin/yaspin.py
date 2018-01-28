@@ -156,11 +156,13 @@ class Yaspin(object):
 
     def ok(self, text="OK"):
         """Set Ok (success) finalizer to a spinner."""
-        self._freeze(text)
+        _text = text if text else "OK"
+        self._freeze(_text)
 
     def fail(self, text="FAIL"):
         """Set fail finalizer to a spinner."""
-        self._freeze(text)
+        _text = text if text else "FAIL"
+        self._freeze(_text)
 
     #
     # Protected
