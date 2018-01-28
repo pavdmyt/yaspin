@@ -167,10 +167,8 @@ class Yaspin(object):
     #
     def _freeze(self, final_text):
         """Stop spinner, compose last frame and 'freeze' it."""
-        if PY2:
-            final_text = to_unicode(final_text).strip()
-
-        self._last_frame = self._compose_out(final_text, mode="last")
+        text = to_unicode(final_text).strip()
+        self._last_frame = self._compose_out(text, mode="last")
 
         # Should be stopped here, otherwise prints after
         # self._freeze call will mess up the spinner

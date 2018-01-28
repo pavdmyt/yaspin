@@ -166,3 +166,26 @@ def colors_test_cases(request):
 ])
 def supported_colors(request):
     return request.param
+
+
+@pytest.fixture(scope="session", params=[
+    # Empty
+    b"",
+    u"",
+
+    # Success
+    b"OK",
+    u"OK",
+    b"\xe2\x9c\x94",
+    u"✔",
+
+    # Sun
+    b"\xe2\x98\x80\xef\xb8\x8f",
+    u"☀️",
+
+    # Spark
+    b"\xf0\x9f\x92\xa5",
+    u"💥",
+])
+def final_text(request):
+    return request.param

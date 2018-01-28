@@ -105,25 +105,6 @@ def test_set_spinner(spinner, expected):
     assert swirl.spinner == expected
 
 
-@pytest.mark.parametrize("final_text", [
-    "", u"",
-
-    "OK", u"OK",
-
-    "✔", u"✔",
-
-    "☀️", u"☀️",
-
-    "💥", u"💥",
-])
-def test_freeze(final_text):
-    swirl = yaspin()
-    swirl._freeze(final_text)
-
-    assert isinstance(swirl._last_frame, builtin_str)
-    assert swirl._last_frame[-1] == "\n"
-
-
 def test_ok():
     swirl = yaspin()
     swirl.ok()
