@@ -27,7 +27,7 @@ def custom_finalizers():
         time.sleep(2)
         sp.ok('☀️')
 
-    with yaspin(text="Processing...") as sp:
+    with yaspin(text="Processing...", right=True) as sp:
         time.sleep(2)
         sp.fail('💥')
 
