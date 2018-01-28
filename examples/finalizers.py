@@ -31,6 +31,10 @@ def custom_finalizers():
         time.sleep(2)
         sp.fail('💥')
 
+    with yaspin(text="Processing...") as sp:
+        time.sleep(2)
+        sp.ok(b'\xe2\x9c\x94')
+
 
 def main():
     default_finalizers()
