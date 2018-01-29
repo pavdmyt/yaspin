@@ -14,6 +14,7 @@ import pytest
 from yaspin import Spinner, yaspin
 from yaspin.base_spinner import default_spinner
 from yaspin.compat import basestring, builtin_str, str
+from yaspin.helpers import to_unicode
 
 
 #
@@ -54,14 +55,14 @@ def test_spinner_setter(frames, interval):
 #
 def test_text_getter(text):
     swirl = yaspin(text=text)
-    assert swirl.text == text
+    assert swirl.text == to_unicode(text)
 
 
 def test_text_setter(text):
     swirl = yaspin()
     swirl.text = text
     assert isinstance(swirl._text, str)
-    assert swirl._text == text
+    assert swirl._text == to_unicode(text)
 
 
 #
