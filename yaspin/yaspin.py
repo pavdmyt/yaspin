@@ -156,21 +156,21 @@ class Yaspin(object):
 
     def ok(self, text="OK"):
         """Set Ok (success) finalizer to a spinner."""
-        self._freeze(text)
+        _text = text if text else "OK"
+        self._freeze(_text)
 
     def fail(self, text="FAIL"):
         """Set fail finalizer to a spinner."""
-        self._freeze(text)
+        _text = text if text else "FAIL"
+        self._freeze(_text)
 
     #
     # Protected
     #
     def _freeze(self, final_text):
         """Stop spinner, compose last frame and 'freeze' it."""
-        if PY2:
-            final_text = to_unicode(final_text).strip()
-
-        self._last_frame = self._compose_out(final_text, mode="last")
+        text = to_unicode(final_text).strip()
+        self._last_frame = self._compose_out(text, mode="last")
 
         # Should be stopped here, otherwise prints after
         # self._freeze call will mess up the spinner
@@ -281,8 +281,8 @@ class Yaspin(object):
     @staticmethod
     def _set_text(text):
         if PY2:
-            return to_unicode(text).strip()
-        return text.strip()
+            return to_unicode(text)
+        return text
 
     @staticmethod
     def _set_color(color):

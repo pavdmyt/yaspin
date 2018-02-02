@@ -8,7 +8,7 @@ yaspin
 A lightweight and easy to use terminal spinner.
 No external dependencies.
 
-:copyright: (c) 2017 Pavlo Dmytrenko
+:copyright: (c) 2018 Pavlo Dmytrenko
 :license: MIT
 """
 
