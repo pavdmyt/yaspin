@@ -9,11 +9,6 @@ python:
   - 3.6
   - pypy
   - pypy3
-  - nightly
-
-allow_failures:
-  - python: pypy
-  - python: nightly
 
 install:
   - pip install -r requirements-test.txt
