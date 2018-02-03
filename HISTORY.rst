@@ -67,7 +67,3 @@ Release History
 ------------------
 
 * First version
-
-
-.. _cli-spinners: https://github.com/sindresorhus/cli-spinners
-.. _termcolor: https://pypi.python.org/pypi/termcolor
