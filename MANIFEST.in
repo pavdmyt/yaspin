@@ -1,4 +1,4 @@
-include README.md HISTORY.rst Features.rst LICENSE
+include README.rst HISTORY.rst LICENSE
 include requirements-dev.txt
 include requirements-test.txt
 

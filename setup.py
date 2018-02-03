@@ -24,9 +24,6 @@ from setuptools.command.test import test as TestCommand
 NAME = 'yaspin'
 LICENSE = 'MIT'
 DESCRIPTION = 'Yet Another Terminal Spinner'
-LONG_DESCR = ('Full-featured terminal spinner to show the progress during '
-              'long-hanging operations.'
-              'Find documentation here: https://github.com/pavdmyt/yaspin')
 URL = 'https://github.com/pavdmyt/yaspin'
 EMAIL = 'mail@pavdmyt.com'
 AUTHOR = 'Pavlo Dmytrenko'
@@ -56,10 +53,8 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 
-with codecs.open('HISTORY.rst', encoding='utf-8') as fd:
-    history = fd.read()
-with codecs.open('Features.rst', encoding='utf-8') as fd:
-    features = fd.read()
+with codecs.open('README.rst', encoding='utf-8') as fd:
+    readme = fd.read()
 
 
 tests_require = [
@@ -74,7 +69,7 @@ setup(
     author_email=EMAIL,
     license=LICENSE,
     description=DESCRIPTION,
-    long_description=LONG_DESCR + "\n\n" + features + "\n\n" + history,
+    long_description=readme,
     url=URL,
     packages=find_packages(exclude=('tests', 'docs', 'examples')),
     include_package_data=True,
