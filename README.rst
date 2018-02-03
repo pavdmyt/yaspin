@@ -1,7 +1,7 @@
 yaspin |Build Status| |Coverage| |Codacy| |pypi| |Versions| |Wheel| |Examples|
 ==============================================================================
 
-**Y**et **A**nother Terminal **Spin**ner for Python.
+**Y**\ et **A**\ nother Terminal **Spin**\ ner for Python.
 
 **Yaspin** provides a full-featured terminal spinner to show the progress during long-hanging operations.
 
