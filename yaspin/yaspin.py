@@ -158,7 +158,11 @@ class Yaspin(object):
         """Writes some text without breaking the spinner."""
         sys.stdout.write("\r")
         self._clear_line()
-        sys.stdout.write("{0}\n".format(to_unicode(text).strip()))
+
+        text = to_unicode(text).strip()
+        if PY2:
+            text = text.encode(ENCODING)
+        sys.stdout.write("{0}\n".format(text))
 
     def ok(self, text="OK"):
         """Set Ok (success) finalizer to a spinner."""

@@ -11,7 +11,8 @@ And all output data is converted to builtin str type.
 import pytest
 
 from yaspin import Spinner, yaspin
-from yaspin.compat import builtin_str, str, basestring
+from yaspin.constants import ENCODING
+from yaspin.compat import builtin_str, str, basestring, PY2
 
 
 def test_input_converted_to_unicode(text, frames, interval, right, reverse):
@@ -69,7 +70,13 @@ def test_write(capsys, text):
     # cleans stdout for _clear_line and \r
     out = out.replace('\r\033[K', '')
 
-    assert isinstance(out, builtin_str)
+    # handle out and text encodings (come out messy in PY2)
+    if PY2:
+        out = out.encode(ENCODING)
+        if isinstance(text, unicode):
+            text = text.encode(ENCODING)
+
+    assert isinstance(out, basestring)
     assert out[-1] == '\n'
     if len(text) > 0:
         assert out[:-1] == text
