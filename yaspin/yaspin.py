@@ -154,6 +154,11 @@ class Yaspin(object):
         if sys.stdout.isatty():
             self._show_cursor()
 
+    def write(self, text):
+        sys.stdout.write("\r")
+        self._clear_line()
+        sys.stdout.write("{0}\n".format(to_unicode(text).strip()))
+
     def ok(self, text="OK"):
         """Set Ok (success) finalizer to a spinner."""
         _text = text if text else "OK"

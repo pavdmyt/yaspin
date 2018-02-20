@@ -60,3 +60,16 @@ def test_compose_out_with_color(colors_test_cases):
     out = swirl._compose_out(frame=u'/')
     assert out.startswith('\r\033')
     assert isinstance(out, builtin_str)
+
+
+def test_write(capsys, text):
+    swirl = yaspin()
+    swirl.write(text)
+    (out, err,) = capsys.readouterr()
+    # cleans stdout for _clear_line and \r
+    out = out.replace('\r\033[K', '')
+
+    assert isinstance(out, builtin_str)
+    assert out[-1] == '\n'
+    if len(text) > 0:
+        assert out[:-1] == text
