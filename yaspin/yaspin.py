@@ -155,6 +155,7 @@ class Yaspin(object):
             self._show_cursor()
 
     def write(self, text):
+        """Writes some text without breaking the spinner."""
         sys.stdout.write("\r")
         self._clear_line()
         sys.stdout.write("{0}\n".format(to_unicode(text).strip()))
