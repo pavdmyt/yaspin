@@ -11,8 +11,8 @@ And all output data is converted to builtin str type.
 import pytest
 
 from yaspin import Spinner, yaspin
+from yaspin.compat import PY2, basestring, builtin_str, str
 from yaspin.constants import ENCODING
-from yaspin.compat import builtin_str, str, basestring, PY2
 
 
 def test_input_converted_to_unicode(text, frames, interval, right, reverse):
