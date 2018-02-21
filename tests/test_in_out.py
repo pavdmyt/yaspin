@@ -72,9 +72,12 @@ def test_write(capsys, text):
     out = out.replace('\r\033[K', '')
 
     # handle out and text encodings (come out messy in PY2)
+    # Under PY2 ``capsys.readouterr`` always produces ``out``
+    # of type ``unicode``. Conversion to bytes is required
+    # for proper ``out`` and ``text`` comparison.
     if PY2:
         out = out.encode(ENCODING)
-        if isinstance(text, unicode):
+        if isinstance(text, str):
             text = text.encode(ENCODING)
 
     assert isinstance(out, basestring)
