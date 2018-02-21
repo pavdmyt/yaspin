@@ -159,10 +159,14 @@ class Yaspin(object):
         sys.stdout.write("\r")
         self._clear_line()
 
-        text = to_unicode(text).strip()
+        _text = to_unicode(text).strip()
         if PY2:
-            text = text.encode(ENCODING)
-        sys.stdout.write("{0}\n".format(text))
+            _text = _text.encode(ENCODING)
+
+        # Ensure output is bytes for Py2 and Unicode for Py3
+        assert isinstance(_text, builtin_str)
+
+        sys.stdout.write("{0}\n".format(_text))
 
     def ok(self, text="OK"):
         """Set Ok (success) finalizer to a spinner."""

@@ -66,8 +66,9 @@ def test_compose_out_with_color(colors_test_cases):
 def test_write(capsys, text):
     swirl = yaspin()
     swirl.write(text)
-    (out, err,) = capsys.readouterr()
-    # cleans stdout for _clear_line and \r
+
+    out, _ = capsys.readouterr()
+    # cleans stdout from _clear_line and \r
     out = out.replace('\r\033[K', '')
 
     # handle out and text encodings (come out messy in PY2)
@@ -78,5 +79,5 @@ def test_write(capsys, text):
 
     assert isinstance(out, basestring)
     assert out[-1] == '\n'
-    if len(text) > 0:
+    if text:
         assert out[:-1] == text
