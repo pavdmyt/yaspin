@@ -71,10 +71,13 @@ setup(
     description=DESCRIPTION,
     long_description=readme,
     url=URL,
+    download_url='https://github.com/pavdmyt/yaspin/archive/master.zip',
     packages=find_packages(exclude=('tests', 'docs', 'examples')),
     include_package_data=True,
     tests_require=tests_require,
     cmdclass={'test': PyTest},
+    keywords='progressmeter progress meter rate console terminal console cli'
+             ' loading loader indicator spinner spinners time busy wait idle',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
