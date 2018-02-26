@@ -205,6 +205,34 @@ Change spinner properties on the fly
 
         time.sleep(2)
 
+
+Writing messages
+////////////////
+
+.. image:: https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/write_text.gif
+
+You should not write any message in the terminal using ``print`` while spinner is open.
+To write messages in the terminal without any collision with ``yaspin`` spinner, a ``.write()`` method is provided:
+
+.. code:: python
+
+    # -*- coding: utf-8 -*-
+    import time
+    from yaspin import yaspin
+
+    with yaspin(text="Downloading images", color="cyan") as sp:
+        # task 1
+        time.sleep(1)
+        sp.write("> image 1 download complete")
+
+        # task 2
+        time.sleep(2)
+        sp.write("> image 2 download complete")
+
+        # finalize
+        sp.ok("✔")
+
+
 More `examples`_.
 
 
