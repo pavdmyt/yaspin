@@ -155,7 +155,9 @@ class Yaspin(object):
             self._show_cursor()
 
     def write(self, text):
-        """Writes some text without breaking the spinner."""
+        """Write text in the terminal without breaking the spinner."""
+        # similar to tqdm.write()
+        # https://pypi.python.org/pypi/tqdm#writing-messages
         sys.stdout.write("\r")
         self._clear_line()
 
