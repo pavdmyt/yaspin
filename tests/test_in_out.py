@@ -91,14 +91,27 @@ def test_write(capsys, text):
 
 def test_hide_show(capsys, text):
     swirl = yaspin()
+    swirl.start()
+
     swirl.hide()
+    # ensure that hidden spinner flag was set
+    assert swirl._hide_spin.is_set()
+    out, _ = capsys.readouterr()
+    # ensure that text was cleared with the hide method
+    assert out[-4:] == '\r\033[K'
+
     # properly encode text to unicode if running in PY2
     sys.stdout.write('{0}\n'.format(
         to_unicode(text).encode(ENCODING) if PY2 else text
     ))
-    swirl.show()
-
     out, _ = capsys.readouterr()
+    # cleans stdout from _clear_line and \r
+    out = out.replace('\r\033[K', '')
+
+    # handle out and text encodings (come out messy in PY2)
+    # Under PY2 ``capsys.readouterr`` always produces ``out``
+    # of type ``unicode``. Conversion to bytes is required
+    # for proper ``out`` and ``text`` comparison.
     if PY2:
         out = out.encode(ENCODING)
         if isinstance(text, str):
@@ -108,3 +121,12 @@ def test_hide_show(capsys, text):
     assert out[-1] == '\n'
     if text:
         assert out[:-1] == text
+
+    swirl.show()
+    # ensure that hidden spinner flag was cleared
+    assert not swirl._hide_spin.is_set()
+    out, _ = capsys.readouterr()
+    # ensure that text was cleared before resuming the spinner
+    assert out[:4] == '\r\033[K'
+
+    swirl.stop()
