@@ -8,10 +8,13 @@ Checks that all input data is converted to unicode.
 And all output data is converted to builtin str type.
 """
 
+import sys
+
 import pytest
 
 from yaspin import Spinner, yaspin
 from yaspin.compat import PY2, basestring, builtin_str, str
+from yaspin.helpers import to_unicode
 from yaspin.constants import ENCODING
 
 
@@ -75,6 +78,27 @@ def test_write(capsys, text):
     # Under PY2 ``capsys.readouterr`` always produces ``out``
     # of type ``unicode``. Conversion to bytes is required
     # for proper ``out`` and ``text`` comparison.
+    if PY2:
+        out = out.encode(ENCODING)
+        if isinstance(text, str):
+            text = text.encode(ENCODING)
+
+    assert isinstance(out, basestring)
+    assert out[-1] == '\n'
+    if text:
+        assert out[:-1] == text
+
+
+def test_hide_show(capsys, text):
+    swirl = yaspin()
+    swirl.hide()
+    # properly encode text to unicode if running in PY2
+    sys.stdout.write('{0}\n'.format(
+        to_unicode(text).encode(ENCODING) if PY2 else text
+    ))
+    swirl.show()
+
+    out, _ = capsys.readouterr()
     if PY2:
         out = out.encode(ENCODING)
         if isinstance(text, str):

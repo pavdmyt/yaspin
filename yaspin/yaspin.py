@@ -140,6 +140,7 @@ class Yaspin(object):
             self._hide_cursor()
 
         self._stop_spin = threading.Event()
+        self._hide_spin = threading.Event()
         self._spin_thread = threading.Thread(target=self._spin)
         self._spin_thread.start()
 
@@ -153,6 +154,31 @@ class Yaspin(object):
 
         if sys.stdout.isatty():
             self._show_cursor()
+
+    def hide(self):
+        """Hide the spinner to allow for custom writing to the terminal."""
+        if self._spin_thread and self._spin_thread.is_alive() and \
+                not self._hide_spin.is_set():
+            # set the hidden spinner flag
+            self._hide_spin.set()
+
+            # clear the current line
+            sys.stdout.write("\r")
+            self._clear_line()
+
+            # flush the stdout buffer so the current line can be rewritten to
+            sys.stdout.flush()
+
+    def show(self):
+        """Show the hidden spinner."""
+        if self._spin_thread and self._spin_thread.is_alive() and \
+                self._hide_spin.is_set():
+            # clear the hidden spinner flag
+            self._hide_spin.clear()
+
+            # clear the current line so the spinner is not appended to it
+            sys.stdout.write("\r")
+            self._clear_line()
 
     def write(self, text):
         """Write text in the terminal without breaking the spinner."""
@@ -195,18 +221,19 @@ class Yaspin(object):
 
     def _spin(self):
         while not self._stop_spin.is_set():
-            # Compose output
-            spin_phase = next(self._cycle)
-            out = self._compose_out(spin_phase)
+            if not self._hide_spin.is_set():
+                # Compose output
+                spin_phase = next(self._cycle)
+                out = self._compose_out(spin_phase)
 
-            # Write
-            sys.stdout.write(out)
-            self._clear_line()
-            sys.stdout.flush()
+                # Write
+                sys.stdout.write(out)
+                self._clear_line()
+                sys.stdout.flush()
 
-            # Wait
-            time.sleep(self._interval)
-            sys.stdout.write('\b')
+                # Wait
+                time.sleep(self._interval)
+                sys.stdout.write('\b')
 
     def _compose_out(self, frame, mode=None):
         # Ensure Unicode input
