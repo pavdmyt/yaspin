@@ -11,7 +11,8 @@ And all output data is converted to builtin str type.
 import pytest
 
 from yaspin import Spinner, yaspin
-from yaspin.compat import builtin_str, str, basestring
+from yaspin.compat import PY2, basestring, builtin_str, str
+from yaspin.constants import ENCODING
 
 
 def test_input_converted_to_unicode(text, frames, interval, right, reverse):
@@ -60,3 +61,26 @@ def test_compose_out_with_color(colors_test_cases):
     out = swirl._compose_out(frame=u'/')
     assert out.startswith('\r\033')
     assert isinstance(out, builtin_str)
+
+
+def test_write(capsys, text):
+    swirl = yaspin()
+    swirl.write(text)
+
+    out, _ = capsys.readouterr()
+    # cleans stdout from _clear_line and \r
+    out = out.replace('\r\033[K', '')
+
+    # handle out and text encodings (come out messy in PY2)
+    # Under PY2 ``capsys.readouterr`` always produces ``out``
+    # of type ``unicode``. Conversion to bytes is required
+    # for proper ``out`` and ``text`` comparison.
+    if PY2:
+        out = out.encode(ENCODING)
+        if isinstance(text, str):
+            text = text.encode(ENCODING)
+
+    assert isinstance(out, basestring)
+    assert out[-1] == '\n'
+    if text:
+        assert out[:-1] == text

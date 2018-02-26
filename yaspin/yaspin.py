@@ -154,6 +154,22 @@ class Yaspin(object):
         if sys.stdout.isatty():
             self._show_cursor()
 
+    def write(self, text):
+        """Write text in the terminal without breaking the spinner."""
+        # similar to tqdm.write()
+        # https://pypi.python.org/pypi/tqdm#writing-messages
+        sys.stdout.write("\r")
+        self._clear_line()
+
+        _text = to_unicode(text).strip()
+        if PY2:
+            _text = _text.encode(ENCODING)
+
+        # Ensure output is bytes for Py2 and Unicode for Py3
+        assert isinstance(_text, builtin_str)
+
+        sys.stdout.write("{0}\n".format(_text))
+
     def ok(self, text="OK"):
         """Set Ok (success) finalizer to a spinner."""
         _text = text if text else "OK"
