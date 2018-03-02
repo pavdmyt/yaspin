@@ -29,23 +29,23 @@ style = Style.from_dict({
 })
 
 
-with yaspin(text='Downloading images') as spinner:
+with yaspin(text='Downloading images') as sp:
 
     # task 1
     time.sleep(1)
-    spinner.hide()
+    sp.hide()
     print(HTML(
         '<b>></b> <msg>image 1</msg> <sub-msg>download complete</sub-msg>'
     ), style=style)
-    spinner.show()
+    sp.show()
 
     # task 2
     time.sleep(2)
-    spinner.hide()
+    sp.hide()
     print(HTML(
         '<b>></b> <msg>image 2</msg> <sub-msg>download complete</sub-msg>'
     ), style=style)
-    spinner.show()
+    sp.show()
 
     # finalize
-    spinner.ok()
+    sp.ok()
