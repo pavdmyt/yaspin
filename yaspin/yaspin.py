@@ -55,6 +55,7 @@ class Yaspin(object):
         self._reverse = reverse
 
         self._stop_spin = None
+        self._hide_spin = None
         self._spin_thread = None
         self._last_frame = None
 
