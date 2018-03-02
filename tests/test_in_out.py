@@ -112,9 +112,12 @@ def test_hide_show(capsys, text, request):
     assert out[-4:] == '\r\033[K'
 
     # properly encode text to unicode if running in PY2
-    sys.stdout.write('{0}\n'.format(
-        to_unicode(text).encode(ENCODING) if PY2 else text
-    ))
+    if PY2:
+        text = to_unicode(text).encode(ENCODING)
+
+    # ``\n`` is required to flush stdout during
+    # the hidden state of the spinner
+    sys.stdout.write('{0}\n'.format(text))
     out, _ = capsys.readouterr()
 
     # cleans stdout from _clear_line and \r
