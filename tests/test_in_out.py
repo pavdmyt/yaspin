@@ -14,8 +14,8 @@ import pytest
 
 from yaspin import Spinner, yaspin
 from yaspin.compat import PY2, basestring, builtin_str, str
-from yaspin.helpers import to_unicode
 from yaspin.constants import ENCODING
+from yaspin.helpers import to_unicode
 
 
 def test_input_converted_to_unicode(text, frames, interval, right, reverse):
