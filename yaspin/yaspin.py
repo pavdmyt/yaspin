@@ -158,8 +158,9 @@ class Yaspin(object):
 
     def hide(self):
         """Hide the spinner to allow for custom writing to the terminal."""
-        if self._spin_thread and self._spin_thread.is_alive() and \
-                not self._hide_spin.is_set():
+        thr_is_alive = self._spin_thread and self._spin_thread.is_alive()
+
+        if thr_is_alive and not self._hide_spin.is_set():
             # set the hidden spinner flag
             self._hide_spin.set()
 
@@ -172,8 +173,9 @@ class Yaspin(object):
 
     def show(self):
         """Show the hidden spinner."""
-        if self._spin_thread and self._spin_thread.is_alive() and \
-                self._hide_spin.is_set():
+        thr_is_alive = self._spin_thread and self._spin_thread.is_alive()
+
+        if thr_is_alive and self._hide_spin.is_set():
             # clear the hidden spinner flag
             self._hide_spin.clear()
 
@@ -222,19 +224,24 @@ class Yaspin(object):
 
     def _spin(self):
         while not self._stop_spin.is_set():
-            if not self._hide_spin.is_set():
-                # Compose output
-                spin_phase = next(self._cycle)
-                out = self._compose_out(spin_phase)
 
-                # Write
-                sys.stdout.write(out)
-                self._clear_line()
-                sys.stdout.flush()
-
-                # Wait
+            if self._hide_spin.is_set():
+                # Wait a bit to avoid wasting cycles
                 time.sleep(self._interval)
-                sys.stdout.write('\b')
+                continue
+
+            # Compose output
+            spin_phase = next(self._cycle)
+            out = self._compose_out(spin_phase)
+
+            # Write
+            sys.stdout.write(out)
+            self._clear_line()
+            sys.stdout.flush()
+
+            # Wait
+            time.sleep(self._interval)
+            sys.stdout.write('\b')
 
     def _compose_out(self, frame, mode=None):
         # Ensure Unicode input
