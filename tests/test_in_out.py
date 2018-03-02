@@ -89,14 +89,25 @@ def test_write(capsys, text):
         assert out[:-1] == text
 
 
-def test_hide_show(capsys, text):
+def test_hide_show(capsys, text, request):
+    # Setup
     swirl = yaspin()
     swirl.start()
 
+    # Ensure that swirl.stop() will be executed
+    def teardown():
+        swirl.stop()
+    request.addfinalizer(teardown)
+
+    #
+    # Actual test
+    #
     swirl.hide()
+
     # ensure that hidden spinner flag was set
     assert swirl._hide_spin.is_set()
     out, _ = capsys.readouterr()
+
     # ensure that text was cleared with the hide method
     assert out[-4:] == '\r\033[K'
 
@@ -105,6 +116,7 @@ def test_hide_show(capsys, text):
         to_unicode(text).encode(ENCODING) if PY2 else text
     ))
     out, _ = capsys.readouterr()
+
     # cleans stdout from _clear_line and \r
     out = out.replace('\r\033[K', '')
 
@@ -123,10 +135,10 @@ def test_hide_show(capsys, text):
         assert out[:-1] == text
 
     swirl.show()
+
     # ensure that hidden spinner flag was cleared
     assert not swirl._hide_spin.is_set()
     out, _ = capsys.readouterr()
+
     # ensure that text was cleared before resuming the spinner
     assert out[:4] == '\r\033[K'
-
-    swirl.stop()
