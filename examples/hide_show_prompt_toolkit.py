@@ -13,11 +13,14 @@ https://github.com/jonathanslenders/python-prompt-toolkit/
     pip install -e git+https://github.com/jonathanslenders/python-prompt-toolkit@2.0#egg=python-prompt-toolkit
 """
 
+from __future__ import print_function
+
 import time
 
 from prompt_toolkit import HTML, print_formatted_text
 from prompt_toolkit.styles import Style
 from yaspin import yaspin
+
 
 # override print with feature-rich ``print_formatted_text`` from prompt_toolkit
 print = print_formatted_text
@@ -35,7 +38,7 @@ with yaspin(text='Downloading images') as sp:
     time.sleep(1)
     sp.hide()
     print(HTML(
-        '<b>></b> <msg>image 1</msg> <sub-msg>download complete</sub-msg>'
+        u'<b>></b> <msg>image 1</msg> <sub-msg>download complete</sub-msg>'
     ), style=style)
     sp.show()
 
@@ -43,7 +46,7 @@ with yaspin(text='Downloading images') as sp:
     time.sleep(2)
     sp.hide()
     print(HTML(
-        '<b>></b> <msg>image 2</msg> <sub-msg>download complete</sub-msg>'
+        u'<b>></b> <msg>image 2</msg> <sub-msg>download complete</sub-msg>'
     ), style=style)
     sp.show()
 
