@@ -34,6 +34,7 @@ Features
 - Runs at all major **CPython** versions (*2.6*, *2.7*, *3.3*, *3.4*, *3.5*, *3.6*), **PyPy** and **PyPy3**
 - Supports all (60+) spinners from `cli-spinners`_
 - Supports all *colors*, *highlights*, *attributes* and their mixes from `termcolor`_ library
+- Easy to combine with other command-line libraries, e.g. `prompt-toolkit`_
 - Flexible API, easy to integrate with existing code
 - Safe **pipes** and **redirects**:
 
@@ -233,6 +234,60 @@ To write messages in the terminal without any collision with ``yaspin`` spinner,
         sp.ok("✔")
 
 
+Integration with other libraries
+////////////////////////////////
+
+.. image:: https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/hide_show.gif
+
+Utilizing ``hide`` and ``show`` methods it is possible to toggle the display of
+the spinner in order to call custom methods that write to the terminal. This is
+helpful for allowing easy usage in other frameworks like `prompt-toolkit`_.
+Using the powerful ``print_formatted_text`` function allows you even to apply
+HTML formats and CSS styles to the output:
+
+.. code:: python
+
+    # -*- coding: utf-8 -*-
+    from __future__ import print_function
+
+    import sys
+    import time
+
+    from yaspin import yaspin
+    from prompt_toolkit import HTML, print_formatted_text
+    from prompt_toolkit.styles import Style
+
+    # override print with feature-rich ``print_formatted_text`` from prompt_toolkit
+    print = print_formatted_text
+
+    # build a basic prompt_toolkit style for styling the HTML wrapped text
+    style = Style.from_dict({
+        'msg': '#4caf50 bold',
+        'sub-msg': '#616161 italic'
+    })
+
+
+    with yaspin(text='Downloading images') as sp:
+        # task 1
+        time.sleep(1)
+        sp.hide()
+        print(HTML(
+            u'<b>></b> <msg>image 1</msg> <sub-msg>download complete</sub-msg>'
+        ), style=style)
+        sp.show()
+
+        # task 2
+        time.sleep(2)
+        sp.hide()
+        print(HTML(
+            u'<b>></b> <msg>image 2</msg> <sub-msg>download complete</sub-msg>'
+        ), style=style)
+        sp.show()
+
+        # finalize
+        sp.ok()
+
+
 More `examples`_.
 
 
@@ -309,3 +364,4 @@ License
 .. _PyPI: https://pypi.org/
 .. _🌈: https://en.wikipedia.org/wiki/Any_Colour_You_Like
 .. _examples: https://github.com/pavdmyt/yaspin/tree/master/examples
+.. _prompt-toolkit: https://github.com/jonathanslenders/python-prompt-toolkit/tree/2.0

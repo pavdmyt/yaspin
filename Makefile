@@ -55,9 +55,16 @@ publish: flake check-rst rm-build
 	@python setup.py sdist upload -r pypi
 	@python setup.py bdist_wheel --universal upload -r pypi
 
+tag:
+	@echo "$(OK_COLOR)==> Creating tag $(version) ...$(NO_COLOR)"
+	@git tag -a "v$(version)" -m "Version $(version)"
+	@echo "$(OK_COLOR)==> Pushing tag $(version) to origin ...$(NO_COLOR)"
+	@git push origin "v$(version)"
+
 bump:
 	@bumpversion                                                  \
 		--commit                                                  \
+		--tag                                                     \
 		--current-version $(version) patch                        \
 		./$(name)/__version__.py                                  \
 		--allow-dirty
@@ -65,6 +72,7 @@ bump:
 bump-minor:
 	@bumpversion                                                  \
 		--commit                                                  \
+		--tag                                                     \
 		--current-version $(version) minor                        \
 		./$(name)/__version__.py                                  \
 		--allow-dirty
