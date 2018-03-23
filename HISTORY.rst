@@ -1,6 +1,11 @@
 Release History
 ===============
 
+0.10.0 / 2018-03-23
+-------------------
+
+* New ``hide`` and ``show`` methods to toogle the display of the spinner
+
 0.9.0 / 2018-02-26
 ------------------
 
