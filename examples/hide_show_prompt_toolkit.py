@@ -15,11 +15,22 @@ https://github.com/jonathanslenders/python-prompt-toolkit/
 
 from __future__ import print_function
 
+import sys
 import time
 
-from prompt_toolkit import HTML, print_formatted_text
-from prompt_toolkit.styles import Style
 from yaspin import yaspin
+
+try:
+    from prompt_toolkit import HTML, print_formatted_text
+    from prompt_toolkit.styles import Style
+except ImportError:
+    print(
+        "This example requires python-prompt-tooklit >= 2.0:\n"
+        "https://github.com/jonathanslenders/python-prompt-toolkit/tree/2.0\n"
+        "\nTo install it, run:\n"
+        "pip install -e git+https://github.com/jonathanslenders/python-prompt-toolkit@2.0#egg=python-prompt-toolkit"
+    )
+    sys.exit(1)
 
 
 # override print with feature-rich ``print_formatted_text`` from prompt_toolkit
