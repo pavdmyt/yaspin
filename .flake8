@@ -6,6 +6,7 @@ exclude =
     __pycache__,
     dist,
     build,
+    examples/hide_show_prompt_toolkit.py,
     # project specific
     yaspin/termcolor.py,
     gif-compose
