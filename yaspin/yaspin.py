@@ -183,14 +183,32 @@ class Yaspin(object):
             sys.stdout.write("\r")
             self._clear_line()
 
-    def write(self, text):
-        """Write text in the terminal without breaking the spinner."""
+    def write(self, text, lstrip=True, rstrip=True):
+        """Write text in the terminal without breaking the spinner.
+
+        By default, this strips the provided string on both ends.
+        This behaviour is configurable with the 'lstrip' and 'rstrip'
+        arguments, which can either be booleans, or lists of chars.
+        In the latter case, the value of the argument will be forwarded
+        to the lstrip/rstrip function.
+        """
         # similar to tqdm.write()
         # https://pypi.python.org/pypi/tqdm#writing-messages
         sys.stdout.write("\r")
         self._clear_line()
 
-        _text = to_unicode(text).strip()
+        _text = to_unicode(text)
+        if lstrip:
+            if isinstance(lstrip, bool):
+                _text = _text.lstrip()
+            else:
+                _text = _text.lstrip(lstrip)
+        if rstrip:
+            if isinstance(rstrip, bool):
+                _text = _text.rstrip()
+            else:
+                _text = _text.rstrip(rstrip)
+
         if PY2:
             _text = _text.encode(ENCODING)
 
