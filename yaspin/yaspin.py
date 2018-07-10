@@ -349,7 +349,7 @@ class Yaspin(object):
 
         if c_lower not in available_text_colors:
             raise ValueError(
-                "{0}: unsupported text color. Use on of the: {1}"
+                "{0}: unsupported text color. Use one of the: {1}"
                 .format(c_lower, available_text_colors)
             )
 
