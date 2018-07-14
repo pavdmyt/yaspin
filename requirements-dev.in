@@ -3,11 +3,11 @@ better-exceptions~=0.2.1
 flake8~=3.5.0
 isort~=4.3.4
 pylint~=1.9.2
-pytest<3.3.0             # 3.3.0 no longer supports Python 2.6 and 3.3
-pytest-xdist<1.21.0      # 1.21.0 dropped support for Python 2.6
+pytest~=3.6.3
+pytest-xdist~=1.22.2
 pytest-cov~=2.5.1
 pytest-sugar~=0.9.1
-tox<3.0.0                # 3.0.0 no longer supports Python 2.6 and 3.3
+tox~=3.1.2
 
 # required for `python setup.py check --restructuredtext -s`
 docutils~=0.14
