@@ -14,6 +14,7 @@ for pipes and redirects:
 
 import os
 import sys
+import uuid
 
 import pytest
 
@@ -45,9 +46,14 @@ def to_unicode(str_or_bytes, encoding=ENCODING):
     return str_or_bytes
 
 
-def test_piping_output(text, frames, interval):
-    py_fname = "spin.py"
-    fname = "out.txt"
+@pytest.fixture()
+def case_id():
+    return str(uuid.uuid4())
+
+
+def test_piping_output(text, frames, interval, case_id):
+    py_fname = "spin-{0}.py".format(case_id)
+    fname = "out-{0}.txt".format(case_id)
 
     def teardown():
         os.remove(py_fname)

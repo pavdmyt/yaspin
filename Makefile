@@ -30,7 +30,8 @@ clean-pyc:
 
 test: clean-pyc flake
 	@echo "$(OK_COLOR)==> Runnings tests ...$(NO_COLOR)"
-	@py.test
+	@py.test -k "not test_piping_output"
+	@py.test -n auto -k "test_piping_output"
 
 coverage: clean-pyc
 	@echo "$(OK_COLOR)==> Calculating coverage...$(NO_COLOR)"
