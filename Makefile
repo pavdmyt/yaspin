@@ -35,7 +35,7 @@ test: clean-pyc flake
 
 coverage: clean-pyc
 	@echo "$(OK_COLOR)==> Calculating coverage...$(NO_COLOR)"
-	@py.test --cov-report term --cov-report html --cov $(name) tests/
+	@pipenv run py.test --cov-report term --cov-report html --cov $(name) tests/
 	@echo "open file://`pwd`/htmlcov/index.html"
 
 rm-build:
@@ -77,3 +77,9 @@ bump-minor:
 		--current-version $(version) minor                        \
 		./$(name)/__version__.py                                  \
 		--allow-dirty
+
+travis-setup:
+	pip install pipenv --upgrade
+	pipenv install pytest~=3.6.3 --skip-lock
+	pipenv install pytest-cov~=2.5.1 --skip-lock
+	pipenv install python-coveralls~=2.9.1 --skip-lock

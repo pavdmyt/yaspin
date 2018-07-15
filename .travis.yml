@@ -10,7 +10,7 @@ python:
   - pypy3
 
 install:
-  - pip install -r requirements-test.txt
+  - make travis-setup
 
 script:
   - make coverage

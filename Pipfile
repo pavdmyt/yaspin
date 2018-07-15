@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+
+[dev-packages]
+bumpversion = "~=0.5.3"
+"flake8" = "~=3.5.0"
+isort = "~=4.3.4"
+pylint = "~=1.9.2"
+pytest = "~=3.6.3"
+pytest-xdist = "~=1.22.2"
+pytest-cov = "~=2.5.1"
+pytest-sugar = "~=0.9.1"
+tox = "~=3.1.2"
+docutils = "~=0.14"
+better_exceptions = "~=0.2.1"
+Pygments = "~=2.2.0"
