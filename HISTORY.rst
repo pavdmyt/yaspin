@@ -1,6 +1,16 @@
 Release History
 ===============
 
+0.12.0 / 2018-07-16
+-------------------
+
+* Add support for Python 3.7
+* Drop support for Python 2.6 and 3.3
+
+* dev: Migrate to Pipfile
+* dev: Speedup local unittests with pytest-xdist
+
+
 0.11.1 / 2018-07-10
 -------------------
 
