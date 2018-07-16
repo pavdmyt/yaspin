@@ -305,7 +305,7 @@ Install dev dependencies:
 
 .. code-block:: bash
 
-    pip install -r requirements-dev.txt
+    pipenv install --dev
 
 
 Lint code:
