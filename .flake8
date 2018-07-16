@@ -2,6 +2,7 @@
 exclude =
     .git,
     .tox,
+    .venv,
     .cache,
     __pycache__,
     dist,
