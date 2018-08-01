@@ -18,7 +18,7 @@ def context_manager_default():
 
 
 def context_manager_line():
-    line_spinner = Spinner('-\\|/', 150)
+    line_spinner = Spinner("-\\|/", 150)
     with yaspin(line_spinner, "line"):
         time.sleep(3)
 
@@ -34,5 +34,5 @@ def main():
     decorated_function()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

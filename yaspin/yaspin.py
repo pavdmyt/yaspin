@@ -42,8 +42,9 @@ class Yaspin(object):
     # Thats why in Py2, output should be encoded manually with desired
     # encoding in order to support pipes and redirects.
 
-    def __init__(self, spinner=None, text='',
-                 color=None, right=False, reverse=False):
+    def __init__(
+        self, spinner=None, text="", color=None, right=False, reverse=False
+    ):
         self._spinner = self._set_spinner(spinner)
         self._frames = self._set_frames(self._spinner, reverse)
         self._interval = self._set_interval(self._spinner)
@@ -63,7 +64,7 @@ class Yaspin(object):
     # Dunders
     #
     def __repr__(self):
-        repr_ = u'<Yaspin frames={0!s}>'.format(self._frames)
+        repr_ = u"<Yaspin frames={0!s}>".format(self._frames)
         if PY2:
             return repr_.encode(ENCODING)
         return repr_
@@ -83,6 +84,7 @@ class Yaspin(object):
         def inner(*args, **kwargs):
             with self:
                 return fn(*args, **kwargs)
+
         return inner
 
     #
@@ -241,7 +243,7 @@ class Yaspin(object):
 
             # Wait
             time.sleep(self._interval)
-            sys.stdout.write('\b')
+            sys.stdout.write("\b")
 
     def _compose_out(self, frame, mode=None):
         # Ensure Unicode input
@@ -291,7 +293,7 @@ class Yaspin(object):
     @staticmethod
     def _set_frames(spinner, reverse):
         # type: (base_spinner.Spinner, bool) -> Union[str, List]
-        uframes = None      # unicode frames
+        uframes = None  # unicode frames
         uframes_seq = None  # sequence of unicode frames
 
         if isinstance(spinner.frames, basestring):
@@ -342,15 +344,22 @@ class Yaspin(object):
             return color
 
         available_text_colors = (
-            "red", "green", "yellow", "blue", "magenta", "cyan", "white",
+            "red",
+            "green",
+            "yellow",
+            "blue",
+            "magenta",
+            "cyan",
+            "white",
         )
 
         c_lower = color.lower()
 
         if c_lower not in available_text_colors:
             raise ValueError(
-                "{0}: unsupported text color. Use one of the: {1}"
-                .format(c_lower, available_text_colors)
+                "{0}: unsupported text color. Use one of the: {1}".format(
+                    c_lower, available_text_colors
+                )
             )
 
         return c_lower
@@ -370,7 +379,7 @@ class Yaspin(object):
         sys.stdout.write("\033[K")
 
 
-def yaspin(spinner=None, text='', color=None, right=False, reverse=False):
+def yaspin(spinner=None, text="", color=None, right=False, reverse=False):
     """Display spinner in stdout.
 
     Can be used as a context manager or as a function decorator.
@@ -412,9 +421,5 @@ def yaspin(spinner=None, text='', color=None, right=False, reverse=False):
 
     """
     return Yaspin(
-        spinner=spinner,
-        text=text,
-        color=color,
-        right=right,
-        reverse=reverse,
+        spinner=spinner, text=text, color=color, right=right, reverse=reverse
     )

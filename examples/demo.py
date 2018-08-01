@@ -17,26 +17,26 @@ from yaspin.termcolor import colored
 
 def any_spinner_you_like():
     params = [
-        ("line",         0.8),
-        ("dots10",       0.8),
-        ("dots11",       0.8),
-        ("simpleDots",   1),
-        ("star",         0.5),
-        ("balloon",      0.7),
-        ("noise",        0.5),
-        ("arc",          0.5),
-        ("arrow2",       0.5),
-        ("bouncingBar",  1),
+        ("line", 0.8),
+        ("dots10", 0.8),
+        ("dots11", 0.8),
+        ("simpleDots", 1),
+        ("star", 0.5),
+        ("balloon", 0.7),
+        ("noise", 0.5),
+        ("arc", 0.5),
+        ("arrow2", 0.5),
+        ("bouncingBar", 1),
         ("bouncingBall", 1),
-        ("smiley",       0.7),
-        ("hearts",       0.5),
-        ("clock",        0.7),
-        ("earth",        0.7),
-        ("moon",         0.7),
-        ("runner",       0.5),
-        ("pong",         1),
-        ("shark",        1.5),
-        ("christmas",    0.5),
+        ("smiley", 0.7),
+        ("hearts", 0.5),
+        ("clock", 0.7),
+        ("earth", 0.7),
+        ("moon", 0.7),
+        ("runner", 0.5),
+        ("pong", 1),
+        ("shark", 1.5),
+        ("christmas", 0.5),
     ]
     random.shuffle(params)
 
@@ -73,38 +73,20 @@ def colors_simple():
 
 def color_highlights():
     setups = [
-        (
-            "On gray color",
-            lambda frame: colored(frame, on_color='on_grey')
-        ),
-        (
-            "On red color",
-            lambda frame: colored(frame, on_color='on_red')
-        ),
-        (
-            "On green color",
-            lambda frame: colored(frame, on_color='on_green')
-        ),
+        ("On gray color", lambda frame: colored(frame, on_color="on_grey")),
+        ("On red color", lambda frame: colored(frame, on_color="on_red")),
+        ("On green color", lambda frame: colored(frame, on_color="on_green")),
         (
             "On yellow color",
-            lambda frame: colored(frame, on_color='on_yellow')
+            lambda frame: colored(frame, on_color="on_yellow"),
         ),
-        (
-            "On blue color",
-            lambda frame: colored(frame, on_color='on_blue')
-        ),
+        ("On blue color", lambda frame: colored(frame, on_color="on_blue")),
         (
             "On magenta color",
-            lambda frame: colored(frame, on_color='on_magenta')
+            lambda frame: colored(frame, on_color="on_magenta"),
         ),
-        (
-            "On cyan color",
-            lambda frame: colored(frame, on_color='on_cyan')
-        ),
-        (
-            "On white color",
-            lambda frame: colored(frame, on_color='on_white')
-        ),
+        ("On cyan color", lambda frame: colored(frame, on_color="on_cyan")),
+        ("On white color", lambda frame: colored(frame, on_color="on_white")),
     ]
     # Setup printing
     max_len = 40
@@ -126,27 +108,27 @@ def color_attributes():
     setups = [
         (
             "Bold gray color",
-            lambda frame: colored(frame, 'grey', attrs=['bold'])
+            lambda frame: colored(frame, "grey", attrs=["bold"]),
         ),
         (
             "Dark red color",
-            lambda frame: colored(frame, 'red', attrs=['dark'])
+            lambda frame: colored(frame, "red", attrs=["dark"]),
         ),
         (
             "Underline green color",
-            lambda frame: colored(frame, 'green', attrs=['underline'])
+            lambda frame: colored(frame, "green", attrs=["underline"]),
         ),
         (
             "Blink yellow color",
-            lambda frame: colored(frame, 'yellow', attrs=['blink'])
+            lambda frame: colored(frame, "yellow", attrs=["blink"]),
         ),
         (
             "Reversed blue color",
-            lambda frame: colored(frame, 'blue', attrs=['reverse'])
+            lambda frame: colored(frame, "blue", attrs=["reverse"]),
         ),
         (
             "Concealed magenta color",
-            lambda frame: colored(frame, 'magenta', attrs=['concealed'])
+            lambda frame: colored(frame, "magenta", attrs=["concealed"]),
         ),
     ]
     # Setup printing
@@ -169,19 +151,25 @@ def color_craziness():
     setups = [
         (
             "Bold underline reverse cyan color",
-            lambda frame: colored(frame, 'cyan', attrs=['bold', 'underline', 'reverse'])  # noqa
+            lambda frame: colored(
+                frame, "cyan", attrs=["bold", "underline", "reverse"]
+            ),
         ),
         (
             "Dark blink concealed white color",
-            lambda frame: colored(frame, 'white', attrs=['dark', 'blink', 'concealed'])  # noqa
+            lambda frame: colored(
+                frame, "white", attrs=["dark", "blink", "concealed"]
+            ),
         ),
         (
             "Underline red on grey color",
-            lambda frame: colored(frame, 'red', 'on_grey', attrs=['underline'])
+            lambda frame: colored(
+                frame, "red", "on_grey", attrs=["underline"]
+            ),
         ),
         (
             "Reversed green on red color",
-            lambda frame: colored(frame, 'green', 'on_red', attrs=['reverse'])
+            lambda frame: colored(frame, "green", "on_red", attrs=["reverse"]),
         ),
     ]
     # Setup printing
@@ -220,7 +208,7 @@ def reversed_spinner():
         time.sleep(1)
 
         sp.text = "Enjoy!"
-        sp.ok('☀️')
+        sp.ok("☀️")
 
 
 def main():
@@ -233,5 +221,5 @@ def main():
     reversed_spinner()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

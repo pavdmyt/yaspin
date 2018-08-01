@@ -61,8 +61,8 @@ def test_compose_out_with_color(colors_test_cases):
 
     # Actual test
     swirl = yaspin(color=color)
-    out = swirl._compose_out(frame=u'/')
-    assert out.startswith('\r\033')
+    out = swirl._compose_out(frame=u"/")
+    assert out.startswith("\r\033")
     assert isinstance(out, builtin_str)
 
 
@@ -72,7 +72,7 @@ def test_write(capsys, text):
 
     out, _ = capsys.readouterr()
     # cleans stdout from _clear_line and \r
-    out = out.replace('\r\033[K', '')
+    out = out.replace("\r\033[K", "")
 
     # handle out and text encodings (come out messy in PY2)
     # Under PY2 ``capsys.readouterr`` always produces ``out``
@@ -84,7 +84,7 @@ def test_write(capsys, text):
             text = text.encode(ENCODING)
 
     assert isinstance(out, basestring)
-    assert out[-1] == '\n'
+    assert out[-1] == "\n"
     if text:
         assert out[:-1] == text
 
@@ -97,6 +97,7 @@ def test_hide_show(capsys, text, request):
     # Ensure that swirl.stop() will be executed
     def teardown():
         swirl.stop()
+
     request.addfinalizer(teardown)
 
     #
@@ -109,7 +110,7 @@ def test_hide_show(capsys, text, request):
     out, _ = capsys.readouterr()
 
     # ensure that text was cleared with the hide method
-    assert out[-4:] == '\r\033[K'
+    assert out[-4:] == "\r\033[K"
 
     # properly encode text to unicode if running in PY2
     if PY2:
@@ -117,11 +118,11 @@ def test_hide_show(capsys, text, request):
 
     # ``\n`` is required to flush stdout during
     # the hidden state of the spinner
-    sys.stdout.write('{0}\n'.format(text))
+    sys.stdout.write("{0}\n".format(text))
     out, _ = capsys.readouterr()
 
     # cleans stdout from _clear_line and \r
-    out = out.replace('\r\033[K', '')
+    out = out.replace("\r\033[K", "")
 
     # handle out and text encodings (come out messy in PY2)
     # Under PY2 ``capsys.readouterr`` always produces ``out``
@@ -133,7 +134,7 @@ def test_hide_show(capsys, text, request):
             text = text.encode(ENCODING)
 
     assert isinstance(out, basestring)
-    assert out[-1] == '\n'
+    assert out[-1] == "\n"
     if text:
         assert out[:-1] == text
 
@@ -144,4 +145,4 @@ def test_hide_show(capsys, text, request):
     out, _ = capsys.readouterr()
 
     # ensure that text was cleared before resuming the spinner
-    assert out[:4] == '\r\033[K'
+    assert out[:4] == "\r\033[K"

@@ -18,7 +18,8 @@ from yaspin.spinners import Spinners
 
 def main():
     names = [
-        attr for attr in dir(Spinners)
+        attr
+        for attr in dir(Spinners)
         if not callable(getattr(Spinners, attr))
         if not attr.startswith("_")
     ]
@@ -28,5 +29,5 @@ def main():
             time.sleep(3)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

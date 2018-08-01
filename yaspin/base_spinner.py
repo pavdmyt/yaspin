@@ -12,5 +12,5 @@ from __future__ import absolute_import
 from collections import namedtuple
 
 
-Spinner = namedtuple('Spinner', "frames interval")
-default_spinner = Spinner('⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏', 80)
+Spinner = namedtuple("Spinner", "frames interval")
+default_spinner = Spinner("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏", 80)
