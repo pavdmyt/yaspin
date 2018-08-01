@@ -1,4 +1,5 @@
 yaspin |Build Status| |Coverage| |Codacy| |pypi| |Versions| |Wheel| |Examples|
+|pyup|
 ==============================================================================
 
 **Y**\ et **A**\ nother Terminal **Spin**\ ner for Python.
@@ -355,6 +356,8 @@ License
    :target: https://pypi.org/project/yaspin/
 .. |Examples| image:: https://img.shields.io/badge/learn%20by-examples-0077b3.svg
    :target: https://github.com/pavdmyt/yaspin/tree/master/examples
+.. |pyup| image:: https://pyup.io/repos/github/pavdmyt/yaspin/shield.svg
+   :target: https://pyup.io/repos/github/pavdmyt/yaspin/
 
 
 .. _context manager: https://docs.python.org/3/reference/datamodel.html#context-managers
