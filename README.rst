@@ -1,5 +1,8 @@
-yaspin |Build Status| |Coverage| |Codacy| |pypi| |Versions| |Wheel| |Examples| |pyup|
-=====================================================================================
+yaspin |Build Status| |Coverage| |Codacy| |pyup| |black-fmt|
+============================================================
+
+|pypi| |Versions| |Wheel|
+|Examples|
 
 **Y**\ et **A**\ nother Terminal **Spin**\ ner for Python.
 
@@ -357,6 +360,8 @@ License
    :target: https://github.com/pavdmyt/yaspin/tree/master/examples
 .. |pyup| image:: https://pyup.io/repos/github/pavdmyt/yaspin/shield.svg
    :target: https://pyup.io/repos/github/pavdmyt/yaspin/
+.. |black-fmt| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/ambv/black
 
 
 .. _context manager: https://docs.python.org/3/reference/datamodel.html#context-managers
