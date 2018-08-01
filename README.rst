@@ -1,6 +1,5 @@
-yaspin |Build Status| |Coverage| |Codacy| |pypi| |Versions| |Wheel| |Examples|
-|pyup|
-==============================================================================
+yaspin |Build Status| |Coverage| |Codacy| |pypi| |Versions| |Wheel| |Examples| |pyup|
+=====================================================================================
 
 **Y**\ et **A**\ nother Terminal **Spin**\ ner for Python.
 
