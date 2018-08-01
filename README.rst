@@ -318,6 +318,13 @@ Lint code:
     make lint
 
 
+Format code:
+
+.. code-block:: bash
+
+    make black-fmt
+
+
 Run tests:
 
 .. code-block:: bash
