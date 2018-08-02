@@ -26,7 +26,7 @@ def all_text_colors():
 def colored_finalizer():
     with yaspin(text="Processing...", color="yellow") as sp:
         time.sleep(2)
-        sp.ok('☀️')
+        sp.ok("☀️")
 
 
 @yaspin(text="Colored decorator", color="yellow")
@@ -40,5 +40,5 @@ def main():
     decorated_function()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

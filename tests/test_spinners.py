@@ -18,13 +18,12 @@ from yaspin.compat import iteritems
 from yaspin.spinners import SPINNERS_PATH, Spinners
 
 
-with codecs.open(SPINNERS_PATH, encoding='utf-8') as f:
+with codecs.open(SPINNERS_PATH, encoding="utf-8") as f:
     spinners_dict = json.load(f)
 
 
 test_cases = [
-    (name, v["frames"], v["interval"])
-    for name, v in iteritems(spinners_dict)
+    (name, v["frames"], v["interval"]) for name, v in iteritems(spinners_dict)
 ]
 
 

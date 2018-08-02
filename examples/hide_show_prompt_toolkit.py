@@ -37,28 +37,31 @@ except ImportError:
 print = print_formatted_text
 
 # build a basic prompt_toolkit style for styling the HTML wrapped text
-style = Style.from_dict({
-    'msg': '#4caf50 bold',
-    'sub-msg': '#616161 italic'
-})
+style = Style.from_dict({"msg": "#4caf50 bold", "sub-msg": "#616161 italic"})
 
 
-with yaspin(text='Downloading images') as sp:
+with yaspin(text="Downloading images") as sp:
 
     # task 1
     time.sleep(1)
     sp.hide()
-    print(HTML(
-        u'<b>></b> <msg>image 1</msg> <sub-msg>download complete</sub-msg>'
-    ), style=style)
+    print(
+        HTML(
+            u"<b>></b> <msg>image 1</msg> <sub-msg>download complete</sub-msg>"
+        ),
+        style=style,
+    )
     sp.show()
 
     # task 2
     time.sleep(2)
     sp.hide()
-    print(HTML(
-        u'<b>></b> <msg>image 2</msg> <sub-msg>download complete</sub-msg>'
-    ), style=style)
+    print(
+        HTML(
+            u"<b>></b> <msg>image 2</msg> <sub-msg>download complete</sub-msg>"
+        ),
+        style=style,
+    )
     sp.show()
 
     # finalize

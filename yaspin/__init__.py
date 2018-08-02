@@ -7,4 +7,4 @@ from .base_spinner import Spinner
 from .yaspin import yaspin
 
 
-__all__ = ('yaspin', 'Spinner',)
+__all__ = ("yaspin", "Spinner")

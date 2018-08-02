@@ -17,6 +17,10 @@ lint:
 isort-all:
 	isort -rc --atomic --verbose setup.py $(name)/
 
+black-fmt:
+	black --line-length 79 --exclude "termcolor.py" \
+	./yaspin ./tests ./examples
+
 clean:
 	@echo "$(OK_COLOR)==> Cleaning up files that are already in .gitignore...$(NO_COLOR)"
 	@for pattern in `cat .gitignore`; do find . -name "*/$$pattern" -delete; done

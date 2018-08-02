@@ -59,7 +59,7 @@ def test_piping_output(text, frames, interval, case_id):
         os.remove(py_fname)
         os.remove(fname)
 
-    with open(py_fname, 'wb') as f:
+    with open(py_fname, "wb") as f:
         if isinstance(frames, basestring):
             # enclosing characters in quotes
             # for basestring entries
