@@ -17,8 +17,8 @@ from yaspin.spinners import Spinners, _get_attrs
 
 
 def main():
-    names = _get_attrs(Spinners)
-    for name in sorted(names):
+    attr_names = _get_attrs(Spinners)
+    for name in sorted(attr_names):
         spinner = getattr(Spinners, name)
         with yaspin(spinner, text=name):
             time.sleep(3)
