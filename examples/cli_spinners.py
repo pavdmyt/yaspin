@@ -13,16 +13,11 @@ Spinners are sorted alphabetically.
 import time
 
 from yaspin import yaspin
-from yaspin.spinners import Spinners
+from yaspin.spinners import Spinners, _get_attrs
 
 
 def main():
-    names = [
-        attr
-        for attr in dir(Spinners)
-        if not callable(getattr(Spinners, attr))
-        if not attr.startswith("_")
-    ]
+    names = _get_attrs(Spinners)
     for name in sorted(names):
         spinner = getattr(Spinners, name)
         with yaspin(spinner, text=name):

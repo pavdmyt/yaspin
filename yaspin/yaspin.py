@@ -87,6 +87,20 @@ class Yaspin(object):
 
         return inner
 
+    def __getattr__(self, name):
+        from .spinners import Spinners, _get_attrs
+
+        if name in list(_get_attrs(Spinners)):
+            sp = getattr(Spinners, name)
+            self.spinner = sp
+        else:
+            raise AttributeError(
+                # TODO: implement logic to get 'Yaspin' name
+                "'Yaspin' object has no attribute: '{0}'".format(name)
+            )
+
+        return self
+
     #
     # Properties
     #

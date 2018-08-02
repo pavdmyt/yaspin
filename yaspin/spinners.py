@@ -27,3 +27,23 @@ def _hook(dct):
 
 with codecs.open(SPINNERS_PATH, encoding="utf-8") as f:
     Spinners = json.load(f, object_hook=_hook)
+
+
+def _get_attrs(spinners):
+    """Get names of the spinners available in ``Spinners``.
+
+    Arguments:
+        spinners (Spinners): namedtuple containing spinners
+            parsed from ``spinners.json``.
+
+    Returns:
+        generator
+
+    """
+    attrs = (
+        attr
+        for attr in dir(spinners)
+        if not callable(getattr(spinners, attr))
+        if not attr.startswith("_")
+    )
+    return attrs
