@@ -107,7 +107,7 @@ class Yaspin(object):
 
     def __getattr__(self, name):
         if name in SPINNER_ATTRS:
-            from .spinners import Spinners, _get_attrs
+            from .spinners import Spinners
 
             sp = getattr(Spinners, name)
             self.spinner = sp
@@ -129,10 +129,10 @@ class Yaspin(object):
 
         if name not in SPINNER_ATTRS + list(COLOR_ATTRS):
             raise AttributeError(
-                # TODO: implement logic to get 'Yaspin' name
-                "'Yaspin' object has no attribute: '{0}'".format(name)
+                "'{0}' object has no attribute: '{1}'".format(
+                    self.__class__.__name__, name
+                )
             )
-
         return self
 
     #
@@ -293,24 +293,23 @@ class Yaspin(object):
             time.sleep(self._interval)
             sys.stdout.write("\b")
 
-    def _set_color(self, color):
+    def _set_color(self, name):
+        if callable(name):
+            return name
 
-        if callable(color):
-            return color
-
-        c_attr_lower = color.lower()
-        if c_attr_lower not in COLOR_ATTRS:
+        n_lower = name.lower()
+        if n_lower not in COLOR_ATTRS:
             raise ValueError(
                 "{0}: unsupported color attribute. Use one of the: {1}".format(
-                    c_attr_lower, COLOR_ATTRS
+                    n_lower, COLOR_ATTRS
                 )
             )
 
-        attr_type = COLOR_MAP[c_attr_lower]
+        attr_type = COLOR_MAP[n_lower]
         if attr_type == "attrs":
-            self._cs.attrs.add(c_attr_lower)
+            self._cs.attrs.add(n_lower)
         if attr_type in ("color", "on_color"):
-            setattr(self._cs, attr_type, c_attr_lower)
+            setattr(self._cs, attr_type, n_lower)
 
         color_fn = functools.partial(
             colored,
@@ -329,11 +328,8 @@ class Yaspin(object):
         text = self._text.encode(ENCODING) if PY2 else self._text
 
         # Colors
-        if self._color and callable(self._color):
-            color_fn = self._color
-            frame = color_fn(frame)
-        if self._color and not callable(self._color):
-            frame = colored(frame, self._color)
+        if self._color is not None:
+            frame = self._color(frame)
 
         # Position
         if self._right:
