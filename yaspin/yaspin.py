@@ -23,9 +23,19 @@ from .termcolor import colored
 
 
 class _ColorSpec(object):
+    """Dataclass for holding color attributes."""
+
     color = None
     on_color = None
     attrs = set()
+
+    def __repr__(self):
+        return (
+            self.__class__.__name__
+            + "(color={0!r}, on_color={1!r}, attrs={2!r})".format(
+                self.color, self.on_color, self.attrs
+            )
+        )
 
 
 class Yaspin(object):
