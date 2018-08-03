@@ -17,9 +17,15 @@ import time
 
 from .base_spinner import default_spinner
 from .compat import PY2, basestring, builtin_str, bytes, str
-from .constants import ENCODING
+from .constants import COLOR_ATTRS, COLOR_MAP, ENCODING, SPINNER_ATTRS
 from .helpers import to_unicode
 from .termcolor import colored
+
+
+class _ColorSpec(object):
+    color = None
+    on_color = None
+    attrs = set()
 
 
 class Yaspin(object):
@@ -50,6 +56,8 @@ class Yaspin(object):
         self._interval = self._set_interval(self._spinner)
         self._cycle = self._set_cycle(self._frames)
         self._text = self._set_text(text)
+
+        self._cs = _ColorSpec()
         self._color = self._set_color(color) if color else color
 
         self._right = right
@@ -88,12 +96,28 @@ class Yaspin(object):
         return inner
 
     def __getattr__(self, name):
-        from .spinners import Spinners, _get_attrs
+        if name in SPINNER_ATTRS:
+            from .spinners import Spinners, _get_attrs
 
-        if name in list(_get_attrs(Spinners)):
             sp = getattr(Spinners, name)
             self.spinner = sp
-        else:
+
+        if name in COLOR_ATTRS:
+            attr_type = COLOR_MAP[name]
+
+            if attr_type == "attrs":
+                self._cs.attrs.add(name)
+            if attr_type in ("color", "on_color"):
+                setattr(self._cs, attr_type, name)
+
+            self.color = functools.partial(
+                colored,
+                color=self._cs.color,
+                on_color=self._cs.on_color,
+                attrs=list(self._cs.attrs),
+            )
+
+        if name not in SPINNER_ATTRS + list(COLOR_ATTRS):
             raise AttributeError(
                 # TODO: implement logic to get 'Yaspin' name
                 "'Yaspin' object has no attribute: '{0}'".format(name)
@@ -259,6 +283,33 @@ class Yaspin(object):
             time.sleep(self._interval)
             sys.stdout.write("\b")
 
+    def _set_color(self, color):
+
+        if callable(color):
+            return color
+
+        c_attr_lower = color.lower()
+        if c_attr_lower not in COLOR_ATTRS:
+            raise ValueError(
+                "{0}: unsupported color attribute. Use one of the: {1}".format(
+                    c_attr_lower, COLOR_ATTRS
+                )
+            )
+
+        attr_type = COLOR_MAP[c_attr_lower]
+        if attr_type == "attrs":
+            self._cs.attrs.add(c_attr_lower)
+        if attr_type in ("color", "on_color"):
+            setattr(self._cs, attr_type, c_attr_lower)
+
+        color_fn = functools.partial(
+            colored,
+            color=self._cs.color,
+            on_color=self._cs.on_color,
+            attrs=list(self._cs.attrs),
+        )
+        return color_fn
+
     def _compose_out(self, frame, mode=None):
         # Ensure Unicode input
         assert isinstance(frame, str)
@@ -267,15 +318,18 @@ class Yaspin(object):
         frame = frame.encode(ENCODING) if PY2 else frame
         text = self._text.encode(ENCODING) if PY2 else self._text
 
+        # Colors
         if self._color and callable(self._color):
             color_fn = self._color
             frame = color_fn(frame)
         if self._color and not callable(self._color):
             frame = colored(frame, self._color)
 
+        # Position
         if self._right:
             frame, text = text, frame
 
+        # Mode
         if not mode:
             out = "\r{0} {1}".format(frame, text)
         else:
@@ -350,33 +404,6 @@ class Yaspin(object):
         if PY2:
             return to_unicode(text)
         return text
-
-    @staticmethod
-    def _set_color(color):
-
-        if callable(color):
-            return color
-
-        available_text_colors = (
-            "red",
-            "green",
-            "yellow",
-            "blue",
-            "magenta",
-            "cyan",
-            "white",
-        )
-
-        c_lower = color.lower()
-
-        if c_lower not in available_text_colors:
-            raise ValueError(
-                "{0}: unsupported text color. Use one of the: {1}".format(
-                    c_lower, available_text_colors
-                )
-            )
-
-        return c_lower
 
     @staticmethod
     def _hide_cursor():
