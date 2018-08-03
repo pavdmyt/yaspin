@@ -388,7 +388,7 @@ class Yaspin(object):
                 "{0!r}: no frames found in spinner".format(spinner)
             )
 
-        # Builtin reversed returns reverse iterator,
+        # Builtin ``reversed`` returns reverse iterator,
         # which adds unnecessary difficulty for returning
         # unicode value;
         # Hence using [::-1] syntax
