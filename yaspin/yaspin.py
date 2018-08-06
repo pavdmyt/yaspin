@@ -22,22 +22,6 @@ from .helpers import to_unicode
 from .termcolor import colored
 
 
-class _ColorSpec(object):
-    """Dataclass for holding color attributes."""
-
-    color = None
-    on_color = None
-    attrs = set()
-
-    def __repr__(self):
-        return (
-            self.__class__.__name__
-            + "(color={0!r}, on_color={1!r}, attrs={2!r})".format(
-                self.color, self.on_color, self.attrs
-            )
-        )
-
-
 class Yaspin(object):
     """Implements a context manager that spawns a thread
     to write spinner frames into a tty (stdout) during
@@ -67,7 +51,8 @@ class Yaspin(object):
         self._cycle = self._set_cycle(self._frames)
         self._text = self._set_text(text)
 
-        self._cs = _ColorSpec()
+        # Color Specification
+        self._cs = {"color": None, "on_color": None, "attrs": set()}
         self._color = self._set_color(color) if color else color
 
         self._right = right
@@ -116,15 +101,15 @@ class Yaspin(object):
             attr_type = COLOR_MAP[name]
 
             if attr_type == "attrs":
-                self._cs.attrs.add(name)
+                self._cs["attrs"].add(name)
             if attr_type in ("color", "on_color"):
-                setattr(self._cs, attr_type, name)
+                self._cs[attr_type] = name
 
             self.color = functools.partial(
                 colored,
-                color=self._cs.color,
-                on_color=self._cs.on_color,
-                attrs=list(self._cs.attrs),
+                color=self._cs["color"],
+                on_color=self._cs["on_color"],
+                attrs=list(self._cs["attrs"]),
             )
 
         if name not in SPINNER_ATTRS + list(COLOR_ATTRS):
@@ -173,15 +158,18 @@ class Yaspin(object):
     def right(self, value):
         self._right = value
 
-    @property
-    def reverse(self):
-        return self._reverse
-
-    @reverse.setter
-    def reverse(self, value):
-        self._reverse = value
-        self._frames = self._set_frames(self._spinner, self._reverse)
-        self._cycle = self._set_cycle(self._frames)
+    # BUG: conflicts with 'reverse' attr from ``attrs`` list
+    #      in ``self._cs``. Commented out till fixed.
+    #
+    # @property
+    # def reverse(self):
+    #     return self._reverse
+    #
+    # @reverse.setter
+    # def reverse(self, value):
+    #     self._reverse = value
+    #     self._frames = self._set_frames(self._spinner, self._reverse)
+    #     self._cycle = self._set_cycle(self._frames)
 
     #
     # Public
@@ -307,15 +295,15 @@ class Yaspin(object):
 
         attr_type = COLOR_MAP[n_lower]
         if attr_type == "attrs":
-            self._cs.attrs.add(n_lower)
+            self._cs["attrs"].add(n_lower)
         if attr_type in ("color", "on_color"):
-            setattr(self._cs, attr_type, n_lower)
+            self._cs[attr_type] = n_lower
 
         color_fn = functools.partial(
             colored,
-            color=self._cs.color,
-            on_color=self._cs.on_color,
-            attrs=list(self._cs.attrs),
+            color=self._cs["color"],
+            on_color=self._cs["on_color"],
+            attrs=list(self._cs["attrs"]),
         )
         return color_fn
 
