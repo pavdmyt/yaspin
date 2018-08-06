@@ -144,7 +144,7 @@ class Yaspin(object):
 
     @property
     def color(self):
-        return self._color
+        return self._cs
 
     @color.setter
     def color(self, value):

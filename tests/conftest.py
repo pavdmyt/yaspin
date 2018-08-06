@@ -9,6 +9,7 @@ Tests data.
 
 import pytest
 
+from yaspin.constants import COLOR_ATTRS
 from yaspin.termcolor import colored
 
 
@@ -145,21 +146,9 @@ def colors_test_cases(request):
     return request.param
 
 
-@pytest.fixture(
-    scope="session",
-    ids=color_id_func,
-    params=[
-        "red",
-        "green",
-        "yellow",
-        "blue",
-        "magenta",
-        "cyan",
-        "white",
-        lambda frame: colored(frame, "red", attrs=["bold"]),
-    ],
-)
-def supported_colors(request):
+# TODO: Test dict entries (and callable entries)? as well.
+@pytest.fixture(scope="session", ids=color_id_func, params=COLOR_ATTRS)
+def supported_color_attrs(request):
     return request.param
 
 
