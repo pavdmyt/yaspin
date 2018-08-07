@@ -168,7 +168,7 @@ class Yaspin(object):
 
     @property
     def attrs(self):
-        return self._attrs
+        return list(self._attrs)
 
     @attrs.setter
     def attrs(self, value):

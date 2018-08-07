@@ -132,3 +132,24 @@ def test_on_color_setter(on_color_test_cases):
     else:
         swirl.on_color = on_color
         assert swirl._on_color == expected
+
+
+#
+# Yaspin.attrs
+#
+def test_attrs_getter(supported_attrs):
+    attrs = supported_attrs
+    swirl = yaspin(attrs=attrs)
+    assert set(swirl.attrs) == set(attrs)
+
+
+def test_attrs_setter(attrs_test_cases):
+    attrs, expected = attrs_test_cases
+    swirl = yaspin()
+
+    if isinstance(expected, Exception):
+        with pytest.raises(type(expected)):
+            swirl.attrs = attrs
+    else:
+        swirl.attrs = attrs
+        assert swirl._attrs == set(expected)

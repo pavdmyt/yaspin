@@ -112,6 +112,15 @@ def color_id_func(case):
     return val
 
 
+def attrs_id_func(case):
+    if isinstance(case, list):
+        val = ", ".join(case)
+    if isinstance(case, tuple):
+        attrs, _ = case
+        val = ", ".join(attrs)
+    return val
+
+
 @pytest.fixture(
     scope="session",
     ids=color_id_func,
@@ -164,6 +173,30 @@ def on_color_test_cases(request):
 
 @pytest.fixture(
     scope="session",
+    ids=attrs_id_func,
+    params=[
+        # Supported attrs
+        (["bold"], ["bold"]),
+        (["dark"], ["dark"]),
+        (["underline"], ["underline"]),
+        (["blink"], ["blink"]),
+        (["reverse"], ["reverse"]),
+        (["concealed"], ["concealed"]),
+        # Multiple attrs
+        (["bold", "dark"], ["bold", "dark"]),
+        (["bold", "dark", "reverse"], ["bold", "dark", "reverse"]),
+        # Unsupported attrs
+        (["foo"], ValueError()),
+        (["Dark"], ValueError()),
+        (["bold", "bar"], ValueError()),
+    ],
+)
+def attrs_test_cases(request):
+    return request.param
+
+
+@pytest.fixture(
+    scope="session",
     ids=color_id_func,
     params=[k for k, v in iteritems(COLOR_MAP) if v == "color"],
 )
@@ -177,6 +210,20 @@ def supported_colors(request):
     params=[k for k, v in iteritems(COLOR_MAP) if v == "on_color"],
 )
 def supported_highlights(request):
+    return request.param
+
+
+@pytest.fixture(
+    scope="session",
+    ids=attrs_id_func,
+    params=[[k] for k, v in iteritems(COLOR_MAP) if v == "attrs"]
+    + [
+        ["bold", "dark"],
+        ["blink", "concealed", "reverse"],
+        ["underline", "concealed", "bold", "dark", "blink", "reverse"],
+    ],
+)
+def supported_attrs(request):
     return request.param
 
 
