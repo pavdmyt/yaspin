@@ -138,8 +138,6 @@ def attrs_id_func(case):
         ("white", "white"),
         # Unsupported text colors
         ("Red", ValueError()),
-        ("black", ValueError()),
-        ("brown", ValueError()),
         ("orange", ValueError()),
     ],
 )
@@ -164,7 +162,6 @@ def color_test_cases(request):
         ("on_white", "on_white"),
         # Unsupported highlights
         ("on_foo", ValueError()),
-        ("on_bar", ValueError()),
     ],
 )
 def on_color_test_cases(request):
@@ -186,7 +183,6 @@ def on_color_test_cases(request):
         (["bold", "dark"], ["bold", "dark"]),
         (["bold", "dark", "reverse"], ["bold", "dark", "reverse"]),
         # Unsupported attrs
-        (["foo"], ValueError()),
         (["Dark"], ValueError()),
         (["bold", "bar"], ValueError()),
     ],

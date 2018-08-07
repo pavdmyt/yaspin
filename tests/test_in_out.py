@@ -48,19 +48,32 @@ def test_repr(text, frames, interval):
     assert isinstance(repr(swirl), builtin_str)
 
 
-def test_compose_out_with_color(color_test_cases):
-    color, expected = color_test_cases
+def test_compose_out_with_color(
+    color_test_cases, on_color_test_cases, attrs_test_cases
+):
+    color, color_exp = color_test_cases
+    on_color, on_color_exp = on_color_test_cases
+    attrs, attrs_exp = attrs_test_cases
 
     # Skip non relevant cases
-    empty = not expected
-    is_exc = isinstance(expected, Exception)
-    func = callable(expected)
-
-    if empty or is_exc or func:
-        pytest.skip("{0} - unsupported case".format(repr(expected)))
+    empty = not color_exp or not on_color_exp or not attrs_exp
+    is_exc = any(
+        [
+            isinstance(color_exp, Exception),
+            isinstance(on_color_exp, Exception),
+            isinstance(attrs_exp, Exception),
+        ]
+    )
+    if empty or is_exc:
+        items = [repr(color_exp), repr(on_color_exp), repr(attrs_exp)]
+        pytest.skip("{0} - unsupported case".format(items))
 
     # Actual test
-    swirl = yaspin(color=color)
+    swirl = yaspin(color=color, on_color=on_color, attrs=attrs)
+    assert swirl._color == color
+    assert swirl._on_color == on_color
+    assert swirl._attrs == set(attrs)
+
     out = swirl._compose_out(frame=u"/")
     assert out.startswith("\r\033")
     assert isinstance(out, builtin_str)
