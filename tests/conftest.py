@@ -141,9 +141,42 @@ def color_test_cases(request):
 @pytest.fixture(
     scope="session",
     ids=color_id_func,
+    params=[
+        # Empty values
+        ("", ""),
+        (None, None),
+        # Supported highlights
+        ("on_red", "on_red"),
+        ("on_green", "on_green"),
+        ("on_yellow", "on_yellow"),
+        ("on_blue", "on_blue"),
+        ("on_magenta", "on_magenta"),
+        ("on_cyan", "on_cyan"),
+        ("on_white", "on_white"),
+        # Unsupported highlights
+        ("on_foo", ValueError()),
+        ("on_bar", ValueError()),
+    ],
+)
+def on_color_test_cases(request):
+    return request.param
+
+
+@pytest.fixture(
+    scope="session",
+    ids=color_id_func,
     params=[k for k, v in iteritems(COLOR_MAP) if v == "color"],
 )
 def supported_colors(request):
+    return request.param
+
+
+@pytest.fixture(
+    scope="session",
+    ids=color_id_func,
+    params=[k for k, v in iteritems(COLOR_MAP) if v == "on_color"],
+)
+def supported_highlights(request):
     return request.param
 
 

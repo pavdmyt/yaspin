@@ -111,3 +111,24 @@ def test_color_setter(color_test_cases):
     else:
         swirl.color = color
         assert swirl._color == expected
+
+
+#
+# Yaspin.on_color
+#
+def test_on_color_getter(supported_highlights):
+    on_color = supported_highlights
+    swirl = yaspin(on_color=on_color)
+    assert swirl.on_color == on_color
+
+
+def test_on_color_setter(on_color_test_cases):
+    on_color, expected = on_color_test_cases
+    swirl = yaspin()
+
+    if isinstance(expected, Exception):
+        with pytest.raises(type(expected)):
+            swirl.on_color = on_color
+    else:
+        swirl.on_color = on_color
+        assert swirl._on_color == expected
