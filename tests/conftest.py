@@ -9,8 +9,8 @@ Tests data.
 
 import pytest
 
-from yaspin.constants import COLOR_ATTRS
-from yaspin.termcolor import colored
+from yaspin.compat import iteritems
+from yaspin.constants import COLOR_MAP
 
 
 frame_cases = [
@@ -128,27 +128,22 @@ def color_id_func(case):
         ("cyan", "cyan"),
         ("white", "white"),
         # Unsupported text colors
+        ("Red", ValueError()),
         ("black", ValueError()),
         ("brown", ValueError()),
         ("orange", ValueError()),
-        # Uppercase handling
-        ("Red", "red"),
-        ("grEEn", "green"),
-        ("BlacK", ValueError()),
-        # Callables
-        (
-            lambda frame: colored(frame, "red", attrs=["bold"]),
-            lambda frame: colored(frame, "red", attrs=["bold"]),
-        ),
     ],
 )
-def colors_test_cases(request):
+def color_test_cases(request):
     return request.param
 
 
-# TODO: Test dict entries (and callable entries)? as well.
-@pytest.fixture(scope="session", ids=color_id_func, params=COLOR_ATTRS)
-def supported_color_attrs(request):
+@pytest.fixture(
+    scope="session",
+    ids=color_id_func,
+    params=[k for k, v in iteritems(COLOR_MAP) if v == "color"],
+)
+def supported_colors(request):
     return request.param
 
 

@@ -7,14 +7,11 @@ tests.test_properties
 Test getters and setters.
 """
 
-from inspect import getsource
-
 import pytest
 
 from yaspin import Spinner, yaspin
 from yaspin.base_spinner import default_spinner
 from yaspin.compat import basestring, builtin_str, str
-from yaspin.constants import COLOR_MAP
 from yaspin.helpers import to_unicode
 
 
@@ -98,38 +95,19 @@ def test_reverse_setter(reverse):
 #
 # Yaspin.color
 #
-def test_color_getter(supported_color_attrs):
-    color_attr = supported_color_attrs
-    swirl = yaspin(color=color_attr)
-
-    attr_type = COLOR_MAP[color_attr]
-    expected = {"color": None, "on_color": None, "attrs": set()}
-    if attr_type in ("color", "on_color"):
-        expected[attr_type] = color_attr
-    if attr_type == "attrs":
-        expected[attr_type].add(color_attr)
-
-    assert swirl.color == expected
+def test_color_getter(supported_colors):
+    color = supported_colors
+    swirl = yaspin(color=color)
+    assert swirl.color == color
 
 
-def test_color_setter(colors_test_cases):
-    color, expected = colors_test_cases
+def test_color_setter(color_test_cases):
+    color, expected = color_test_cases
     swirl = yaspin()
 
-    # Exception
     if isinstance(expected, Exception):
         with pytest.raises(type(expected)):
             swirl.color = color
-
-    # Callable arg
-    elif callable(color):
-        # Compare source code to check funcs equality
-        swirl.color = color
-        fn1 = swirl._color
-        fn2 = expected
-        assert getsource(fn1) == getsource(fn2)
-
-    # Common arg
     else:
         swirl.color = color
         assert swirl._color == expected

@@ -16,7 +16,7 @@ import threading
 import time
 
 from .base_spinner import default_spinner
-from .compat import PY2, basestring, builtin_str, bytes, str, iteritems
+from .compat import PY2, basestring, builtin_str, bytes, iteritems, str
 from .constants import COLOR_ATTRS, COLOR_MAP, ENCODING, SPINNER_ATTRS
 from .helpers import to_unicode
 from .termcolor import colored
@@ -59,8 +59,8 @@ class Yaspin(object):
         self._cycle = self._set_cycle(self._frames)
 
         # Color Specification
-        self._color = self._set_color(color) if color else None
-        self._on_color = self._set_on_color(on_color) if on_color else None
+        self._color = self._set_color(color) if color else color
+        self._on_color = self._set_on_color(on_color) if on_color else on_color
         self._attrs = self._set_attrs(attrs) if attrs else set()
         self._color_func = self._compose_color_func()
 
@@ -154,7 +154,7 @@ class Yaspin(object):
 
     @color.setter
     def color(self, value):
-        self._color = self._set_color(value) if value else None
+        self._color = self._set_color(value) if value else value
         self._color_func = self._compose_color_func()  # update
 
     @property
@@ -163,7 +163,7 @@ class Yaspin(object):
 
     @on_color.setter
     def on_color(self, value):
-        self._on_color = self._set_on_color(value) if value else None
+        self._on_color = self._set_on_color(value) if value else value
         self._color_func = self._compose_color_func()  # update
 
     @property
