@@ -16,7 +16,7 @@ import threading
 import time
 
 from .base_spinner import default_spinner
-from .compat import PY2, basestring, builtin_str, bytes, str
+from .compat import PY2, basestring, builtin_str, bytes, str, iteritems
 from .constants import COLOR_ATTRS, COLOR_MAP, ENCODING, SPINNER_ATTRS
 from .helpers import to_unicode
 from .termcolor import colored
@@ -43,21 +43,33 @@ class Yaspin(object):
     # encoding in order to support pipes and redirects.
 
     def __init__(
-        self, spinner=None, text="", color=None, right=False, reverse=False
+        self,
+        spinner=None,
+        text="",
+        color=None,
+        on_color=None,
+        attrs=None,
+        right=False,
+        reverse=False,
     ):
+        # Spinner
         self._spinner = self._set_spinner(spinner)
         self._frames = self._set_frames(self._spinner, reverse)
         self._interval = self._set_interval(self._spinner)
         self._cycle = self._set_cycle(self._frames)
-        self._text = self._set_text(text)
 
         # Color Specification
-        self._cs = {"color": None, "on_color": None, "attrs": set()}
-        self._color = self._set_color(color) if color else color
+        self._color = self._set_color(color) if color else None
+        self._on_color = self._set_on_color(on_color) if on_color else None
+        self._attrs = self._set_attrs(attrs) if attrs else set()
+        self._color_func = self._compose_color_func()
 
+        # Other
+        self._text = self._set_text(text)
         self._right = right
         self._reverse = reverse
 
+        # Helper flags
         self._stop_spin = None
         self._hide_spin = None
         self._spin_thread = None
@@ -101,16 +113,10 @@ class Yaspin(object):
             attr_type = COLOR_MAP[name]
 
             if attr_type == "attrs":
-                self._cs["attrs"].add(name)
+                self._attrs.add(name)
             if attr_type in ("color", "on_color"):
-                self._cs[attr_type] = name
-
-            self.color = functools.partial(
-                colored,
-                color=self._cs["color"],
-                on_color=self._cs["on_color"],
-                attrs=list(self._cs["attrs"]),
-            )
+                setattr(self, attr_type, name)
+            self._color_func = self._compose_color_func()  # update
 
         if name not in SPINNER_ATTRS + list(COLOR_ATTRS):
             raise AttributeError(
@@ -144,11 +150,30 @@ class Yaspin(object):
 
     @property
     def color(self):
-        return self._cs
+        return self._color
 
     @color.setter
     def color(self, value):
-        self._color = self._set_color(value) if value else value
+        self._color = self._set_color(value) if value else None
+        self._color_func = self._compose_color_func()  # update
+
+    @property
+    def on_color(self):
+        return self._on_color
+
+    @on_color.setter
+    def on_color(self, value):
+        self._on_color = self._set_on_color(value) if value else None
+        self._color_func = self._compose_color_func()  # update
+
+    @property
+    def attrs(self):
+        return self._attrs
+
+    @attrs.setter
+    def attrs(self, value):
+        self._attrs = self._set_attrs(value) if value else set()
+        self._color_func = self._compose_color_func()  # update
 
     @property
     def right(self):
@@ -281,31 +306,14 @@ class Yaspin(object):
             time.sleep(self._interval)
             sys.stdout.write("\b")
 
-    def _set_color(self, name):
-        if callable(name):
-            return name
-
-        n_lower = name.lower()
-        if n_lower not in COLOR_ATTRS:
-            raise ValueError(
-                "{0}: unsupported color attribute. Use one of the: {1}".format(
-                    n_lower, COLOR_ATTRS
-                )
-            )
-
-        attr_type = COLOR_MAP[n_lower]
-        if attr_type == "attrs":
-            self._cs["attrs"].add(n_lower)
-        if attr_type in ("color", "on_color"):
-            self._cs[attr_type] = n_lower
-
-        color_fn = functools.partial(
+    def _compose_color_func(self):
+        fn = functools.partial(
             colored,
-            color=self._cs["color"],
-            on_color=self._cs["on_color"],
-            attrs=list(self._cs["attrs"]),
+            color=self._color,
+            on_color=self._on_color,
+            attrs=list(self._attrs),
         )
-        return color_fn
+        return fn
 
     def _compose_out(self, frame, mode=None):
         # Ensure Unicode input
@@ -316,8 +324,8 @@ class Yaspin(object):
         text = self._text.encode(ENCODING) if PY2 else self._text
 
         # Colors
-        if self._color is not None:
-            frame = self._color(frame)
+        if self._color_func is not None:
+            frame = self._color_func(frame)
 
         # Position
         if self._right:
@@ -337,6 +345,49 @@ class Yaspin(object):
     #
     # Static
     #
+    @staticmethod
+    def _set_color(value):
+        # type: (str) -> None
+        available_values = [k for k, v in iteritems(COLOR_MAP) if v == "color"]
+
+        if value not in available_values:
+            raise ValueError(
+                "'{0}': unsupported color value. Use one of the: {1}".format(
+                    value, ", ".join(available_values)
+                )
+            )
+        return value
+
+    @staticmethod
+    def _set_on_color(value):
+        # type: (str) -> None
+        available_values = [
+            k for k, v in iteritems(COLOR_MAP) if v == "on_color"
+        ]
+        if value not in available_values:
+            raise ValueError(
+                "'{0}': unsupported on_color value. "
+                "Use one of the: {1}".format(
+                    value, ", ".join(available_values)
+                )
+            )
+        return value
+
+    @staticmethod
+    def _set_attrs(attrs):
+        # type: (List[str]) -> None
+        available_values = [k for k, v in iteritems(COLOR_MAP) if v == "attrs"]
+
+        for attr in attrs:
+            if attr not in available_values:
+                raise ValueError(
+                    "'{0}': unsupported attribute value. "
+                    "Use one of the: {1}".format(
+                        attr, ", ".join(available_values)
+                    )
+                )
+        return set(attrs)
+
     @staticmethod
     def _set_spinner(spinner):
         if not spinner:
@@ -414,7 +465,15 @@ class Yaspin(object):
         sys.stdout.write("\033[K")
 
 
-def yaspin(spinner=None, text="", color=None, right=False, reverse=False):
+def yaspin(
+    spinner=None,
+    text="",
+    color=None,
+    on_color=None,
+    attrs=None,
+    right=False,
+    reverse=False,
+):
     """Display spinner in stdout.
 
     Can be used as a context manager or as a function decorator.
@@ -432,6 +491,15 @@ def yaspin(spinner=None, text="", color=None, right=False, reverse=False):
 
     Raises:
         ValueError: If unsupported `color` is specified.
+
+    Available text colors:
+        red, green, yellow, blue, magenta, cyan, white.
+
+    Available text highlights:
+        on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan, on_white.
+
+    Available attributes:
+        bold, dark, underline, blink, reverse, concealed.
 
     Example::
 
@@ -455,6 +523,4 @@ def yaspin(spinner=None, text="", color=None, right=False, reverse=False):
         foo()
 
     """
-    return Yaspin(
-        spinner=spinner, text=text, color=color, right=right, reverse=reverse
-    )
+    return Yaspin(**locals())
