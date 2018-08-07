@@ -48,8 +48,8 @@ def test_repr(text, frames, interval):
     assert isinstance(repr(swirl), builtin_str)
 
 
-def test_compose_out_with_color(colors_test_cases):
-    color, expected = colors_test_cases
+def test_compose_out_with_color(color_test_cases):
+    color, expected = color_test_cases
 
     # Skip non relevant cases
     empty = not expected
