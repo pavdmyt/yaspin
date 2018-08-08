@@ -111,12 +111,12 @@ class Yaspin(object):
 
         if name in COLOR_ATTRS:
             attr_type = COLOR_MAP[name]
-
+            # Call appropriate property setters;
+            # _color_func is updated automatically by setters.
             if attr_type == "attrs":
-                self._attrs.add(name)
+                self.attrs = [name]  # calls property setter
             if attr_type in ("color", "on_color"):
-                setattr(self, attr_type, name)
-            self._color_func = self._compose_color_func()  # update
+                setattr(self, attr_type, name)  # calls property setter
 
         if name not in SPINNER_ATTRS + list(COLOR_ATTRS):
             raise AttributeError(
@@ -172,7 +172,9 @@ class Yaspin(object):
 
     @attrs.setter
     def attrs(self, value):
-        self._attrs = self._set_attrs(value) if value else set()
+        new_attrs = self._set_attrs(value) if value else set()
+        # TODO: test this!
+        self._attrs = self._attrs.union(new_attrs)
         self._color_func = self._compose_color_func()  # update
 
     @property
