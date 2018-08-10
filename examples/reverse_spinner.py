@@ -20,7 +20,7 @@ def main():
         time.sleep(3)
 
         # Reverse spin direction
-        sp.reverse = True
+        sp.reversal = True
         sp.text = "Counterclockwise"
 
         # Counterclockwise rotation

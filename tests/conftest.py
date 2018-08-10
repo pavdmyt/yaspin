@@ -92,9 +92,9 @@ def right(request):
 
 
 @pytest.fixture(
-    scope="session", params=[False, True], ids=["default", "reverse"]
+    scope="session", params=[False, True], ids=["default", "reversal"]
 )
-def reverse(request):
+def reversal(request):
     return request.param
 
 

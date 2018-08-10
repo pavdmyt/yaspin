@@ -18,9 +18,9 @@ from yaspin.constants import ENCODING
 from yaspin.helpers import to_unicode
 
 
-def test_input_converted_to_unicode(text, frames, interval, right, reverse):
+def test_input_converted_to_unicode(text, frames, interval, right, reversal):
     sp = Spinner(frames, interval)
-    swirl = yaspin(sp, text, right=right, reverse=reverse)
+    swirl = yaspin(sp, text, right=right, reversal=reversal)
 
     if isinstance(swirl._frames, basestring):
         assert isinstance(swirl._frames, str)
@@ -31,9 +31,9 @@ def test_input_converted_to_unicode(text, frames, interval, right, reverse):
     assert isinstance(swirl._text, str)
 
 
-def test_out_converted_to_builtin_str(text, frames, interval, right, reverse):
+def test_out_converted_to_builtin_str(text, frames, interval, right, reversal):
     sp = Spinner(frames, interval)
-    swirl = yaspin(sp, text, right=right, reverse=reverse)
+    swirl = yaspin(sp, text, right=right, reversal=reversal)
 
     for _ in range(len(frames)):
         frame = next(swirl._cycle)

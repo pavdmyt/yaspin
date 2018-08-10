@@ -50,11 +50,11 @@ class Yaspin(object):
         on_color=None,
         attrs=None,
         right=False,
-        reverse=False,
+        reversal=False,
     ):
         # Spinner
         self._spinner = self._set_spinner(spinner)
-        self._frames = self._set_frames(self._spinner, reverse)
+        self._frames = self._set_frames(self._spinner, reversal)
         self._interval = self._set_interval(self._spinner)
         self._cycle = self._set_cycle(self._frames)
 
@@ -67,7 +67,7 @@ class Yaspin(object):
         # Other
         self._text = self._set_text(text)
         self._right = right
-        self._reverse = reverse
+        self._reversal = reversal
 
         # Helper flags
         self._stop_spin = None
@@ -136,7 +136,7 @@ class Yaspin(object):
     @spinner.setter
     def spinner(self, sp):
         self._spinner = self._set_spinner(sp)
-        self._frames = self._set_frames(self._spinner, self._reverse)
+        self._frames = self._set_frames(self._spinner, self._reversal)
         self._interval = self._set_interval(self._spinner)
         self._cycle = self._set_cycle(self._frames)
 
@@ -184,18 +184,15 @@ class Yaspin(object):
     def right(self, value):
         self._right = value
 
-    # BUG: conflicts with 'reverse' attr from ``attrs`` list
-    #      in ``self._cs``. Commented out till fixed.
-    #
-    # @property
-    # def reverse(self):
-    #     return self._reverse
-    #
-    # @reverse.setter
-    # def reverse(self, value):
-    #     self._reverse = value
-    #     self._frames = self._set_frames(self._spinner, self._reverse)
-    #     self._cycle = self._set_cycle(self._frames)
+    @property
+    def reversal(self):
+        return self._reversal
+
+    @reversal.setter
+    def reversal(self, value):
+        self._reversal = value
+        self._frames = self._set_frames(self._spinner, self._reversal)
+        self._cycle = self._set_cycle(self._frames)
 
     #
     # Public
@@ -405,7 +402,7 @@ class Yaspin(object):
         return sp
 
     @staticmethod
-    def _set_frames(spinner, reverse):
+    def _set_frames(spinner, reversal):
         # type: (base_spinner.Spinner, bool) -> Union[str, List]
         uframes = None  # unicode frames
         uframes_seq = None  # sequence of unicode frames
@@ -432,7 +429,7 @@ class Yaspin(object):
         # which adds unnecessary difficulty for returning
         # unicode value;
         # Hence using [::-1] syntax
-        frames = _frames[::-1] if reverse else _frames
+        frames = _frames[::-1] if reversal else _frames
 
         return frames
 
@@ -473,7 +470,7 @@ def yaspin(
     on_color=None,
     attrs=None,
     right=False,
-    reverse=False,
+    reversal=False,
 ):
     """Display spinner in stdout.
 
@@ -485,7 +482,7 @@ def yaspin(
         color (str, callable, optional): Color or color style of the spinner.
         right (bool, optional): Place spinner to the right end
             of the text string.
-        reverse (bool, optional): Reverse spin direction.
+        reversal (bool, optional): Reverse spin direction.
 
     Returns:
         yaspin.Yaspin: instance of the Yaspin class.
