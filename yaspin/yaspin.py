@@ -49,8 +49,8 @@ class Yaspin(object):
         color=None,
         on_color=None,
         attrs=None,
-        right=False,
         reversal=False,
+        side="left",
     ):
         # Spinner
         self._spinner = self._set_spinner(spinner)
@@ -66,7 +66,7 @@ class Yaspin(object):
 
         # Other
         self._text = self._set_text(text)
-        self._right = right
+        self._side = self._set_side(side)
         self._reversal = reversal
 
         # Helper flags
@@ -177,12 +177,12 @@ class Yaspin(object):
         self._color_func = self._compose_color_func()  # update
 
     @property
-    def right(self):
-        return self._right
+    def side(self):
+        return self._side
 
-    @right.setter
-    def right(self, value):
-        self._right = value
+    @side.setter
+    def side(self, value):
+        self._side = self._set_side(value)
 
     @property
     def reversal(self):
@@ -326,7 +326,7 @@ class Yaspin(object):
             frame = self._color_func(frame)
 
         # Position
-        if self._right:
+        if self._side == "right":
             frame, text = text, frame
 
         # Mode
@@ -345,7 +345,7 @@ class Yaspin(object):
     #
     @staticmethod
     def _set_color(value):
-        # type: (str) -> None
+        # type: (str) -> str
         available_values = [k for k, v in iteritems(COLOR_MAP) if v == "color"]
 
         if value not in available_values:
@@ -358,7 +358,7 @@ class Yaspin(object):
 
     @staticmethod
     def _set_on_color(value):
-        # type: (str) -> None
+        # type: (str) -> str
         available_values = [
             k for k, v in iteritems(COLOR_MAP) if v == "on_color"
         ]
@@ -373,7 +373,7 @@ class Yaspin(object):
 
     @staticmethod
     def _set_attrs(attrs):
-        # type: (List[str]) -> None
+        # type: (List[str]) -> Set[str]
         available_values = [k for k, v in iteritems(COLOR_MAP) if v == "attrs"]
 
         for attr in attrs:
@@ -400,6 +400,16 @@ class Yaspin(object):
             sp = default_spinner
 
         return sp
+
+    @staticmethod
+    def _set_side(side):
+        # type: (str) -> str
+        if side not in ("left", "right"):
+            raise ValueError(
+                "'{0}': unsupported side value. "
+                "Use either 'left' or 'right'."
+            )
+        return side
 
     @staticmethod
     def _set_frames(spinner, reversal):
@@ -469,8 +479,8 @@ def yaspin(
     color=None,
     on_color=None,
     attrs=None,
-    right=False,
     reversal=False,
+    side="left",
 ):
     """Display spinner in stdout.
 
@@ -480,9 +490,9 @@ def yaspin(
         spinner (yaspin.Spinner, optional): Spinner to use.
         text (str, optional): Text to show along with spinner.
         color (str, callable, optional): Color or color style of the spinner.
-        right (bool, optional): Place spinner to the right end
-            of the text string.
         reversal (bool, optional): Reverse spin direction.
+        side (str, optional): Place spinner to the right or left end
+            of the text string.
 
     Returns:
         yaspin.Yaspin: instance of the Yaspin class.

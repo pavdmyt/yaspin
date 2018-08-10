@@ -84,10 +84,8 @@ def text(request):
     return request.param
 
 
-@pytest.fixture(
-    scope="session", params=[False, True], ids=["'left'", "'right'"]
-)
-def right(request):
+@pytest.fixture(scope="session", params=["left", "right"])
+def side(request):
     return request.param
 
 

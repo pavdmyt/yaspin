@@ -64,17 +64,27 @@ def test_text_setter(text):
 
 
 #
-# Yaspin.right
+# Yaspin.side
 #
-def test_right_getter(right):
-    swirl = yaspin(right=right)
-    assert swirl.right == right
+def test_side_getter(side):
+    sp = yaspin(side=side)
+    assert sp.side == side
 
 
-def test_right_setter(right):
-    swirl = yaspin()
-    swirl.right = right
-    assert swirl._right == right
+@pytest.mark.parametrize(
+    "side, expected",
+    [("left", "left"), ("right", "right"), ("center", ValueError())],
+)
+def test_side_setter(side, expected):
+    sp = yaspin()
+    assert sp._side == "left"
+
+    if isinstance(expected, Exception):
+        with pytest.raises(type(expected)):
+            sp.side = side
+    else:
+        sp.side = side
+        assert sp._side == expected
 
 
 #
