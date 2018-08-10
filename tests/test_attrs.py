@@ -94,3 +94,19 @@ def test_previous_attrs_persist_1(attrs):
 def test_previous_attrs_persist_2():
     sp = yaspin(attrs=["blink", "underline"]).bold.dark
     assert sp._attrs == set(["blink", "underline", "bold", "dark"])
+
+
+# Values for ``side`` argument
+@pytest.mark.parametrize(
+    "side, expected",
+    [("left", "left"), ("right", "right"), ("center", ValueError())],
+)
+def test_side(side, expected):
+    sp = yaspin()
+
+    if isinstance(expected, Exception):
+        with pytest.raises(AttributeError):
+            getattr(sp, side)
+    else:
+        getattr(sp, side)
+        assert sp.side == expected

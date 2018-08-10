@@ -103,13 +103,14 @@ class Yaspin(object):
         return inner
 
     def __getattr__(self, name):
+        # CLI spinners
         if name in SPINNER_ATTRS:
             from .spinners import Spinners
 
             sp = getattr(Spinners, name)
             self.spinner = sp
-
-        if name in COLOR_ATTRS:
+        # Color Attributes: "color", "on_color", "attrs"
+        elif name in COLOR_ATTRS:
             attr_type = COLOR_MAP[name]
             # Call appropriate property setters;
             # _color_func is updated automatically by setters.
@@ -117,8 +118,11 @@ class Yaspin(object):
                 self.attrs = [name]  # calls property setter
             if attr_type in ("color", "on_color"):
                 setattr(self, attr_type, name)  # calls property setter
-
-        if name not in SPINNER_ATTRS + list(COLOR_ATTRS):
+        # Side: "left" or "right"
+        elif name in ("left", "right"):
+            self.side = name  # calls property setter
+        # Common error for unsupported attributes
+        else:
             raise AttributeError(
                 "'{0}' object has no attribute: '{1}'".format(
                     self.__class__.__name__, name
