@@ -19,48 +19,48 @@ from yaspin.helpers import to_unicode
 # Yaspin.spinner
 #
 def test_spinner_getter(frames, interval):
-    swirl = yaspin()
-    assert swirl.spinner == default_spinner
+    sp = yaspin()
+    assert sp.spinner == default_spinner
 
     new_spinner = Spinner(frames, interval)
-    swirl.spinner = new_spinner
-    assert swirl.spinner == swirl._set_spinner(new_spinner)
+    sp.spinner = new_spinner
+    assert sp.spinner == sp._set_spinner(new_spinner)
 
 
 def test_spinner_setter(frames, interval):
-    swirl = yaspin()
-    assert swirl._spinner == default_spinner
-    assert isinstance(swirl._frames, str)
-    assert swirl._interval == swirl._spinner.interval * 0.001
-    assert isinstance(repr(swirl), builtin_str)
+    sp = yaspin()
+    assert sp._spinner == default_spinner
+    assert isinstance(sp._frames, str)
+    assert sp._interval == sp._spinner.interval * 0.001
+    assert isinstance(repr(sp), builtin_str)
 
     new_spinner = Spinner(frames, interval)
-    swirl.spinner = new_spinner
-    assert swirl._spinner == swirl._set_spinner(new_spinner)
+    sp.spinner = new_spinner
+    assert sp._spinner == sp._set_spinner(new_spinner)
 
-    if isinstance(swirl._frames, basestring):
-        assert isinstance(swirl._frames, str)
+    if isinstance(sp._frames, basestring):
+        assert isinstance(sp._frames, str)
 
-    if isinstance(swirl._frames, (list, tuple)):
-        assert isinstance(swirl._frames[0], str)
+    if isinstance(sp._frames, (list, tuple)):
+        assert isinstance(sp._frames[0], str)
 
-    assert swirl._interval == swirl._spinner.interval * 0.001
-    assert isinstance(repr(swirl), builtin_str)
+    assert sp._interval == sp._spinner.interval * 0.001
+    assert isinstance(repr(sp), builtin_str)
 
 
 #
 # Yaspin.text
 #
 def test_text_getter(text):
-    swirl = yaspin(text=text)
-    assert swirl.text == to_unicode(text)
+    sp = yaspin(text=text)
+    assert sp.text == to_unicode(text)
 
 
 def test_text_setter(text):
-    swirl = yaspin()
-    swirl.text = text
-    assert isinstance(swirl._text, str)
-    assert swirl._text == to_unicode(text)
+    sp = yaspin()
+    sp.text = text
+    assert isinstance(sp._text, str)
+    assert sp._text == to_unicode(text)
 
 
 #
@@ -91,15 +91,15 @@ def test_side_setter(side, expected):
 # Yaspin.reversal
 #
 def test_reversal_getter(reversal):
-    swirl = yaspin(reversal=reversal)
-    assert swirl.reversal == reversal
+    sp = yaspin(reversal=reversal)
+    assert sp.reversal == reversal
 
 
 def test_reversal_setter(reversal):
-    swirl = yaspin()
-    swirl.reversal = reversal
-    assert isinstance(swirl._frames, str)
-    assert swirl._reversal == reversal
+    sp = yaspin()
+    sp.reversal = reversal
+    assert isinstance(sp._frames, str)
+    assert sp._reversal == reversal
 
 
 #
@@ -107,20 +107,20 @@ def test_reversal_setter(reversal):
 #
 def test_color_getter(supported_colors):
     color = supported_colors
-    swirl = yaspin(color=color)
-    assert swirl.color == color
+    sp = yaspin(color=color)
+    assert sp.color == color
 
 
 def test_color_setter(color_test_cases):
     color, expected = color_test_cases
-    swirl = yaspin()
+    sp = yaspin()
 
     if isinstance(expected, Exception):
         with pytest.raises(type(expected)):
-            swirl.color = color
+            sp.color = color
     else:
-        swirl.color = color
-        assert swirl._color == expected
+        sp.color = color
+        assert sp._color == expected
 
 
 #
@@ -128,20 +128,20 @@ def test_color_setter(color_test_cases):
 #
 def test_on_color_getter(supported_highlights):
     on_color = supported_highlights
-    swirl = yaspin(on_color=on_color)
-    assert swirl.on_color == on_color
+    sp = yaspin(on_color=on_color)
+    assert sp.on_color == on_color
 
 
 def test_on_color_setter(on_color_test_cases):
     on_color, expected = on_color_test_cases
-    swirl = yaspin()
+    sp = yaspin()
 
     if isinstance(expected, Exception):
         with pytest.raises(type(expected)):
-            swirl.on_color = on_color
+            sp.on_color = on_color
     else:
-        swirl.on_color = on_color
-        assert swirl._on_color == expected
+        sp.on_color = on_color
+        assert sp._on_color == expected
 
 
 #
@@ -149,17 +149,17 @@ def test_on_color_setter(on_color_test_cases):
 #
 def test_attrs_getter(supported_attrs):
     attrs = supported_attrs
-    swirl = yaspin(attrs=attrs)
-    assert set(swirl.attrs) == set(attrs)
+    sp = yaspin(attrs=attrs)
+    assert set(sp.attrs) == set(attrs)
 
 
 def test_attrs_setter(attrs_test_cases):
     attrs, expected = attrs_test_cases
-    swirl = yaspin()
+    sp = yaspin()
 
     if isinstance(expected, Exception):
         with pytest.raises(type(expected)):
-            swirl.attrs = attrs
+            sp.attrs = attrs
     else:
-        swirl.attrs = attrs
-        assert swirl._attrs == set(expected)
+        sp.attrs = attrs
+        assert sp._attrs == set(expected)

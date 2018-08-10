@@ -14,33 +14,33 @@ from yaspin.spinners import Spinners
 
 
 def manual_setup():
-    swirl = yaspin(text="Default spinner")
-    swirl.start()
+    sp = yaspin(text="Default spinner")
+    sp.start()
 
     time.sleep(2)
 
-    swirl.spinner = Spinners.arc
-    swirl.text = "Right arc spinner"
-    swirl.color = "yellow"
-    swirl.right = True
+    sp.spinner = Spinners.arc
+    sp.text = "Right arc spinner"
+    sp.color = "yellow"
+    sp.right = True
 
     time.sleep(3)
 
-    swirl.text = "Resersed arc spinner"
-    swirl.reverse = True
+    sp.text = "Resersed arc spinner"
+    sp.reverse = True
 
     time.sleep(3)
 
-    swirl.stop()
+    sp.stop()
 
 
 def context_mngr_setup():
-    with yaspin(Spinners.noise, text="Noise spinner") as swirl:
+    with yaspin(Spinners.noise, text="Noise spinner") as sp:
         time.sleep(2)
 
-        swirl.spinner = Spinners.simpleDotsScrolling
-        swirl.text = "Scrolling Dots spinner"
-        swirl.color = "magenta"
+        sp.spinner = Spinners.simpleDotsScrolling
+        sp.text = "Scrolling Dots spinner"
+        sp.color = "magenta"
 
         time.sleep(2)
 

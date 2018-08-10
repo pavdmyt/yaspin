@@ -37,5 +37,5 @@ from yaspin.base_spinner import default_spinner
     ],
 )
 def test_set_spinner(spinner, expected):
-    swirl = yaspin(spinner)
-    assert swirl.spinner == expected
+    sp = yaspin(spinner)
+    assert sp.spinner == expected
