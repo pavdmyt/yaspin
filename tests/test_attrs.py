@@ -68,3 +68,29 @@ def test_attrs(attr):
     getattr(sp, attr)
     assert sp.attrs == [attr]
     assert sp._color_func.keywords["attrs"] == [attr]
+
+
+def id_func(case):
+    return ", ".join(case)
+
+
+@pytest.mark.parametrize(
+    "attrs",
+    [
+        ["bold", "bold"],
+        ["bold", "dark"],
+        ["blink", "reverse", "blink"],
+        ["concealed", "underline", "bold", "bold"],
+    ],
+    ids=id_func,
+)
+def test_previous_attrs_persist_1(attrs):
+    sp = yaspin()
+    for attr in attrs:
+        getattr(sp, attr)
+    assert sp._attrs == set(attrs)
+
+
+def test_previous_attrs_persist_2():
+    sp = yaspin(attrs=["blink", "underline"]).bold.dark
+    assert sp._attrs == set(["blink", "underline", "bold", "dark"])

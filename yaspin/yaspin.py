@@ -173,7 +173,6 @@ class Yaspin(object):
     @attrs.setter
     def attrs(self, value):
         new_attrs = self._set_attrs(value) if value else set()
-        # TODO: test this!
         self._attrs = self._attrs.union(new_attrs)
         self._color_func = self._compose_color_func()  # update
 
