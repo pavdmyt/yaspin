@@ -13,11 +13,11 @@ from yaspin import yaspin
 
 
 def main():
-    with yaspin(text="Right spinner", right=True) as sp:
+    with yaspin(text="Right spinner", side="right", color="cyan") as sp:
         time.sleep(2)
 
         # Switch to left spinner
-        sp.right = False
+        sp.side = "left"  # or just ``sp.left``
         sp.text = "Left spinner"
 
         time.sleep(2)

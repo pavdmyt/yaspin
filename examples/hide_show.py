@@ -28,7 +28,7 @@ def main():
         sp.show()
 
         # finalize
-        sp.ok()
+        sp.green.ok("✔")
 
 
 if __name__ == "__main__":

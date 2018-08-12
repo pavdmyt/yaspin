@@ -20,14 +20,14 @@ def manual_setup():
     time.sleep(2)
 
     sp.spinner = Spinners.arc
-    sp.text = "Right arc spinner"
+    sp.text = "Right arc yellow spinner"
     sp.color = "yellow"
-    sp.right = True
+    sp.side = "right"
 
     time.sleep(3)
 
     sp.text = "Resersed arc spinner"
-    sp.reverse = True
+    sp.reversal = True
 
     time.sleep(3)
 

@@ -23,7 +23,7 @@ def main():
         sp.write("> image 2 download complete")
 
         # finalize
-        sp.ok()
+        sp.green.ok("✔")
 
 
 if __name__ == "__main__":

@@ -11,8 +11,13 @@ import random
 import time
 
 from yaspin import yaspin
+from yaspin.compat import iteritems
+from yaspin.constants import COLOR_MAP
 from yaspin.spinners import Spinners
-from yaspin.termcolor import colored
+
+
+COLORS = (k for k, v in iteritems(COLOR_MAP) if v == "color")
+HIGHLIGHTS = (k for k, v in iteritems(COLOR_MAP) if v == "on_color")
 
 
 def any_spinner_you_like():
@@ -54,161 +59,126 @@ def any_spinner_you_like():
             time.sleep(period)
 
 
-def colors_simple():
+def colors_simple(sleep=0.7):
     # Setup printing
     max_len = 25
     msg = "[Colors]"
 
     with yaspin(Spinners.dots12) as sp:
-        colors = ("red", "green", "yellow", "blue", "magenta", "cyan", "white")
-
-        for color in colors:
+        for color in COLORS:
             spaces_qty = max_len - len(color) - len(msg)
             text = "{0}{1}{2}".format(color, " " * spaces_qty, msg)
 
             sp.color = color
             sp.text = text
-            time.sleep(0.7)
+            time.sleep(sleep)
 
 
-def color_highlights():
-    setups = [
-        ("On gray color", lambda frame: colored(frame, on_color="on_grey")),
-        ("On red color", lambda frame: colored(frame, on_color="on_red")),
-        ("On green color", lambda frame: colored(frame, on_color="on_green")),
-        (
-            "On yellow color",
-            lambda frame: colored(frame, on_color="on_yellow"),
-        ),
-        ("On blue color", lambda frame: colored(frame, on_color="on_blue")),
-        (
-            "On magenta color",
-            lambda frame: colored(frame, on_color="on_magenta"),
-        ),
-        ("On cyan color", lambda frame: colored(frame, on_color="on_cyan")),
-        ("On white color", lambda frame: colored(frame, on_color="on_white")),
-    ]
+def color_highlights(sleep=0.5):
     # Setup printing
     max_len = 40
     msg = "[Color Highlights]"
 
     with yaspin(Spinners.bouncingBall) as sp:
-
-        for name, color_func in setups:
+        for highlight in HIGHLIGHTS:
+            name = "On {0} color".format(highlight.split("_")[1])
             spaces_qty = max_len - len(name) - len(msg)
             text = "{0}{1}{2}".format(name, " " * spaces_qty, msg)
 
-            sp.color = color_func
+            sp.on_color = highlight
             sp.text = text
 
-            time.sleep(0.5)
+            time.sleep(sleep)
 
 
-def color_attributes():
-    setups = [
-        (
-            "Bold gray color",
-            lambda frame: colored(frame, "grey", attrs=["bold"]),
-        ),
-        (
-            "Dark red color",
-            lambda frame: colored(frame, "red", attrs=["dark"]),
-        ),
-        (
-            "Underline green color",
-            lambda frame: colored(frame, "green", attrs=["underline"]),
-        ),
-        (
-            "Blink yellow color",
-            lambda frame: colored(frame, "yellow", attrs=["blink"]),
-        ),
-        (
-            "Reversed blue color",
-            lambda frame: colored(frame, "blue", attrs=["reverse"]),
-        ),
-        (
-            "Concealed magenta color",
-            lambda frame: colored(frame, "magenta", attrs=["concealed"]),
-        ),
+def color_attributes(sleep=0.8):
+    descriptions = [
+        "Bold white color",
+        "Dark red color",
+        "Underline green color",
+        "Blink yellow color",
+        "Reverse blue color",
+        "Concealed magenta color",
     ]
     # Setup printing
     max_len = 42
     msg = "[Color Attributes]"
 
     with yaspin(Spinners.bouncingBall) as sp:
+        for descr in descriptions:
+            spaces_qty = max_len - len(descr) - len(msg)
+            text = "{0}{1}{2}".format(descr, " " * spaces_qty, msg)
 
-        for name, color_func in setups:
-            spaces_qty = max_len - len(name) - len(msg)
-            text = "{0}{1}{2}".format(name, " " * spaces_qty, msg)
-
-            sp.color = color_func
+            attr, color, _ = descr.split()
+            sp.attrs, sp.color = [attr.lower()], color
             sp.text = text
 
-            time.sleep(0.8)
+            time.sleep(sleep)
 
 
-def color_craziness():
-    setups = [
-        (
-            "Bold underline reverse cyan color",
-            lambda frame: colored(
-                frame, "cyan", attrs=["bold", "underline", "reverse"]
-            ),
-        ),
-        (
-            "Dark blink concealed white color",
-            lambda frame: colored(
-                frame, "white", attrs=["dark", "blink", "concealed"]
-            ),
-        ),
-        (
-            "Underline red on grey color",
-            lambda frame: colored(
-                frame, "red", "on_grey", attrs=["underline"]
-            ),
-        ),
-        (
-            "Reversed green on red color",
-            lambda frame: colored(frame, "green", "on_red", attrs=["reverse"]),
-        ),
+def color_craziness(sleep=1.3):
+    descriptions = [
+        "Bold underline reverse cyan color",
+        "Dark blink concealed white color",
+        "Underline red on_grey color",
+        "Reversed green on_red color",
     ]
+
+    def parse_attrs(description):
+        """Parse attributes from text description."""
+        attrs = []
+        for word in description.split():
+            attr = word.lower()
+            sp = yaspin()
+            try:
+                getattr(sp, attr)
+            except AttributeError:
+                continue
+            else:
+                attrs.append(attr)
+        return attrs
+
     # Setup printing
     max_len = 58
     msg = "[Color Craziness 🙀 ]"
 
-    with yaspin(Spinners.pong) as sp:
+    # New spinner instance should be created every iteration since
+    # multiple simultaneous color attributes are supported. Hence,
+    # updating attribute of the instance will add new attribute to
+    # the existing list of previous attributes.
+    for descr in descriptions:
+        spaces_qty = max_len - len(descr) - len(msg)
+        text = "{0}{1}{2}".format(descr, " " * spaces_qty, msg)
 
-        for name, color_func in setups:
-            spaces_qty = max_len - len(name) - len(msg)
-            text = "{0}{1}{2}".format(name, " " * spaces_qty, msg)
+        with yaspin(Spinners.pong, text=text) as sp:
+            # Apply all color attributes from description
+            for attr in parse_attrs(descr):
+                getattr(sp, attr)
 
-            sp.color = color_func
-            sp.text = text
-
-            time.sleep(1.3)
+            time.sleep(sleep)
 
 
-def right_spinner():
-    with yaspin(text="Right spinner", right=True, color="cyan") as sp:
-        time.sleep(2)
+def right_spinner(sleep=2):
+    with yaspin(text="Right spinner", side="right", color="cyan") as sp:
+        time.sleep(sleep)
 
         # Switch to left spinner
-        sp.right = False
+        sp.side = "left"
         sp.text = "Left spinner"
 
-        time.sleep(2)
+        time.sleep(sleep)
 
 
-def reversed_spinner():
-    with yaspin(text="Reversed spinner", reverse=True, color="cyan") as sp:
-        time.sleep(1)
+def reversed_spinner(sleep=1):
+    with yaspin(text="Reversed spinner", reversal=True, color="cyan") as sp:
+        time.sleep(sleep)
 
         sp.spinner = Spinners.line
 
-        time.sleep(1)
+        time.sleep(sleep)
 
         sp.text = "Enjoy!"
-        sp.ok("☀️")
+        sp.ok("☀️ ")
 
 
 def main():

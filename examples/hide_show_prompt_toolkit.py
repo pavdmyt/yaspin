@@ -6,11 +6,11 @@ examples.hide_show_prompt_toolkit
 
 Usage of the ``hide`` and ``show`` methods with prompt_toolkit's printing.
 
-Requires python-prompt-tooklit (2.0):
+Requires python-prompt-tooklit >= 2.0.1
 https://github.com/jonathanslenders/python-prompt-toolkit/
 
 .. code:: bash
-    pip install -e git+https://github.com/jonathanslenders/python-prompt-toolkit@2.0#egg=python-prompt-toolkit
+    pip install "prompt_toolkit>=2.0.1"
 """
 
 from __future__ import print_function
@@ -25,10 +25,10 @@ try:
     from prompt_toolkit.styles import Style
 except ImportError:
     print(
-        "This example requires python-prompt-tooklit >= 2.0:\n"
-        "https://github.com/jonathanslenders/python-prompt-toolkit/tree/2.0\n"
+        "This example requires python-prompt-tooklit >= 2.0.1:\n"
+        "https://github.com/jonathanslenders/python-prompt-toolkit/\n"
         "\nTo install it, run:\n"
-        "pip install -e git+https://github.com/jonathanslenders/python-prompt-toolkit@2.0#egg=python-prompt-toolkit"
+        'pip install "prompt_toolkit>=2.0.1"'
     )
     sys.exit(1)
 
@@ -65,4 +65,4 @@ with yaspin(text="Downloading images") as sp:
     sp.show()
 
     # finalize
-    sp.ok()
+    sp.green.ok("✔")

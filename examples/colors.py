@@ -34,6 +34,7 @@ def all_highlights():
             "on_magenta",
             "on_cyan",
             "on_white",
+            "on_grey",
         )
         for highlight in highlights:
             text = "On {0} color".format(highlight.split("_")[1])
