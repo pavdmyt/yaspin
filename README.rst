@@ -30,6 +30,20 @@ or as a function `decorator`_:
     some_operations()
 
 
+**Yaspin** also provides an intuitive and powerful API. For example, you can easily summon a shark:
+
+.. code:: python
+
+    import time
+    from yaspin import yaspin
+
+    with yaspin().white.bold.shark.on_blue as sp:
+        sp.text = "White bold shark in a blue sea"
+        time.sleep(5)
+
+.. image:: https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/shark.gif
+
+
 Features
 --------
 
@@ -158,13 +172,20 @@ Advanced colors usage
     import time
     from yaspin import yaspin
     from yaspin.spinners import Spinners
-    from yaspin.termcolor import colored
 
     text = "Bold blink magenta spinner on cyan color"
-    # Support all termcolor features via simple closure
-    color_fn = lambda frame: colored(frame, "magenta", "on_cyan", attrs=["bold", "blink"])
+    with yaspin().bold.blink.magenta.bouncingBall.on_cyan as sp:
+        sp.text = text
+        time.sleep(3)
 
-    with yaspin(Spinners.bouncingBall, text=text, color=color_fn):
+    # The same result can be achieved by passing arguments directly
+    with yaspin(
+        Spinners.bouncingBall,
+        color="magenta",
+        on_color="on_cyan",
+        attrs=["bold", "blink"],
+    ) as sp:
+        sp.text = text
         time.sleep(3)
 
 
@@ -204,8 +225,8 @@ Change spinner properties on the fly
         sp.spinner = Spinners.arc  # spinner type
         sp.text = "Arc spinner"    # text along with spinner
         sp.color = "green"         # spinner color
-        sp.right = True            # put spinner to the right
-        sp.reverse = True          # reverse spin direction
+        sp.side = "right"          # put spinner to the right
+        sp.reversal = True         # reverse spin direction
 
         time.sleep(2)
 
@@ -378,4 +399,4 @@ License
 .. _PyPI: https://pypi.org/
 .. _🌈: https://en.wikipedia.org/wiki/Any_Colour_You_Like
 .. _examples: https://github.com/pavdmyt/yaspin/tree/master/examples
-.. _prompt-toolkit: https://github.com/jonathanslenders/python-prompt-toolkit/tree/2.0
+.. _prompt-toolkit: https://github.com/jonathanslenders/python-prompt-toolkit/
