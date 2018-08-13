@@ -279,7 +279,7 @@ class Yaspin(object):
     #
     def _freeze(self, final_text):
         """Stop spinner, compose last frame and 'freeze' it."""
-        text = to_unicode(final_text).strip()
+        text = to_unicode(final_text)
         self._last_frame = self._compose_out(text, mode="last")
 
         # Should be stopped here, otherwise prints after
