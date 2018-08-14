@@ -71,7 +71,6 @@ tag:
 bump:
 	@bumpversion                                                  \
 		--commit                                                  \
-		--tag                                                     \
 		--current-version $(version) patch                        \
 		./$(name)/__version__.py                                  \
 		--allow-dirty
@@ -79,7 +78,6 @@ bump:
 bump-minor:
 	@bumpversion                                                  \
 		--commit                                                  \
-		--tag                                                     \
 		--current-version $(version) minor                        \
 		./$(name)/__version__.py                                  \
 		--allow-dirty
