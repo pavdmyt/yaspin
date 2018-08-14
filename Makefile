@@ -85,5 +85,6 @@ bump-minor:
 travis-setup:
 	pip install pipenv --upgrade
 	pipenv install pytest~=3.6.3 --skip-lock
+	pipenv install pytest-xdist~=1.22.2 --skip-lock
 	pipenv install pytest-cov~=2.5.1 --skip-lock
 	pipenv install python-coveralls~=2.9.1 --skip-lock
