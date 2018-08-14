@@ -192,7 +192,7 @@ def attrs_test_cases(request):
 @pytest.fixture(
     scope="session",
     ids=color_id_func,
-    params=[k for k, v in iteritems(COLOR_MAP) if v == "color"],
+    params=sorted([k for k, v in iteritems(COLOR_MAP) if v == "color"]),
 )
 def supported_colors(request):
     return request.param
@@ -201,7 +201,7 @@ def supported_colors(request):
 @pytest.fixture(
     scope="session",
     ids=color_id_func,
-    params=[k for k, v in iteritems(COLOR_MAP) if v == "on_color"],
+    params=sorted([k for k, v in iteritems(COLOR_MAP) if v == "on_color"]),
 )
 def supported_highlights(request):
     return request.param
@@ -210,7 +210,7 @@ def supported_highlights(request):
 @pytest.fixture(
     scope="session",
     ids=attrs_id_func,
-    params=[[k] for k, v in iteritems(COLOR_MAP) if v == "attrs"]
+    params=sorted([[k] for k, v in iteritems(COLOR_MAP) if v == "attrs"])
     + [
         ["bold", "dark"],
         ["blink", "concealed", "reverse"],

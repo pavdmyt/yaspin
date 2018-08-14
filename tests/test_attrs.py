@@ -61,7 +61,7 @@ def test_on_color(on_color_test_cases):
 
 # Values for ``attrs`` argument
 @pytest.mark.parametrize(
-    "attr", [k for k, v in iteritems(COLOR_MAP) if v == "attrs"]
+    "attr", sorted([k for k, v in iteritems(COLOR_MAP) if v == "attrs"])
 )
 def test_attrs(attr):
     sp = yaspin()
