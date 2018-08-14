@@ -19,7 +19,7 @@ isort-all:
 
 black-fmt:
 	black --line-length 79 --exclude "termcolor.py" \
-	./yaspin ./tests ./examples
+	./yaspin ./tests ./examples ./setup.py
 
 clean:
 	@echo "$(OK_COLOR)==> Cleaning up files that are already in .gitignore...$(NO_COLOR)"
