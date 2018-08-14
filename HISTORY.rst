@@ -1,6 +1,18 @@
 Release History
 ===============
 
+0.13.0 / 2018-08-14
+-------------------
+
+* API improvements: ``spinner``, ``color``, ``on_color``, ``attrs`` and ``side`` argument values are handled via ``__getattr__``
+* New ``yaspin`` arguments: ``on_color``, ``attrs``
+* ``right=False`` argument replaced with ``side="left"``
+* ``Yaspin.right`` replaced with ``Yaspin.side``
+* ``reverse`` argument replaced with ``reversal``
+* ``Yaspin.reverse`` replaced with ``Yaspin.reversal``
+* Remove default text stripping in ``Yaspin._freeze``
+
+
 0.12.0 / 2018-07-16
 -------------------
 
