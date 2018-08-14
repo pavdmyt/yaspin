@@ -36,6 +36,9 @@ test: clean-pyc flake
 	@echo "$(OK_COLOR)==> Runnings tests ...$(NO_COLOR)"
 	@py.test -n auto
 
+ci:
+	pipenv run py.test -n auto
+
 coverage: clean-pyc
 	@echo "$(OK_COLOR)==> Calculating coverage...$(NO_COLOR)"
 	@pipenv run py.test --cov-report term --cov-report html --cov $(name) tests/
