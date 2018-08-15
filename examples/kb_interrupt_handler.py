@@ -16,17 +16,16 @@ from yaspin.spinners import Spinners
 
 
 def unpacker():
-    sp = yaspin(Spinners.simpleDotsScrolling, right=True)
+    sp = yaspin(Spinners.simpleDotsScrolling, side="right")
 
     try:
         sp.start()
         for p in range(0, 101, 5):
             sp.text = "{0}% Unpacking".format(p)
             time.sleep(random.random())
-        sp.ok("✔")
+        sp.green.ok("✔")
     except KeyboardInterrupt:
-        sp.color = "red"
-        sp.fail("✘")
+        sp.red.fail("✘")
         sp.stop()
 
 

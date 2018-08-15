@@ -18,57 +18,70 @@ from yaspin.constants import ENCODING
 from yaspin.helpers import to_unicode
 
 
-def test_input_converted_to_unicode(text, frames, interval, right, reverse):
+def test_input_converted_to_unicode(text, frames, interval, reversal, side):
     sp = Spinner(frames, interval)
-    swirl = yaspin(sp, text, right=right, reverse=reverse)
+    sp = yaspin(sp, text, side=side, reversal=reversal)
 
-    if isinstance(swirl._frames, basestring):
-        assert isinstance(swirl._frames, str)
+    if isinstance(sp._frames, basestring):
+        assert isinstance(sp._frames, str)
 
-    if isinstance(swirl._frames, (list, tuple)):
-        assert isinstance(swirl._frames[0], str)
+    if isinstance(sp._frames, (list, tuple)):
+        assert isinstance(sp._frames[0], str)
 
-    assert isinstance(swirl._text, str)
+    assert isinstance(sp._text, str)
 
 
-def test_out_converted_to_builtin_str(text, frames, interval, right, reverse):
+def test_out_converted_to_builtin_str(text, frames, interval, reversal, side):
     sp = Spinner(frames, interval)
-    swirl = yaspin(sp, text, right=right, reverse=reverse)
+    sp = yaspin(sp, text, side=side, reversal=reversal)
 
     for _ in range(len(frames)):
-        frame = next(swirl._cycle)
-        out = swirl._compose_out(frame)
+        frame = next(sp._cycle)
+        out = sp._compose_out(frame)
         assert isinstance(out, builtin_str)
 
 
 def test_repr(text, frames, interval):
     sp = Spinner(frames, interval)
-    swirl = yaspin(sp, text)
+    sp = yaspin(sp, text)
 
-    assert isinstance(repr(swirl), builtin_str)
+    assert isinstance(repr(sp), builtin_str)
 
 
-def test_compose_out_with_color(colors_test_cases):
-    color, expected = colors_test_cases
+def test_compose_out_with_color(
+    color_test_cases, on_color_test_cases, attrs_test_cases
+):
+    color, color_exp = color_test_cases
+    on_color, on_color_exp = on_color_test_cases
+    attrs, attrs_exp = attrs_test_cases
 
     # Skip non relevant cases
-    empty = not expected
-    is_exc = isinstance(expected, Exception)
-    func = callable(expected)
-
-    if empty or is_exc or func:
-        pytest.skip("{0} - unsupported case".format(repr(expected)))
+    empty = not color_exp or not on_color_exp or not attrs_exp
+    is_exc = any(
+        [
+            isinstance(color_exp, Exception),
+            isinstance(on_color_exp, Exception),
+            isinstance(attrs_exp, Exception),
+        ]
+    )
+    if empty or is_exc:
+        items = [repr(color_exp), repr(on_color_exp), repr(attrs_exp)]
+        pytest.skip("{0} - unsupported case".format(items))
 
     # Actual test
-    swirl = yaspin(color=color)
-    out = swirl._compose_out(frame=u"/")
+    sp = yaspin(color=color, on_color=on_color, attrs=attrs)
+    assert sp._color == color
+    assert sp._on_color == on_color
+    assert sp._attrs == set(attrs)
+
+    out = sp._compose_out(frame=u"/")
     assert out.startswith("\r\033")
     assert isinstance(out, builtin_str)
 
 
 def test_write(capsys, text):
-    swirl = yaspin()
-    swirl.write(text)
+    sp = yaspin()
+    sp.write(text)
 
     out, _ = capsys.readouterr()
     # cleans stdout from _clear_line and \r
@@ -91,22 +104,22 @@ def test_write(capsys, text):
 
 def test_hide_show(capsys, text, request):
     # Setup
-    swirl = yaspin()
-    swirl.start()
+    sp = yaspin()
+    sp.start()
 
-    # Ensure that swirl.stop() will be executed
+    # Ensure that sp.stop() will be executed
     def teardown():
-        swirl.stop()
+        sp.stop()
 
     request.addfinalizer(teardown)
 
     #
     # Actual test
     #
-    swirl.hide()
+    sp.hide()
 
     # ensure that hidden spinner flag was set
-    assert swirl._hide_spin.is_set()
+    assert sp._hide_spin.is_set()
     out, _ = capsys.readouterr()
 
     # ensure that text was cleared with the hide method
@@ -138,10 +151,10 @@ def test_hide_show(capsys, text, request):
     if text:
         assert out[:-1] == text
 
-    swirl.show()
+    sp.show()
 
     # ensure that hidden spinner flag was cleared
-    assert not swirl._hide_spin.is_set()
+    assert not sp._hide_spin.is_set()
     out, _ = capsys.readouterr()
 
     # ensure that text was cleared before resuming the spinner

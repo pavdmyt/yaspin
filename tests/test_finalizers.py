@@ -11,36 +11,36 @@ from yaspin.compat import builtin_str
 
 
 def test_freeze(final_text):
-    swirl = yaspin()
-    swirl._freeze(final_text)
+    sp = yaspin()
+    sp._freeze(final_text)
 
-    assert isinstance(swirl._last_frame, builtin_str)
-    assert swirl._last_frame[-1] == "\n"
+    assert isinstance(sp._last_frame, builtin_str)
+    assert sp._last_frame[-1] == "\n"
 
 
 def test_ok(final_text):
-    swirl = yaspin()
-    swirl.ok(final_text)
+    sp = yaspin()
+    sp.ok(final_text)
 
-    assert isinstance(swirl._last_frame, builtin_str)
-    assert swirl._last_frame[-1] == "\n"
+    assert isinstance(sp._last_frame, builtin_str)
+    assert sp._last_frame[-1] == "\n"
 
 
 def test_ok_empty_case():
-    swirl = yaspin()
-    swirl.ok()
-    assert "OK" in swirl._last_frame
+    sp = yaspin()
+    sp.ok()
+    assert "OK" in sp._last_frame
 
 
 def test_fail(final_text):
-    swirl = yaspin()
-    swirl.fail(final_text)
+    sp = yaspin()
+    sp.fail(final_text)
 
-    assert isinstance(swirl._last_frame, builtin_str)
-    assert swirl._last_frame[-1] == "\n"
+    assert isinstance(sp._last_frame, builtin_str)
+    assert sp._last_frame[-1] == "\n"
 
 
 def test_fail_empty_case():
-    swirl = yaspin()
-    swirl.fail()
-    assert "FAIL" in swirl._last_frame
+    sp = yaspin()
+    sp.fail()
+    assert "FAIL" in sp._last_frame

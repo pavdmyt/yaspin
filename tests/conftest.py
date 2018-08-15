@@ -9,7 +9,8 @@ Tests data.
 
 import pytest
 
-from yaspin.termcolor import colored
+from yaspin.compat import iteritems
+from yaspin.constants import COLOR_MAP
 
 
 frame_cases = [
@@ -83,17 +84,15 @@ def text(request):
     return request.param
 
 
-@pytest.fixture(
-    scope="session", params=[False, True], ids=["'left'", "'right'"]
-)
-def right(request):
+@pytest.fixture(scope="session", params=["left", "right"])
+def side(request):
     return request.param
 
 
 @pytest.fixture(
-    scope="session", params=[False, True], ids=["default", "reverse"]
+    scope="session", params=[False, True], ids=["default", "reversal"]
 )
-def reverse(request):
+def reversal(request):
     return request.param
 
 
@@ -108,6 +107,15 @@ def color_id_func(case):
     else:
         val = color
 
+    return val
+
+
+def attrs_id_func(case):
+    if isinstance(case, list):
+        val = ", ".join(case)
+    if isinstance(case, tuple):
+        attrs, _ = case
+        val = ", ".join(attrs)
     return val
 
 
@@ -127,21 +135,11 @@ def color_id_func(case):
         ("cyan", "cyan"),
         ("white", "white"),
         # Unsupported text colors
-        ("black", ValueError()),
-        ("brown", ValueError()),
+        ("Red", ValueError()),
         ("orange", ValueError()),
-        # Uppercase handling
-        ("Red", "red"),
-        ("grEEn", "green"),
-        ("BlacK", ValueError()),
-        # Callables
-        (
-            lambda frame: colored(frame, "red", attrs=["bold"]),
-            lambda frame: colored(frame, "red", attrs=["bold"]),
-        ),
     ],
 )
-def colors_test_cases(request):
+def color_test_cases(request):
     return request.param
 
 
@@ -149,17 +147,79 @@ def colors_test_cases(request):
     scope="session",
     ids=color_id_func,
     params=[
-        "red",
-        "green",
-        "yellow",
-        "blue",
-        "magenta",
-        "cyan",
-        "white",
-        lambda frame: colored(frame, "red", attrs=["bold"]),
+        # Empty values
+        ("", ""),
+        (None, None),
+        # Supported highlights
+        ("on_red", "on_red"),
+        ("on_green", "on_green"),
+        ("on_yellow", "on_yellow"),
+        ("on_blue", "on_blue"),
+        ("on_magenta", "on_magenta"),
+        ("on_cyan", "on_cyan"),
+        ("on_white", "on_white"),
+        # Unsupported highlights
+        ("on_foo", ValueError()),
     ],
 )
+def on_color_test_cases(request):
+    return request.param
+
+
+@pytest.fixture(
+    scope="session",
+    ids=attrs_id_func,
+    params=[
+        # Supported attrs
+        (["bold"], ["bold"]),
+        (["dark"], ["dark"]),
+        (["underline"], ["underline"]),
+        (["blink"], ["blink"]),
+        (["reverse"], ["reverse"]),
+        (["concealed"], ["concealed"]),
+        # Multiple attrs
+        (["bold", "dark"], ["bold", "dark"]),
+        (["bold", "dark", "reverse"], ["bold", "dark", "reverse"]),
+        # Unsupported attrs
+        (["Dark"], ValueError()),
+        (["bold", "bar"], ValueError()),
+    ],
+)
+def attrs_test_cases(request):
+    return request.param
+
+
+@pytest.fixture(
+    scope="session",
+    ids=color_id_func,
+    params=sorted([k for k, v in iteritems(COLOR_MAP) if v == "color"]),
+)
 def supported_colors(request):
+    return request.param
+
+
+@pytest.fixture(
+    scope="session",
+    ids=color_id_func,
+    params=sorted([k for k, v in iteritems(COLOR_MAP) if v == "on_color"]),
+)
+def supported_highlights(request):
+    return request.param
+
+
+@pytest.fixture(
+    scope="session",
+    ids=attrs_id_func,
+    params=sorted(
+        [[k] for k, v in iteritems(COLOR_MAP) if v == "attrs"]
+        + [
+            ["bold", "dark"],
+            ["blink", "concealed", "reverse"],
+            ["underline", "concealed", "bold", "dark", "blink", "reverse"],
+        ]
+    ),
+)
+def supported_attrs(request):
     return request.param
 
 

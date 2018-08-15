@@ -19,7 +19,7 @@ isort-all:
 
 black-fmt:
 	black --line-length 79 --exclude "termcolor.py" \
-	./yaspin ./tests ./examples
+	./yaspin ./tests ./examples ./setup.py
 
 clean:
 	@echo "$(OK_COLOR)==> Cleaning up files that are already in .gitignore...$(NO_COLOR)"
@@ -34,8 +34,10 @@ clean-pyc:
 
 test: clean-pyc flake
 	@echo "$(OK_COLOR)==> Runnings tests ...$(NO_COLOR)"
-	@py.test -k "not test_piping_output"
-	@py.test -n auto -k "test_piping_output"
+	@py.test -n auto
+
+ci:
+	pipenv run py.test -n auto
 
 coverage: clean-pyc
 	@echo "$(OK_COLOR)==> Calculating coverage...$(NO_COLOR)"
@@ -69,7 +71,6 @@ tag:
 bump:
 	@bumpversion                                                  \
 		--commit                                                  \
-		--tag                                                     \
 		--current-version $(version) patch                        \
 		./$(name)/__version__.py                                  \
 		--allow-dirty
@@ -77,7 +78,6 @@ bump:
 bump-minor:
 	@bumpversion                                                  \
 		--commit                                                  \
-		--tag                                                     \
 		--current-version $(version) minor                        \
 		./$(name)/__version__.py                                  \
 		--allow-dirty
@@ -85,5 +85,6 @@ bump-minor:
 travis-setup:
 	pip install pipenv --upgrade
 	pipenv install pytest~=3.6.3 --skip-lock
+	pipenv install pytest-xdist~=1.22.2 --skip-lock
 	pipenv install pytest-cov~=2.5.1 --skip-lock
 	pipenv install python-coveralls~=2.9.1 --skip-lock

@@ -25,15 +25,13 @@ def default_finalizers():
 def custom_finalizers():
     with yaspin(text="Processing...") as sp:
         time.sleep(2)
-        sp.ok("☀️")
-
-    with yaspin(text="Processing...", right=True) as sp:
-        time.sleep(2)
-        sp.fail("💥")
+        # Make finalizer green
+        sp.green.ok("✔")
 
     with yaspin(text="Processing...") as sp:
         time.sleep(2)
-        sp.ok(b"\xe2\x9c\x94")
+        # Make finalizer red
+        sp.red.fail("✘")
 
 
 def main():

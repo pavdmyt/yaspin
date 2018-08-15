@@ -11,6 +11,7 @@ from __future__ import absolute_import
 
 import codecs
 import json
+from collections import OrderedDict
 
 import pytest
 
@@ -19,7 +20,7 @@ from yaspin.spinners import SPINNERS_PATH, Spinners
 
 
 with codecs.open(SPINNERS_PATH, encoding="utf-8") as f:
-    spinners_dict = json.load(f)
+    spinners_dict = OrderedDict(json.load(f))
 
 
 test_cases = [
