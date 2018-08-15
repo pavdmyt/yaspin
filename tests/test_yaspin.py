@@ -35,6 +35,15 @@ from yaspin.base_spinner import default_spinner
         # Both attrs, are set
         (Spinner("-\\|/", 42), Spinner("-\\|/", 42)),
     ],
+    ids=[
+        "None",
+        "no `interval` attr",
+        "no `frames` attr",
+        "attrs not set",
+        "`frames` not set",
+        "`interval` not set",
+        "both attrs are set",
+    ],
 )
 def test_set_spinner(spinner, expected):
     sp = yaspin(spinner)

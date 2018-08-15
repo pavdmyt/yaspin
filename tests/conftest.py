@@ -210,12 +210,14 @@ def supported_highlights(request):
 @pytest.fixture(
     scope="session",
     ids=attrs_id_func,
-    params=sorted([[k] for k, v in iteritems(COLOR_MAP) if v == "attrs"])
-    + [
-        ["bold", "dark"],
-        ["blink", "concealed", "reverse"],
-        ["underline", "concealed", "bold", "dark", "blink", "reverse"],
-    ],
+    params=sorted(
+        [[k] for k, v in iteritems(COLOR_MAP) if v == "attrs"]
+        + [
+            ["bold", "dark"],
+            ["blink", "concealed", "reverse"],
+            ["underline", "concealed", "bold", "dark", "blink", "reverse"],
+        ]
+    ),
 )
 def supported_attrs(request):
     return request.param
