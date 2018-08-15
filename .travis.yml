@@ -1,38 +1,47 @@
 sudo: false
 language: python
 cache: pip
+env:
+  - PYTHONHASHSEED=0
 install:
   - make travis-setup
 jobs:
   include:
     - stage: test
       script:
+        - echo ";;; PYTHONHASHSEED " $PYTHONHASHSEED
         - make ci
       python: '2.7'
     - stage: test
       script:
+        - echo ";;; PYTHONHASHSEED " $PYTHONHASHSEED
         - make ci
       python: '3.4'
     - stage: test
       script:
+        - echo ";;; PYTHONHASHSEED " $PYTHONHASHSEED
         - make ci
       python: '3.5'
     - stage: test
       script:
+        - echo ";;; PYTHONHASHSEED " $PYTHONHASHSEED
         - make ci
       python: '3.6'
     - stage: test
       script:
+        - echo ";;; PYTHONHASHSEED " $PYTHONHASHSEED
         - make ci
       python: '3.7'
       dist: xenial
       sudo: true
     - stage: test
       script:
+        - echo ";;; PYTHONHASHSEED " $PYTHONHASHSEED
         - make ci
       python: 'pypy'
     - stage: test
       script:
+        - echo ";;; PYTHONHASHSEED " $PYTHONHASHSEED
         - make ci
       python: 'pypy3'
     - stage: coverage
@@ -40,6 +49,7 @@ jobs:
         - 2.7
         - 3.6
       script:
+        - echo ";;; PYTHONHASHSEED " $PYTHONHASHSEED
         - make coverage
       after_success:
         - coveralls
