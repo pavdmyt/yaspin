@@ -20,6 +20,7 @@ from .base_spinner import default_spinner
 from .compat import PY2, basestring, builtin_str, bytes, iteritems, str
 from .constants import COLOR_ATTRS, COLOR_MAP, ENCODING, SPINNER_ATTRS
 from .helpers import to_unicode
+from .signal_handlers import default_handler
 from .termcolor import colored
 
 
@@ -552,4 +553,17 @@ def yaspin(
         foo()
 
     """
+    return Yaspin(**locals())
+
+
+def kb_yaspin(
+    spinner=None,
+    text="",
+    color=None,
+    on_color=None,
+    attrs=None,
+    reversal=False,
+    side="left",
+    sigmap={signal.SIGINT: default_handler},
+):
     return Yaspin(**locals())
