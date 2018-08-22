@@ -11,6 +11,7 @@ from __future__ import absolute_import
 
 import functools
 import itertools
+import signal
 import sys
 import threading
 import time
@@ -51,6 +52,7 @@ class Yaspin(object):
         attrs=None,
         reversal=False,
         side="left",
+        sigmap=None,
     ):
         # Spinner
         self._spinner = self._set_spinner(spinner)
@@ -63,6 +65,9 @@ class Yaspin(object):
         self._on_color = self._set_on_color(on_color) if on_color else on_color
         self._attrs = self._set_attrs(attrs) if attrs else set()
         self._color_func = self._compose_color_func()
+
+        # Signals
+        self._sigmap = sigmap if sigmap else {}
 
         # Other
         self._text = self._set_text(text)
@@ -202,6 +207,15 @@ class Yaspin(object):
     # Public
     #
     def start(self):
+        if self._sigmap:
+            # Register signal handlers
+            for s, handler_fn in iteritems(self._sigmap):
+                # ``signal.signal`` accepts handler function which is called
+                # with two arguments: signal number and the interrupted stack
+                # frame. ``functools.partial`` solves the problem of passing
+                # spinner instance into the handler function.
+                signal.signal(s, functools.partial(handler_fn, spinner=self))
+
         if sys.stdout.isatty():
             self._hide_cursor()
 
@@ -477,6 +491,7 @@ class Yaspin(object):
         sys.stdout.write("\033[K")
 
 
+# TODO: add description for the ``sigmap`` argument.
 def yaspin(
     spinner=None,
     text="",
@@ -485,6 +500,7 @@ def yaspin(
     attrs=None,
     reversal=False,
     side="left",
+    sigmap=None,
 ):
     """Display spinner in stdout.
 
