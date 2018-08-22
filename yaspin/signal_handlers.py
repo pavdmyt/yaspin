@@ -4,6 +4,8 @@
 yaspin.signal_handlers
 ~~~~~~~~~~~~~~~~~~~~~~
 
+Callback functions or "signal handlers", that are invoked
+when the signal occurs.
 """
 
 import sys

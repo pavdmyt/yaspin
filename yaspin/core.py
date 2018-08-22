@@ -20,7 +20,6 @@ from .base_spinner import default_spinner
 from .compat import PY2, basestring, builtin_str, bytes, iteritems, str
 from .constants import COLOR_ATTRS, COLOR_MAP, ENCODING, SPINNER_ATTRS
 from .helpers import to_unicode
-from .signal_handlers import default_handler
 from .termcolor import colored
 
 
@@ -490,80 +489,3 @@ class Yaspin(object):
     @staticmethod
     def _clear_line():
         sys.stdout.write("\033[K")
-
-
-# TODO: add description for the ``sigmap`` argument.
-def yaspin(
-    spinner=None,
-    text="",
-    color=None,
-    on_color=None,
-    attrs=None,
-    reversal=False,
-    side="left",
-    sigmap=None,
-):
-    """Display spinner in stdout.
-
-    Can be used as a context manager or as a function decorator.
-
-    Arguments:
-        spinner (yaspin.Spinner, optional): Spinner to use.
-        text (str, optional): Text to show along with spinner.
-        color (str, callable, optional): Color or color style of the spinner.
-        reversal (bool, optional): Reverse spin direction.
-        side (str, optional): Place spinner to the right or left end
-            of the text string.
-
-    Returns:
-        yaspin.Yaspin: instance of the Yaspin class.
-
-    Raises:
-        ValueError: If unsupported `color` is specified.
-
-    Available text colors:
-        red, green, yellow, blue, magenta, cyan, white.
-
-    Available text highlights:
-        on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan, on_white,
-        on_grey.
-
-    Available attributes:
-        bold, dark, underline, blink, reverse, concealed.
-
-    Example::
-
-        # Use as a context manager
-        with yaspin():
-            some_operations()
-
-        # Context manager with text
-        with yaspin(text="Processing..."):
-            some_operations()
-
-        # Context manager with custom sequence
-        with yaspin(Spinner('-\\|/', 150)):
-            some_operations()
-
-        # As decorator
-        @yaspin(text="Loading...")
-        def foo():
-            time.sleep(5)
-
-        foo()
-
-    """
-    return Yaspin(**locals())
-
-
-def kb_yaspin(
-    spinner=None,
-    text="",
-    color=None,
-    on_color=None,
-    attrs=None,
-    reversal=False,
-    side="left",
-    sigmap={signal.SIGINT: default_handler},
-):
-    return Yaspin(**locals())
