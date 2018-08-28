@@ -73,9 +73,9 @@ def yaspin(*args, **kwargs):
     return Yaspin(*args, **kwargs)
 
 
-def kb_yaspin(*args, **kwargs):
+def kbi_safe_yaspin(*args, **kwargs):
     kwargs["sigmap"] = {signal.SIGINT: default_handler}
     return Yaspin(*args, **kwargs)
 
 
-kb_yaspin.__doc__ = yaspin.__doc__
+kbi_safe_yaspin.__doc__ = yaspin.__doc__
