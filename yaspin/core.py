@@ -66,9 +66,6 @@ class Yaspin(object):
         self._attrs = self._set_attrs(attrs) if attrs else set()
         self._color_func = self._compose_color_func()
 
-        # Signals
-        self._sigmap = sigmap if sigmap else {}
-
         # Other
         self._text = self._set_text(text)
         self._side = self._set_side(side)
@@ -79,6 +76,18 @@ class Yaspin(object):
         self._hide_spin = None
         self._spin_thread = None
         self._last_frame = None
+
+        # Signals
+
+        # In Python 2 signal.SIG* are of type int.
+        # In Python 3 signal.SIG* are enums.
+        #
+        # Signal     = Union[enum.Enum, int]
+        # SigHandler = Union[enum.Enum, Callable]
+        self._sigmap = sigmap if sigmap else {}  # Dict[Signal, SigHandler]
+        # Maps signals to their default handlers in order to reset
+        # custom handlers set by ``sigmap`` at the cleanup phase.
+        self._dfl_sigmap = {}  # Dict[Signal, SigHandler]
 
     #
     # Dunders
@@ -209,12 +218,20 @@ class Yaspin(object):
     def start(self):
         if self._sigmap:
             # Register signal handlers
-            for s, handler_fn in iteritems(self._sigmap):
+            for sig, sig_handler in iteritems(self._sigmap):
+                # A handler for a particular signal, once set, remains
+                # installed until it is explicitly reset. Store default
+                # signal handlers for subsequent reset at cleanup phase.
+                dfl_handler = signal.getsignal(sig)
+                self._dfl_sigmap[sig] = dfl_handler
+
                 # ``signal.signal`` accepts handler function which is called
                 # with two arguments: signal number and the interrupted stack
                 # frame. ``functools.partial`` solves the problem of passing
                 # spinner instance into the handler function.
-                signal.signal(s, functools.partial(handler_fn, spinner=self))
+                signal.signal(
+                    sig, functools.partial(sig_handler, spinner=self)
+                )
 
         if sys.stdout.isatty():
             self._hide_cursor()
@@ -225,6 +242,11 @@ class Yaspin(object):
         self._spin_thread.start()
 
     def stop(self):
+        if self._dfl_sigmap:
+            # Reset registered signal handlers to default ones
+            for sig, sig_handler in iteritems(self._dfl_sigmap):
+                signal.signal(sig, sig_handler)
+
         if self._spin_thread:
             self._stop_spin.set()
             self._spin_thread.join()
