@@ -9,10 +9,10 @@ Handling signals.
 Reference
 ---------
 
- - Signals in a nutshell:
+- Signals in a nutshell:
     https://twitter.com/b0rk/status/981678748763414529
 
- - More detailed overview:
+- More detailed overview:
     https://jvns.ca/blog/2016/06/13/should-you-be-scared-of-signals/
 
 - Python signal module examples:
@@ -81,7 +81,7 @@ def passing_additional_info_into_signal_handler():
         sys.exit(0)
 
     with yaspin(sigmap={signal.SIGINT: my_handler}).toggle8 as sp:
-        sp.text = "Tossing a coin... Press Control-C to know the result"
+        sp.text = "Tossing a coin... Press Control-C to view the result"
         time.sleep(10)
         sp.write("The coin has disappeared")
 
@@ -105,11 +105,30 @@ def handling_multiple_signals():
         sp.write("No signal received")
 
 
-# TODO: Add ignore signal example
+def ignore_signal():
+    with yaspin(
+        sigmap={signal.SIGINT: signal.SIG_IGN}, text="You can't interrupt me!"
+    ):
+        time.sleep(5)
+
+
+def default_os_handler_for_sigint():
+    # Python sets ``signal.default_int_handler`` as a default handler
+    # for SIGINT. It raises KeyboardInterrupt exception. It is also
+    # possible to set default OS behavior for SIGINT by setting
+    # ``signal.SIG_DFL`` as a signal handler.
+    #
+    # Generally ``signal.SIG_DFL`` performs the default function for the
+    # signal.
+    with yaspin(
+        sigmap={signal.SIGINT: signal.SIG_DFL},
+        text="Default OS handler for SIGINT",
+    ):
+        time.sleep(5)
 
 
 #
-# Miscellaneous
+# Real-world examples
 #
 def unpacker():
     swirl = yaspin(
@@ -144,10 +163,11 @@ def unpacker():
 def main():
     simple_keyboard_interrupt_handling()
     fancy_keyboard_interrupt_handler()
-    unpacker()
     custom_signal_handler()
     passing_additional_info_into_signal_handler()
     handling_multiple_signals()
+    ignore_signal()
+    default_os_handler_for_sigint()
     unpacker()
 
 
