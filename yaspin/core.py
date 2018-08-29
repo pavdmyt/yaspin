@@ -225,13 +225,17 @@ class Yaspin(object):
                 dfl_handler = signal.getsignal(sig)
                 self._dfl_sigmap[sig] = dfl_handler
 
-                # ``signal.signal`` accepts handler function which is called
-                # with two arguments: signal number and the interrupted stack
-                # frame. ``functools.partial`` solves the problem of passing
-                # spinner instance into the handler function.
-                signal.signal(
-                    sig, functools.partial(sig_handler, spinner=self)
-                )
+                # ``signal.SIG_DFL`` and ``signal.SIG_IGN`` are also valid
+                # signal handlers and are not callables.
+                if callable(sig_handler):
+                    # ``signal.signal`` accepts handler function which is
+                    # called with two arguments: signal number and the
+                    # interrupted stack frame. ``functools.partial`` solves
+                    # the problem of passing spinner instance into the handler
+                    # function.
+                    sig_handler = functools.partial(sig_handler, spinner=self)
+
+                signal.signal(sig, sig_handler)
 
         if sys.stdout.isatty():
             self._hide_cursor()
