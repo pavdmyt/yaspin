@@ -51,3 +51,12 @@ def test_sigmap_signals_get_registered(sigmap_test_cases):
                 assert sig_handler == handler
     finally:
         sp.stop()
+
+
+def test_raise_exception_for_sigkill():
+    sp = yaspin(sigmap={signal.SIGKILL: signal.SIG_IGN})
+    try:
+        with pytest.raises(ValueError):
+            sp.start()
+    finally:
+        sp.stop()
