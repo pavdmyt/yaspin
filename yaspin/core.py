@@ -366,15 +366,16 @@ class Yaspin(object):
         return out
 
     def _register_signal_handlers(self):
+        # SIGKILL cannot be caught or ignored, and the receiving
+        # process cannot perform any clean-up upon receiving this
+        # signal.
+        if signal.SIGKILL in self._sigmap.keys():
+            raise ValueError(
+                "Registering handler for SIGKILL signal. "
+                "SIGKILL cannot be cought or ignored in POSIX systems."
+            )
+
         for sig, sig_handler in iteritems(self._sigmap):
-            # SIGKILL cannot be caught or ignored, and the receiving
-            # process cannot perform any clean-up upon receiving this
-            # signal.
-            if sig == signal.SIGKILL:
-                raise ValueError(
-                    "Registering handler for SIGKILL signal. "
-                    "SIGKILL cannot be cought or ignored in POSIX systems."
-                )
             # A handler for a particular signal, once set, remains
             # installed until it is explicitly reset. Store default
             # signal handlers for subsequent reset at cleanup phase.
