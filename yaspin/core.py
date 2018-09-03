@@ -217,33 +217,7 @@ class Yaspin(object):
     #
     def start(self):
         if self._sigmap:
-            # Register signal handlers
-            for sig, sig_handler in iteritems(self._sigmap):
-                # SIGKILL cannot be caught or ignored, and the receiving
-                # process cannot perform any clean-up upon receiving this
-                # signal.
-                if sig == signal.SIGKILL:
-                    raise ValueError(
-                        "Registering handler for SIGKILL signal. "
-                        "SIGKILL cannot be cought or ignored in POSIX systems."
-                    )
-                # A handler for a particular signal, once set, remains
-                # installed until it is explicitly reset. Store default
-                # signal handlers for subsequent reset at cleanup phase.
-                dfl_handler = signal.getsignal(sig)
-                self._dfl_sigmap[sig] = dfl_handler
-
-                # ``signal.SIG_DFL`` and ``signal.SIG_IGN`` are also valid
-                # signal handlers and are not callables.
-                if callable(sig_handler):
-                    # ``signal.signal`` accepts handler function which is
-                    # called with two arguments: signal number and the
-                    # interrupted stack frame. ``functools.partial`` solves
-                    # the problem of passing spinner instance into the handler
-                    # function.
-                    sig_handler = functools.partial(sig_handler, spinner=self)
-
-                signal.signal(sig, sig_handler)
+            self._register_signal_handlers()
 
         if sys.stdout.isatty():
             self._hide_cursor()
@@ -256,8 +230,7 @@ class Yaspin(object):
     def stop(self):
         if self._dfl_sigmap:
             # Reset registered signal handlers to default ones
-            for sig, sig_handler in iteritems(self._dfl_sigmap):
-                signal.signal(sig, sig_handler)
+            self._reset_signal_handlers()
 
         if self._spin_thread:
             self._stop_spin.set()
@@ -391,6 +364,38 @@ class Yaspin(object):
         assert isinstance(out, builtin_str)
 
         return out
+
+    def _register_signal_handlers(self):
+        for sig, sig_handler in iteritems(self._sigmap):
+            # SIGKILL cannot be caught or ignored, and the receiving
+            # process cannot perform any clean-up upon receiving this
+            # signal.
+            if sig == signal.SIGKILL:
+                raise ValueError(
+                    "Registering handler for SIGKILL signal. "
+                    "SIGKILL cannot be cought or ignored in POSIX systems."
+                )
+            # A handler for a particular signal, once set, remains
+            # installed until it is explicitly reset. Store default
+            # signal handlers for subsequent reset at cleanup phase.
+            dfl_handler = signal.getsignal(sig)
+            self._dfl_sigmap[sig] = dfl_handler
+
+            # ``signal.SIG_DFL`` and ``signal.SIG_IGN`` are also valid
+            # signal handlers and are not callables.
+            if callable(sig_handler):
+                # ``signal.signal`` accepts handler function which is
+                # called with two arguments: signal number and the
+                # interrupted stack frame. ``functools.partial`` solves
+                # the problem of passing spinner instance into the handler
+                # function.
+                sig_handler = functools.partial(sig_handler, spinner=self)
+
+            signal.signal(sig, sig_handler)
+
+    def _reset_signal_handlers(self):
+        for sig, sig_handler in iteritems(self._dfl_sigmap):
+            signal.signal(sig, sig_handler)
 
     #
     # Static
