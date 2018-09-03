@@ -60,3 +60,17 @@ def test_raise_exception_for_sigkill():
             sp.start()
     finally:
         sp.stop()
+
+
+def test_default_handlers_are_set_at_cleanup_stage(sigmap_test_cases):
+    sigmap = sigmap_test_cases
+    if not sigmap:
+        pytest.skip("{0!r} - unsupported case".format(sigmap))
+
+    sp = yaspin(sigmap=sigmap)
+    sp.start()
+    sp.stop()
+
+    for sig in sigmap.keys():
+        handler = signal.getsignal(sig)
+        assert handler == sp._dfl_sigmap[sig]
