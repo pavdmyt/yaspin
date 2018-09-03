@@ -14,7 +14,7 @@ import signal
 
 import pytest
 
-from yaspin import yaspin
+from yaspin import kbi_safe_yaspin, yaspin
 from yaspin.compat import iteritems
 
 
@@ -74,3 +74,17 @@ def test_default_handlers_are_set_at_cleanup_stage(sigmap_test_cases):
     for sig in sigmap.keys():
         handler = signal.getsignal(sig)
         assert handler == sp._dfl_sigmap[sig]
+
+
+def test_kbi_safe_yaspin():
+    sp = kbi_safe_yaspin()
+
+    try:
+        sp.start()
+
+        handler = signal.getsignal(signal.SIGINT)
+        # Handler function is wrapped into ``partial`` and
+        # is accesible via ``func`` attribute.
+        assert handler.func == sp._sigmap[signal.SIGINT]
+    finally:
+        sp.stop()
