@@ -22,7 +22,7 @@ def yaspin(*args, **kwargs):
     Can be used as a context manager or as a function decorator.
 
     Arguments:
-        spinner (yaspin.Spinner, optional): Spinner object to use.
+        spinner (base_spinner.Spinner, optional): Spinner object to use.
         text (str, optional): Text to show along with spinner.
         color (str, optional): Spinner color.
         on_color (str, optional): Color highlight for the spinner.
@@ -84,4 +84,5 @@ def kbi_safe_yaspin(*args, **kwargs):
     return Yaspin(*args, **kwargs)
 
 
-kbi_safe_yaspin.__doc__ = yaspin.__doc__
+_kbi_safe_doc = yaspin.__doc__.replace("yaspin", "kbi_safe_yaspin")
+kbi_safe_yaspin.__doc__ = _kbi_safe_doc
