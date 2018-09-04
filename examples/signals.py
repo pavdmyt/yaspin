@@ -45,6 +45,9 @@ def simple_keyboard_interrupt_handling():
         time.sleep(5)
 
 
+# Set the handler for signal signalnum to the function handler.
+# Handler can be a callable Python object taking two arguments,
+# or one of the special values signal.SIG_IGN or signal.SIG_DFL.
 def fancy_keyboard_interrupt_handler():
     with yaspin(sigmap={signal.SIGINT: fancy_handler}, text=DEFAULT_TEXT):
         time.sleep(5)
@@ -141,23 +144,6 @@ def unpacker():
             sp.text = "{0}% Unpacking".format(p)
             time.sleep(random.random())
         sp.green.ok("✔")
-
-
-# Pre-setup example
-# def setup_example():
-#     swirl = yaspin(
-#         sigmap={SIGINT: fancy_handler},
-#         color="red",
-#         text="swirl!",
-#         spinner=Spinners.simpleDotsScrolling,
-#         side="right",
-#     )
-#     with swirl as sp:
-#         time.sleep(2)
-#         sp.text = "more swirl!11"
-#         sp.reversal = True
-#         time.sleep(2)
-#         sp.green.ok("✔")
 
 
 def main():
