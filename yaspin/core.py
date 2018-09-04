@@ -371,7 +371,7 @@ class Yaspin(object):
         # signal.
         if signal.SIGKILL in self._sigmap.keys():
             raise ValueError(
-                "Registering handler for SIGKILL signal. "
+                "Trying to set handler for SIGKILL signal. "
                 "SIGKILL cannot be cought or ignored in POSIX systems."
             )
 
