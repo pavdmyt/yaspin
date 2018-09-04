@@ -16,34 +16,40 @@ from .core import Yaspin
 from .signal_handlers import default_handler
 
 
-# TODO: add description for the ``sigmap`` argument.
-# TODO: add description for the ``on_color`` argument.
-# TODO: add description for the ``attrs`` argument.
 def yaspin(*args, **kwargs):
     """Display spinner in stdout.
 
     Can be used as a context manager or as a function decorator.
 
     Arguments:
-        spinner (yaspin.Spinner, optional): Spinner to use.
+        spinner (yaspin.Spinner, optional): Spinner object to use.
         text (str, optional): Text to show along with spinner.
-        color (str, callable, optional): Color or color style of the spinner.
+        color (str, optional): Spinner color.
+        on_color (str, optional): Color highlight for the spinner.
+        attrs (list, optional): Color attributes for the spinner.
         reversal (bool, optional): Reverse spin direction.
         side (str, optional): Place spinner to the right or left end
             of the text string.
+        sigmap (dict, optional): Maps POSIX signals to their respective
+            handlers.
 
     Returns:
-        yaspin.Yaspin: instance of the Yaspin class.
+        core.Yaspin: instance of the Yaspin class.
 
     Raises:
-        ValueError: If unsupported `color` is specified.
+        ValueError: If unsupported ``color`` is specified.
+        ValueError: If unsupported ``on_color`` is specified.
+        ValueError: If unsupported color attribute in ``attrs``
+            is specified.
+        ValueError: If trying to register handler for SIGKILL signal.
+        ValueError: If unsupported ``side`` is specified.
 
     Available text colors:
         red, green, yellow, blue, magenta, cyan, white.
 
     Available text highlights:
-        on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan, on_white,
-        on_grey.
+        on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan,
+        on_white, on_grey.
 
     Available attributes:
         bold, dark, underline, blink, reverse, concealed.

@@ -481,7 +481,7 @@ class Yaspin(object):
         # TODO (pavdmyt): support any type that implements iterable
         if isinstance(spinner.frames, (list, tuple)):
 
-            # Empty spinner.frames is handled by Yaspin._set_spinner
+            # Empty ``spinner.frames`` is handled by ``Yaspin._set_spinner``
             if spinner.frames and isinstance(spinner.frames[0], bytes):
                 uframes_seq = [to_unicode(frame) for frame in spinner.frames]
             else:
@@ -489,6 +489,9 @@ class Yaspin(object):
 
         _frames = uframes or uframes_seq
         if not _frames:
+            # Empty ``spinner.frames`` is handled by ``Yaspin._set_spinner``.
+            # This code is very unlikely to be executed. However, it's still
+            # here to be on a safe side.
             raise ValueError(
                 "{0!r}: no frames found in spinner".format(spinner)
             )
