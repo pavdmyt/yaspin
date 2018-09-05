@@ -11,6 +11,7 @@ from __future__ import absolute_import
 
 import functools
 import itertools
+import signal
 import sys
 import threading
 import time
@@ -51,6 +52,7 @@ class Yaspin(object):
         attrs=None,
         reversal=False,
         side="left",
+        sigmap=None,
     ):
         # Spinner
         self._spinner = self._set_spinner(spinner)
@@ -74,6 +76,18 @@ class Yaspin(object):
         self._hide_spin = None
         self._spin_thread = None
         self._last_frame = None
+
+        # Signals
+
+        # In Python 2 signal.SIG* are of type int.
+        # In Python 3 signal.SIG* are enums.
+        #
+        # Signal     = Union[enum.Enum, int]
+        # SigHandler = Union[enum.Enum, Callable]
+        self._sigmap = sigmap if sigmap else {}  # Dict[Signal, SigHandler]
+        # Maps signals to their default handlers in order to reset
+        # custom handlers set by ``sigmap`` at the cleanup phase.
+        self._dfl_sigmap = {}  # Dict[Signal, SigHandler]
 
     #
     # Dunders
@@ -202,6 +216,9 @@ class Yaspin(object):
     # Public
     #
     def start(self):
+        if self._sigmap:
+            self._register_signal_handlers()
+
         if sys.stdout.isatty():
             self._hide_cursor()
 
@@ -211,6 +228,10 @@ class Yaspin(object):
         self._spin_thread.start()
 
     def stop(self):
+        if self._dfl_sigmap:
+            # Reset registered signal handlers to default ones
+            self._reset_signal_handlers()
+
         if self._spin_thread:
             self._stop_spin.set()
             self._spin_thread.join()
@@ -344,6 +365,39 @@ class Yaspin(object):
 
         return out
 
+    def _register_signal_handlers(self):
+        # SIGKILL cannot be caught or ignored, and the receiving
+        # process cannot perform any clean-up upon receiving this
+        # signal.
+        if signal.SIGKILL in self._sigmap.keys():
+            raise ValueError(
+                "Trying to set handler for SIGKILL signal. "
+                "SIGKILL cannot be cought or ignored in POSIX systems."
+            )
+
+        for sig, sig_handler in iteritems(self._sigmap):
+            # A handler for a particular signal, once set, remains
+            # installed until it is explicitly reset. Store default
+            # signal handlers for subsequent reset at cleanup phase.
+            dfl_handler = signal.getsignal(sig)
+            self._dfl_sigmap[sig] = dfl_handler
+
+            # ``signal.SIG_DFL`` and ``signal.SIG_IGN`` are also valid
+            # signal handlers and are not callables.
+            if callable(sig_handler):
+                # ``signal.signal`` accepts handler function which is
+                # called with two arguments: signal number and the
+                # interrupted stack frame. ``functools.partial`` solves
+                # the problem of passing spinner instance into the handler
+                # function.
+                sig_handler = functools.partial(sig_handler, spinner=self)
+
+            signal.signal(sig, sig_handler)
+
+    def _reset_signal_handlers(self):
+        for sig, sig_handler in iteritems(self._dfl_sigmap):
+            signal.signal(sig, sig_handler)
+
     #
     # Static
     #
@@ -427,7 +481,7 @@ class Yaspin(object):
         # TODO (pavdmyt): support any type that implements iterable
         if isinstance(spinner.frames, (list, tuple)):
 
-            # Empty spinner.frames is handled by Yaspin._set_spinner
+            # Empty ``spinner.frames`` is handled by ``Yaspin._set_spinner``
             if spinner.frames and isinstance(spinner.frames[0], bytes):
                 uframes_seq = [to_unicode(frame) for frame in spinner.frames]
             else:
@@ -435,6 +489,9 @@ class Yaspin(object):
 
         _frames = uframes or uframes_seq
         if not _frames:
+            # Empty ``spinner.frames`` is handled by ``Yaspin._set_spinner``.
+            # This code is very unlikely to be executed. However, it's still
+            # here to be on a safe side.
             raise ValueError(
                 "{0!r}: no frames found in spinner".format(spinner)
             )
@@ -475,65 +532,3 @@ class Yaspin(object):
     @staticmethod
     def _clear_line():
         sys.stdout.write("\033[K")
-
-
-def yaspin(
-    spinner=None,
-    text="",
-    color=None,
-    on_color=None,
-    attrs=None,
-    reversal=False,
-    side="left",
-):
-    """Display spinner in stdout.
-
-    Can be used as a context manager or as a function decorator.
-
-    Arguments:
-        spinner (yaspin.Spinner, optional): Spinner to use.
-        text (str, optional): Text to show along with spinner.
-        color (str, callable, optional): Color or color style of the spinner.
-        reversal (bool, optional): Reverse spin direction.
-        side (str, optional): Place spinner to the right or left end
-            of the text string.
-
-    Returns:
-        yaspin.Yaspin: instance of the Yaspin class.
-
-    Raises:
-        ValueError: If unsupported `color` is specified.
-
-    Available text colors:
-        red, green, yellow, blue, magenta, cyan, white.
-
-    Available text highlights:
-        on_red, on_green, on_yellow, on_blue, on_magenta, on_cyan, on_white,
-        on_grey.
-
-    Available attributes:
-        bold, dark, underline, blink, reverse, concealed.
-
-    Example::
-
-        # Use as a context manager
-        with yaspin():
-            some_operations()
-
-        # Context manager with text
-        with yaspin(text="Processing..."):
-            some_operations()
-
-        # Context manager with custom sequence
-        with yaspin(Spinner('-\\|/', 150)):
-            some_operations()
-
-        # As decorator
-        @yaspin(text="Loading...")
-        def foo():
-            time.sleep(5)
-
-        foo()
-
-    """
-    return Yaspin(**locals())

@@ -7,10 +7,14 @@ tests.conftest
 Tests data.
 """
 
+import signal
+import sys
+
 import pytest
 
 from yaspin.compat import iteritems
 from yaspin.constants import COLOR_MAP
+from yaspin.signal_handlers import default_handler, fancy_handler
 
 
 frame_cases = [
@@ -243,4 +247,37 @@ def supported_attrs(request):
     ],
 )
 def final_text(request):
+    return request.param
+
+
+@pytest.fixture(
+    scope="session",
+    params=[
+        None,
+        {signal.SIGUSR1: signal.SIG_DFL},
+        {signal.SIGTERM: signal.SIG_IGN},
+        {signal.SIGTERM: signal.default_int_handler},
+        {signal.SIGHUP: default_handler},
+        {signal.SIGINT: fancy_handler},
+        {signal.SIGINT: lambda signum, frame: sys.exit(1)},
+        {
+            signal.SIGUSR1: signal.SIG_DFL,
+            signal.SIGTERM: signal.SIG_IGN,
+            signal.SIGHUP: default_handler,
+            signal.SIGINT: fancy_handler,
+            signal.SIGINT: lambda signum, frame: sys.exit(1),
+        },
+    ],
+    ids=[
+        "no sigmap",
+        "SIGUSR1 - SIG_DFL",
+        "SIGTERM - SIG_IGN",
+        "SIGTERM - default_int_handler",
+        "SIGHUP - default_handler",
+        "SIGINT - fancy_handler",
+        "SIGINT - custom handler",
+        "Multiple signals-handlers map",
+    ],
+)
+def sigmap_test_cases(request):
     return request.param

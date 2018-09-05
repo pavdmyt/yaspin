@@ -53,6 +53,7 @@ Features
 - Supports all *colors*, *highlights*, *attributes* and their mixes from `termcolor`_ library
 - Easy to combine with other command-line libraries, e.g. `prompt-toolkit`_
 - Flexible API, easy to integrate with existing code
+- User-friendly API for handling POSIX `signals`_
 - Safe **pipes** and **redirects**:
 
 .. code-block:: bash
@@ -312,6 +313,43 @@ HTML formats and CSS styles to the output:
         sp.ok()
 
 
+Handling POSIX `signals`_
+/////////////////////////
+
+Handling keyboard interrupts (pressing Control-C):
+
+.. code:: python
+
+    # -*- coding: utf-8 -*-
+    import time
+
+    from yaspin import kbi_safe_yaspin
+
+
+    with kbi_safe_yaspin(text="Press Control+C to send SIGINT (Keyboard Interrupt) signal"):
+        time.sleep(5)  # time consuming code
+
+
+Handling other types of signals:
+
+.. code:: python
+
+    # -*- coding: utf-8 -*-
+    import os
+    import time
+    from signal import SIGTERM, SIGUSR1
+
+    from yaspin import yaspin
+    from yaspin.signal_handlers import default_handler, fancy_handler
+
+
+    sigmap = {SIGUSR1: default_handler, SIGTERM: fancy_handler}
+    with yaspin(sigmap=sigmap, text="Handling SIGUSR1 and SIGTERM signals") as sp:
+        sp.write("Send signals using `kill` command")
+        sp.write("E.g. $ kill -USR1 {0}".format(os.getpid()))
+        time.sleep(20)  # time consuming code
+
+
 More `examples`_.
 
 
@@ -400,3 +438,4 @@ License
 .. _🌈: https://en.wikipedia.org/wiki/Any_Colour_You_Like
 .. _examples: https://github.com/pavdmyt/yaspin/tree/master/examples
 .. _prompt-toolkit: https://github.com/jonathanslenders/python-prompt-toolkit/
+.. _signals: https://www.computerhope.com/unix/signals.htm

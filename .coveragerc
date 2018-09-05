@@ -1,4 +1,5 @@
 [report]
 omit =
     yaspin/compat.py
+    yaspin/signal_handlers.py
     yaspin/termcolor.py
