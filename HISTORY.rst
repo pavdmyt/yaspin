@@ -1,6 +1,13 @@
 Release History
 ===============
 
+0.14.0 / 2018-09-05
+-------------------
+
+* Support for handling POSIX signals
+* New function in public API: ``kbi_safe_yaspin``
+
+
 0.13.0 / 2018-08-14
 -------------------
 
