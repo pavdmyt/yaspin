@@ -402,6 +402,12 @@ Contributing
 6. Make sure tests are passing
 
 
+Liked what you've seen?
+-----------------------
+
+Make a tweet: |tweet|
+
+
 License
 -------
 
@@ -428,6 +434,8 @@ License
    :target: https://pyup.io/repos/github/pavdmyt/yaspin/
 .. |black-fmt| image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/ambv/black
+.. |tweet| image:: https://img.shields.io/twitter/url/http/shields.io.svg
+   :target: https://twitter.com/intent/tweet?text=A%20full-featured%20terminal%20spinner%20to%20show%20the%20progress%20during%20long-hanging%20operations%20&url=https://github.com/pavdmyt/yaspin&via=pavdmyt&hashtags=python,programming
 
 
 .. _context manager: https://docs.python.org/3/reference/datamodel.html#context-managers
