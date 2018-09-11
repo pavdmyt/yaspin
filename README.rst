@@ -2,7 +2,7 @@ yaspin |Build Status| |Coverage| |Codacy| |pyup| |black-fmt|
 ============================================================
 
 |pypi| |Versions| |Wheel|
-|Examples|
+|Examples| |tweet|
 
 **Y**\ et **A**\ nother Terminal **Spin**\ ner for Python.
 
@@ -400,12 +400,6 @@ Contributing
 4. Push to the branch: ``git push origin my-new-feature``
 5. Submit a pull request
 6. Make sure tests are passing
-
-
-Liked what you've seen?
------------------------
-
-Make a tweet: |tweet|
 
 
 License
