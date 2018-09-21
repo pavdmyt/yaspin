@@ -1,12 +1,15 @@
-yaspin |Build Status| |Coverage| |Codacy| |pyup| |black-fmt|
-============================================================
+|Logo|
 
-|pypi| |Versions| |Wheel|
-|Examples|
+=====================================================================
+``yaspin``: **Y**\ et **A**\ nother Terminal **Spin**\ ner for Python
+=====================================================================
 
-**Y**\ et **A**\ nother Terminal **Spin**\ ner for Python.
+|Build Status| |Coverage| |Codacy| |pyup| |black-fmt|
 
-**Yaspin** provides a full-featured terminal spinner to show the progress during long-hanging operations.
+|pypi| |Versions| |Wheel| |Examples|
+
+
+``Yaspin`` provides a full-featured terminal spinner to show the progress during long-hanging operations.
 
 .. image:: https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/demo.gif
 
@@ -410,6 +413,8 @@ License
 * Contains data from `cli-spinners`_: MIT License, Copyright (c) Sindre Sorhus sindresorhus@gmail.com (sindresorhus.com)
 
 
+.. |Logo| image:: https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/logo.png
+   :alt: yaspin Logo
 .. |Build Status| image:: https://travis-ci.org/pavdmyt/yaspin.svg?branch=master
    :target: https://travis-ci.org/pavdmyt/yaspin
 .. |Coverage| image:: https://coveralls.io/repos/github/pavdmyt/yaspin/badge.svg?branch=master
