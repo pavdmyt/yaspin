@@ -413,10 +413,8 @@ License
 * Contains data from `cli-spinners`_: MIT License, Copyright (c) Sindre Sorhus sindresorhus@gmail.com (sindresorhus.com)
 
 
-.. |Logo| image:: https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/logo.png
+.. |Logo| image:: https://raw.githubusercontent.com/pavdmyt/yaspin/master/static/logo_80.png
    :alt: yaspin Logo
-   :scale: 80 %
-   :align: middle
 .. |Build Status| image:: https://travis-ci.org/pavdmyt/yaspin.svg?branch=master
    :target: https://travis-ci.org/pavdmyt/yaspin
 .. |Coverage| image:: https://coveralls.io/repos/github/pavdmyt/yaspin/badge.svg?branch=master
