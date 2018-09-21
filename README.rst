@@ -415,7 +415,8 @@ License
 
 .. |Logo| image:: https://raw.githubusercontent.com/pavdmyt/yaspin/master/gifs/logo.png
    :alt: yaspin Logo
-   :height: 50px
+   :scale: 80 %
+   :align: middle
 .. |Build Status| image:: https://travis-ci.org/pavdmyt/yaspin.svg?branch=master
    :target: https://travis-ci.org/pavdmyt/yaspin
 .. |Coverage| image:: https://coveralls.io/repos/github/pavdmyt/yaspin/badge.svg?branch=master
