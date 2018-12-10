@@ -17,7 +17,6 @@ except ImportError:
     import json
 
 
-THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 SPINNERS_DATA = pkgutil.get_data(__package__, "data/spinners.json").decode("utf-8")
 
 
