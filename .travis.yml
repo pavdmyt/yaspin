@@ -26,6 +26,12 @@ jobs:
     - stage: test
       script:
         - make ci
+      env:
+        - PYTHONOPTIMIZE=2
+      python: '3.6'
+    - stage: test
+      script:
+        - make ci
       python: '3.7'
       dist: xenial
       sudo: true
