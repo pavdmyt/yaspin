@@ -27,6 +27,7 @@ jobs:
       script:
         - make ci
       env:
+        - PYTHONHASHSEED=0
         - PYTHONOPTIMIZE=2
       python: '3.6'
     - stage: test
