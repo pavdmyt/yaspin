@@ -85,7 +85,7 @@ bump-minor:
 travis-setup:
 	# Require pipenv fix for https://github.com/pypa/pipenv/issues/3313
 	# (not yet available in latest release: 2018.11.26)
-	pip install https://github.com/pypa/pipenv/archive/master.zip
+	pip install https://github.com/pavdmyt/pipenv/archive/rel-2018.11.26_and_pypy3_fix.zip
 	pipenv install pytest~=3.6.3 --skip-lock
 	pipenv install pytest-xdist~=1.22.2 --skip-lock
 	pipenv install pytest-cov~=2.5.1 --skip-lock
