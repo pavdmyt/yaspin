@@ -37,7 +37,7 @@ test: clean-pyc flake
 	@py.test -n auto
 
 ci:
-	pipenv run py.test -n auto
+	py.test -n auto
 
 coverage: clean-pyc
 	@echo "$(OK_COLOR)==> Calculating coverage...$(NO_COLOR)"
