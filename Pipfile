@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 
 [dev-packages]
+yaspin = {path = ".", editable = true}
 bumpversion = "~=0.5.3"
 "flake8" = "~=3.5.0"
 isort = "~=4.3.4"
@@ -19,3 +20,6 @@ docutils = "~=0.14"
 better_exceptions = "~=0.2.1"
 Pygments = "~=2.2.0"
 black = "~=18.6b4"
+
+[pipenv]
+allow_prereleases = true
