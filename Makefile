@@ -41,7 +41,8 @@ ci:
 
 coverage: clean-pyc
 	@echo "$(OK_COLOR)==> Calculating coverage...$(NO_COLOR)"
-	@pipenv run py.test --cov-report term --cov-report html --cov $(name) tests/
+	# @pipenv run py.test --cov-report term --cov-report html --cov $(name) tests/
+	py.test --cov-report term --cov-report html --cov $(name) tests/
 	@echo "open file://`pwd`/htmlcov/index.html"
 
 rm-build:
