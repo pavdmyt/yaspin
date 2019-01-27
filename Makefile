@@ -37,11 +37,19 @@ test: clean-pyc flake
 	@py.test -n auto
 
 ci:
-	pipenv run py.test -n auto
+	# pipenv run py.test -n auto
+	#
+	# Temporary solution; till fix for https://github.com/pypa/pipenv/issues/3313
+	# is not released at PyPI
+	py.test -n auto
 
 coverage: clean-pyc
 	@echo "$(OK_COLOR)==> Calculating coverage...$(NO_COLOR)"
-	@pipenv run py.test --cov-report term --cov-report html --cov $(name) tests/
+	# @pipenv run py.test --cov-report term --cov-report html --cov $(name) tests/
+	#
+	# Temporary solution; till fix for https://github.com/pypa/pipenv/issues/3313
+	# is not released at PyPI
+	@py.test --cov-report term --cov-report html --cov $(name) tests/
 	@echo "open file://`pwd`/htmlcov/index.html"
 
 rm-build:
@@ -83,8 +91,15 @@ bump-minor:
 		--allow-dirty
 
 travis-setup:
-	pip install pipenv --upgrade
-	pipenv install pytest~=3.6.3 --skip-lock
-	pipenv install pytest-xdist~=1.22.2 --skip-lock
-	pipenv install pytest-cov~=2.5.1 --skip-lock
-	pipenv install python-coveralls~=2.9.1 --skip-lock
+	# pip install pipenv --upgrade
+	# pipenv install pytest~=3.6.3 --skip-lock
+	# pipenv install pytest-xdist~=1.22.2 --skip-lock
+	# pipenv install pytest-cov~=2.5.1 --skip-lock
+	# pipenv install python-coveralls~=2.9.1 --skip-lock
+	#
+	# Temporary solution; till fix for https://github.com/pypa/pipenv/issues/3313
+	# is not released at PyPI
+	pip install pytest~=3.6.3
+	pip install pytest-xdist~=1.22.2
+	pip install pytest-cov~=2.5.1
+	pip install python-coveralls~=2.9.1
