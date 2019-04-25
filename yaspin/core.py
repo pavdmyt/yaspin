@@ -327,7 +327,6 @@ class Yaspin(object):
 
             # Wait
             time.sleep(self._interval)
-            sys.stdout.write("\b")
 
     def _compose_color_func(self):
         fn = functools.partial(
