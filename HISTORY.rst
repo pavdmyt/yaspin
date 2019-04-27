@@ -1,6 +1,12 @@
 Release History
 ===============
 
+0.14.2 / 2019-04-27
+-------------------
+
+* fix: remove extra ``\b`` written to stdout. Fixes ``write()`` in rxvt terminal
+
+
 0.14.1 / 2019-01-28
 -------------------
 
