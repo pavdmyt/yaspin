@@ -168,15 +168,15 @@ def test_spinner_write_race_condition(capsys):
     # this generally happens when the spinner thread writes
     # between write()'s \r and the text it actually wants to write
 
-    sp = yaspin(text='aaaa')
+    sp = yaspin(text="aaaa")
     sp.start()
     sp._interval = 0.0
     start_time = time.time()
     while time.time() - start_time < 3.0:
-        sp.write('bbbb')
+        sp.write("bbbb")
     sp.stop()
 
     out, _ = capsys.readouterr()
-    assert 'aaaa' in out  # spinner text is present
-    assert 'bbbb' in out  # write() text is present
+    assert "aaaa" in out  # spinner text is present
+    assert "bbbb" in out  # write() text is present
     assert not re.search(r"aaaa[^\rb]*bbbb", out)
