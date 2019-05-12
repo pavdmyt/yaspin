@@ -1,6 +1,12 @@
 Release History
 ===============
 
+0.14.3 / 2019-05-12
+-------------------
+
+* fix(#29): race condition between spinner thread and ``write()``
+
+
 0.14.2 / 2019-04-27
 -------------------
 

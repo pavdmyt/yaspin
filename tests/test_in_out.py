@@ -8,7 +8,9 @@ Checks that all input data is converted to unicode.
 And all output data is converted to builtin str type.
 """
 
+import re
 import sys
+import time
 
 import pytest
 
@@ -159,3 +161,22 @@ def test_hide_show(capsys, text, request):
 
     # ensure that text was cleared before resuming the spinner
     assert out[:4] == "\r\033[K"
+
+
+def test_spinner_write_race_condition(capsys):
+    # test that spinner text does not overwrite write() contents
+    # this generally happens when the spinner thread writes
+    # between write()'s \r and the text it actually wants to write
+
+    sp = yaspin(text="aaaa")
+    sp.start()
+    sp._interval = 0.0
+    start_time = time.time()
+    while time.time() - start_time < 3.0:
+        sp.write("bbbb")
+    sp.stop()
+
+    out, _ = capsys.readouterr()
+    assert "aaaa" in out  # spinner text is present
+    assert "bbbb" in out  # write() text is present
+    assert not re.search(r"aaaa[^\rb]*bbbb", out)
