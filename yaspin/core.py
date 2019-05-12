@@ -256,7 +256,8 @@ class Yaspin(object):
                 sys.stdout.write("\r")
                 self._clear_line()
 
-                # flush the stdout buffer so the current line can be rewritten to
+                # flush the stdout buffer so the current line
+                # can be rewritten to
                 sys.stdout.flush()
 
     def show(self):
