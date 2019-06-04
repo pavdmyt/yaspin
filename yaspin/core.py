@@ -19,7 +19,7 @@ import time
 from .base_spinner import default_spinner
 from .compat import PY2, basestring, builtin_str, bytes, iteritems, str
 from .constants import COLOR_ATTRS, COLOR_MAP, ENCODING, SPINNER_ATTRS
-from .helpers import to_unicode
+from .helpers import to_unicode, to_printable_text
 from .termcolor import colored
 
 
@@ -273,21 +273,15 @@ class Yaspin(object):
                 sys.stdout.write("\r")
                 self._clear_line()
 
-    def write(self, text):
+    def write(self, *args):
         """Write text in the terminal without breaking the spinner."""
         # similar to tqdm.write()
         # https://pypi.python.org/pypi/tqdm#writing-messages
+        _text = ' '.join([to_printable_text(text) for text in args])
+
         with self._stdout_lock:
             sys.stdout.write("\r")
             self._clear_line()
-
-            _text = to_unicode(text)
-            if PY2:
-                _text = _text.encode(ENCODING)
-
-            # Ensure output is bytes for Py2 and Unicode for Py3
-            assert isinstance(_text, builtin_str)
-
             sys.stdout.write("{0}\n".format(_text))
 
     def ok(self, text="OK"):

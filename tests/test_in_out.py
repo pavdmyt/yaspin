@@ -104,6 +104,32 @@ def test_write(capsys, text):
         assert out[:-1] == text
 
 
+def test_write_with_non_str_object(capsys):
+    obj = 23
+    sp = yaspin()
+    sp.write(obj)
+
+    out, _ = capsys.readouterr()
+    # cleans stdout from _clear_line and \r
+    out = out.replace("\r\033[K", "")
+
+    assert out == str(obj) + "\n"
+
+
+def test_write_with_multiple_args(capsys):
+    args = ("Hello World,", "this is test no", 23)
+    sp = yaspin()
+    sp.write(*args)
+
+    out, _ = capsys.readouterr()
+    # cleans stdout from _clear_line and \r
+    out = out.replace("\r\033[K", "")
+
+    expected_result = " ".join(str(arg) for arg in args) + "\n"
+
+    assert out == expected_result
+
+
 def test_hide_show(capsys, text, request):
     # Setup
     sp = yaspin()
