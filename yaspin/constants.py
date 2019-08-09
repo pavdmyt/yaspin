@@ -44,6 +44,7 @@ SPINNER_ATTRS = [
     "arrow3",
     "balloon",
     "balloon2",
+    "betaWave",
     "bounce",
     "bouncingBall",
     "bouncingBar",
