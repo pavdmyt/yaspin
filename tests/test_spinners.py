@@ -9,18 +9,16 @@ Tests for spinners collection.
 
 from __future__ import absolute_import
 
-import codecs
 import json
 from collections import OrderedDict
 
 import pytest
 
 from yaspin.compat import iteritems
-from yaspin.spinners import SPINNERS_PATH, Spinners
+from yaspin.spinners import SPINNERS_DATA, Spinners
 
 
-with codecs.open(SPINNERS_PATH, encoding="utf-8") as f:
-    spinners_dict = OrderedDict(json.load(f))
+spinners_dict = OrderedDict(json.loads(SPINNERS_DATA))
 
 
 test_cases = [
