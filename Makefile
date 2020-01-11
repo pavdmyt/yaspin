@@ -102,4 +102,5 @@ travis-setup:
 	pip install pytest~=3.6.3
 	pip install pytest-xdist~=1.22.2
 	pip install pytest-cov~=2.5.1
+	pip install pyyaml==5.1.2  # python-coveralls dep; recently dropped py34 support
 	pip install python-coveralls~=2.9.1
