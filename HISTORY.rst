@@ -1,6 +1,13 @@
 Release History
 ===============
 
+0.16.0 / 2020-01-11
+-------------------
+
+* Allow use inside zip bundled package
+* Code improvements
+
+
 0.15.0 / 2019-08-09
 -------------------
 
