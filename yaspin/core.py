@@ -452,9 +452,6 @@ class Yaspin(object):
 
     @staticmethod
     def _set_spinner(spinner):
-        if not spinner:
-            sp = default_spinner
-
         if hasattr(spinner, "frames") and hasattr(spinner, "interval"):
             if not spinner.frames or not spinner.interval:
                 sp = default_spinner

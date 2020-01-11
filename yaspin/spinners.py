@@ -7,7 +7,6 @@ yaspin.spinners
 A collection of cli spinners.
 """
 
-import codecs
 import pkgutil
 from collections import namedtuple
 
