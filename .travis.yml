@@ -20,7 +20,6 @@ jobs:
   include:
     - stage: coverage
       python:
-        - "2.7"
         - "3.6"
       script:
         - make coverage
