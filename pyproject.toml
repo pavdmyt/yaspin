@@ -1,0 +1,79 @@
+[tool.poetry]
+name = "yaspin"
+version = "0.16.1"
+description = "Yet Another Terminal Spinner"
+license = "MIT"
+authors = ["Pavlo Dmytrenko <mail@pavdmyt.com>"]
+readme = "README.rst"
+homepage = "https://github.com/pavdmyt/yaspin"
+repository = "https://github.com/pavdmyt/yaspin"
+documentation = "https://github.com/pavdmyt/yaspin/blob/master/README.rst"
+keywords = ["spinner", "console", "terminal", "loader", "indicator"]
+include = [
+    "README.rst",
+    "HISTORY.rst",
+    "LICENSE",
+    "yaspin/data/spinners.json",
+    "tests/*.py",
+    "examples/*.py",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Environment :: MacOS X",
+    "Environment :: Other Environment",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Other Audience",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 2",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.4",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: Implementation",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: User Interfaces",
+    "Topic :: System :: Logging",
+    "Topic :: System :: Monitoring",
+    "Topic :: System :: Shells",
+    "Topic :: Terminals",
+    "Topic :: Utilities",
+]
+
+[tool.poetry.dependencies]
+# <3.7 is set for DEV purposes only
+# Pylint ^1.9 fails with exceptions under Py37
+#
+# ^2.7 is required to build Py2-compatible wheels
+python = "^2.7 || >=3.4, <3.7"
+
+[tool.poetry.dev-dependencies]
+flake8 = "~3.5.0"
+isort = "^4.3.4"
+pylint = "^1.9"  # v2.0.0 deprecated py2 support
+pytest = "^3.6"
+pytest-xdist = "^1.22.2"
+pytest-cov = "^2.5.1"
+pytest-sugar = "^0.9.1"
+tox = "^3.1.2"
+docutils = "~0.14"
+better_exceptions = "^0.2.1"
+Pygments = "^2.2.0"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/pavdmyt/yaspin/issues"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

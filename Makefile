@@ -4,7 +4,7 @@ NO_COLOR=\033[0m
 .PHONY: build
 
 name='yaspin'
-version=`python -c 'import yaspin; print(yaspin.__version__)'`
+version=`poetry version | awk '{ print $2 }'`
 
 flake:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
@@ -17,6 +17,10 @@ lint:
 isort-all:
 	isort -rc --atomic --verbose setup.py $(name)/
 
+# black should be available as external tool
+#
+# No way to add it as tool.poetry.dev-dependencies,
+# since it conflicts with any Py <3.6
 black-fmt:
 	black --line-length 79 --exclude "termcolor.py" \
 	./yaspin ./tests ./examples ./setup.py
@@ -77,18 +81,10 @@ tag:
 	@git push origin "v$(version)"
 
 bump:
-	@bumpversion                                                  \
-		--commit                                                  \
-		--current-version $(version) patch                        \
-		./$(name)/__version__.py                                  \
-		--allow-dirty
+	@poetry version patch
 
 bump-minor:
-	@bumpversion                                                  \
-		--commit                                                  \
-		--current-version $(version) minor                        \
-		./$(name)/__version__.py                                  \
-		--allow-dirty
+	@poetry version minor
 
 travis-setup:
 	# pip install pipenv --upgrade

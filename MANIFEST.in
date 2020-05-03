@@ -1,6 +1,0 @@
-include README.rst HISTORY.rst LICENSE
-include Pipfile
-
-include examples/*.py
-include yaspin/data/*.json
-include tests/*.py
