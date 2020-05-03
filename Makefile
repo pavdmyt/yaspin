@@ -8,14 +8,14 @@ version=`poetry version | awk '{ print $2 }'`
 
 flake:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
-	@flake8 .
+	@poetry run flake8 .
 
 lint:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
-	@pylint setup.py $(name)/ -rn -f colorized --ignore termcolor.py
+	@poetry run pylint setup.py $(name)/ -rn -f colorized --ignore termcolor.py
 
 isort-all:
-	isort -rc --atomic --verbose setup.py $(name)/
+	@poetry run isort -rc --atomic --verbose setup.py $(name)/
 
 # black should be available as external tool
 #
@@ -38,22 +38,14 @@ clean-pyc:
 
 test: clean-pyc flake
 	@echo "$(OK_COLOR)==> Runnings tests ...$(NO_COLOR)"
-	@py.test -n auto
+	@poetry run py.test -n auto
 
 ci:
-	# pipenv run py.test -n auto
-	#
-	# Temporary solution; till fix for https://github.com/pypa/pipenv/issues/3313
-	# is not released at PyPI
-	py.test -n auto
+	poetry run py.test -n auto
 
 coverage: clean-pyc
 	@echo "$(OK_COLOR)==> Calculating coverage...$(NO_COLOR)"
-	# @pipenv run py.test --cov-report term --cov-report html --cov $(name) tests/
-	#
-	# Temporary solution; till fix for https://github.com/pypa/pipenv/issues/3313
-	# is not released at PyPI
-	@py.test --cov-report term --cov-report html --cov $(name) tests/
+	@poetry run py.test --cov-report term --cov-report html --cov $(name) tests/
 	@echo "open file://`pwd`/htmlcov/index.html"
 
 rm-build:
@@ -87,16 +79,5 @@ bump-minor:
 	@poetry version minor
 
 travis-setup:
-	# pip install pipenv --upgrade
-	# pipenv install pytest~=3.6.3 --skip-lock
-	# pipenv install pytest-xdist~=1.22.2 --skip-lock
-	# pipenv install pytest-cov~=2.5.1 --skip-lock
-	# pipenv install python-coveralls~=2.9.1 --skip-lock
-	#
-	# Temporary solution; till fix for https://github.com/pypa/pipenv/issues/3313
-	# is not released at PyPI
-	pip install pytest~=3.6.3
-	pip install pytest-xdist~=1.22.2
-	pip install pytest-cov~=2.5.1
-	pip install pyyaml==5.1.2  # python-coveralls dep; recently dropped py34 support
-	pip install python-coveralls~=2.9.1
+	curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+	poetry install

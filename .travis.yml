@@ -8,35 +8,17 @@ install:
 jobs:
   include:
     - stage: test
-      script:
-        - make ci
-      python: '2.7'
-    - stage: test
-      script:
-        - make ci
-      python: '3.4'
-    - stage: test
-      script:
-        - make ci
-      python: '3.5'
-    - stage: test
-      script:
-        - make ci
-      python: '3.6'
-    - stage: test
-      script:
-        - make ci
-      python: '3.7'
-      dist: xenial
-      sudo: true
-    - stage: test
-      script:
-        - make ci
-      python: 'pypy'
-    - stage: test
-      script:
-        - make ci
-      python: 'pypy3'
+      python:
+        - 2.7
+        - 3.4
+        - 3.5
+        - 3.6
+        - 3.7
+        # PyPy versions
+        - 'pypy'
+        - 'pypy3'
+        script:
+          - make ci
     - stage: coverage
       python:
         - 2.7
