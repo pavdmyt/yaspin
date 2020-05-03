@@ -1,24 +1,23 @@
-sudo: false
 language: python
 cache: pip
 env:
   - PYTHONHASHSEED=0
 install:
   - make travis-setup
+python:
+  - "2.7"
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.7"
+  # PyPy versions
+  - "pypy"
+  - "pypy3"
+script:
+  - make ci
+
 jobs:
   include:
-    - stage: test
-      python:
-        - "2.7"
-        - "3.4"
-        - "3.5"
-        - "3.6"
-        - "3.7"
-        # PyPy versions
-        - "pypy"
-        - "pypy3"
-      script:
-        - make ci
     - stage: coverage
       python:
         - "2.7"
