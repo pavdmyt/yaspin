@@ -9,20 +9,20 @@ jobs:
   include:
     - stage: test
       python:
-        - 2.7
-        - 3.4
-        - 3.5
-        - 3.6
-        - 3.7
+        - "2.7"
+        - "3.4"
+        - "3.5"
+        - "3.6"
+        - "3.7"
         # PyPy versions
-        - 'pypy'
-        - 'pypy3'
-        script:
-          - make ci
+        - "pypy"
+        - "pypy3"
+      script:
+        - make ci
     - stage: coverage
       python:
-        - 2.7
-        - 3.6
+        - "2.7"
+        - "3.6"
       script:
         - make coverage
       after_success:
