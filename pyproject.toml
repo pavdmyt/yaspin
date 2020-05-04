@@ -34,7 +34,6 @@ classifiers = [
     "Programming Language :: Python :: 2",
     "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.4",
     "Programming Language :: Python :: 3.5",
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
@@ -55,7 +54,7 @@ classifiers = [
 # Pylint ^1.9 fails with exceptions under Py37
 #
 # ^2.7 is required to build Py2-compatible wheels
-python = "^2.7 || ^3.4"
+python = "^2.7 || ^3.5"
 
 [tool.poetry.dev-dependencies]
 flake8 = "~3.5.0"
