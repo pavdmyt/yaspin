@@ -66,9 +66,7 @@ pytest-xdist = "^1.22.2"
 pytest-cov = "^2.5.1"
 pytest-sugar = "^0.9.1"
 tox = "^3.1.2"
-docutils = "~0.14"
-better_exceptions = "^0.2.1"
-Pygments = "^2.2.0"
+twine = "<2"  # v2.0.0 requires Python 3.6 or later
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/pavdmyt/yaspin/issues"

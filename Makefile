@@ -51,17 +51,17 @@ coverage: clean-pyc
 rm-build:
 	@rm -rf build dist .egg $(name).egg-info
 
-# requires docutils and pygments to be installed
-# -s stands for strict (raises errors instead of warnings)
+# https://github.com/pypa/readme_renderer#check-description-locally
+# https://github.com/pypa/twine#twine-check
 check-rst:
-	@python setup.py check --restructuredtext -s
+	@echo "$(OK_COLOR)==> Checking RST will render...$(NO_COLOR)"
+	@poetry run twine check dist/*
 
 build: rm-build
 	@echo "$(OK_COLOR)==> Building...$(NO_COLOR)"
-	@python setup.py sdist
-	@python setup.py bdist_wheel --universal
+	@poetry build
 
-publish: flake check-rst rm-build
+publish: flake rm-build build check-rst
 	@echo "$(OK_COLOR)==> Publishing...$(NO_COLOR)"
 	@python setup.py sdist upload -r pypi
 	@python setup.py bdist_wheel --universal upload -r pypi
