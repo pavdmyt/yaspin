@@ -4,7 +4,12 @@ NO_COLOR=\033[0m
 .PHONY: build
 
 name='yaspin'
-version=`poetry version | awk '{ print $2 }'`
+
+# Use $$ if running awk inside make
+# https://lists.freebsd.org/pipermail/freebsd-questions/2012-September/244810.html
+version := $(shell poetry version | awk '{ print $$2 }')
+pypi_usr := $(shell grep username ~/.pypirc | awk -F"= " '{ print $$2 }')
+pypi_pwd := $(shell grep password ~/.pypirc | awk -F"= " '{ print $$2 }')
 
 flake:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
@@ -63,8 +68,7 @@ build: rm-build
 
 publish: flake rm-build build check-rst
 	@echo "$(OK_COLOR)==> Publishing...$(NO_COLOR)"
-	@python setup.py sdist upload -r pypi
-	@python setup.py bdist_wheel --universal upload -r pypi
+	@poetry publish -u $(pypi_usr) -p $(pypi_pwd)
 
 tag:
 	@echo "$(OK_COLOR)==> Creating tag $(version) ...$(NO_COLOR)"
