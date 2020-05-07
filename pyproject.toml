@@ -65,7 +65,6 @@ pytest = "^3.6"
 pytest-xdist = "^1.22.2"
 pytest-cov = "^2.5.1"
 pytest-sugar = "^0.9.1"
-tox = "^3.1.2"
 twine = "<2"  # v2.0.0 requires Python 3.6 or later
 
 [tool.poetry.urls]
