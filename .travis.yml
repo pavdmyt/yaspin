@@ -1,46 +1,27 @@
-sudo: false
 language: python
+dist: bionic
 cache: pip
 env:
   - PYTHONHASHSEED=0
 install:
   - make travis-setup
+python:
+  - "2.7"
+  - "3.5"
+  - "3.6"
+  - "3.7"
+  - "3.8"
+  # PyPy versions
+  - "pypy2"
+  - "pypy3"
+script:
+  - make ci
+
 jobs:
   include:
-    - stage: test
-      script:
-        - make ci
-      python: '2.7'
-    - stage: test
-      script:
-        - make ci
-      python: '3.4'
-    - stage: test
-      script:
-        - make ci
-      python: '3.5'
-    - stage: test
-      script:
-        - make ci
-      python: '3.6'
-    - stage: test
-      script:
-        - make ci
-      python: '3.7'
-      dist: xenial
-      sudo: true
-    - stage: test
-      script:
-        - make ci
-      python: 'pypy'
-    - stage: test
-      script:
-        - make ci
-      python: 'pypy3'
     - stage: coverage
       python:
-        - 2.7
-        - 3.6
+        - "3.6"
       script:
         - make coverage
       after_success:
