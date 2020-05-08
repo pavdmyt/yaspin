@@ -1,6 +1,17 @@
 Release History
 ===============
 
+0.17.0 / 2020-05-08
+-------------------
+
+* Migrate to ``poetry`` for dependencies management, building and publishing project
+* Add tests for Python 3.8
+* Deprecate support for Python 3.4
+* Run tests under Ubuntu 18.04
+* Update dev dependencies to the most recent ones (compatible with Python 2.7)
+* Remove Tox from the project (use CI for tests under different versions of Python)
+
+
 0.16.0 / 2020-01-11
 -------------------
 
