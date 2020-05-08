@@ -66,7 +66,7 @@ build: rm-build
 	@echo "$(OK_COLOR)==> Building...$(NO_COLOR)"
 	@poetry build
 
-publish: flake rm-build build check-rst
+publish: flake build check-rst
 	@echo "$(OK_COLOR)==> Publishing...$(NO_COLOR)"
 	@poetry publish -u $(pypi_usr) -p $(pypi_pwd)
 
@@ -85,3 +85,6 @@ bump-minor:
 travis-setup:
 	curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 	poetry install
+
+export-requirements:
+	@poetry export -f requirements.txt --dev > requirements.txt
