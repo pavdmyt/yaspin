@@ -370,7 +370,10 @@ Install dev dependencies:
 
 .. code-block:: bash
 
-    pipenv install --dev
+    poetry install
+
+    # if you don't have poetry installed:
+    pip install -r requirements.txt
 
 
 Lint code:
