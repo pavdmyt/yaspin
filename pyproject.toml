@@ -58,13 +58,13 @@ classifiers = [
 python = "^2.7 || ^3.5"
 
 [tool.poetry.dev-dependencies]
-flake8 = "~3.5.0"
-isort = "^4.3.4"
+flake8 = "<3.7"  # Starting from 3.7.0 dislikes mypy notation
+isort = "^4.3"
 pylint = "^1.9"  # v2.0.0 deprecated py2 support
-pytest = "^3.6"
-pytest-xdist = "^1.22.2"
-pytest-cov = "^2.5.1"
-pytest-sugar = "^0.9.1"
+pytest = "^4.6"
+pytest-xdist = "^1.32"
+pytest-cov = "^2.8"
+pytest-sugar = "^0.9"
 twine = "<2"  # v2.0.0 requires Python 3.6 or later
 
 [tool.poetry.urls]
