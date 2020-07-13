@@ -118,8 +118,8 @@ pytest-cov==2.10.0 \
 pytest-forked==1.2.0 \
     --hash=sha256:42a438336731465c5bd76ab38e1645647ac55914a08b507efbabe8783a08aa6c \
     --hash=sha256:65f96334863d9cbe53d21f73e8febc4dd61b8d1fdcac7b487d9af07a5d02a938
-pytest-sugar==0.9.3 \
-    --hash=sha256:1630b5b7ea3624919b73fde37cffb87965c5087a4afab8a43074ff44e0d810c4
+pytest-sugar==0.9.4 \
+    --hash=sha256:b1b2186b0a72aada6859bea2a5764145e3aaa2c1cfbb23c3a19b5f7b697563d3
 pytest-xdist==1.32.0 \
     --hash=sha256:1d4166dcac69adb38eeaedb88c8fada8588348258a3492ab49ba9161f2971129 \
     --hash=sha256:ba5ec9fde3410bd9a116ff7e4f26c92e02fa3d27975ef3ad03f330b3d4b54e91
