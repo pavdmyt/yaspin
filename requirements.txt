@@ -120,9 +120,9 @@ pytest-forked==1.2.0 \
     --hash=sha256:65f96334863d9cbe53d21f73e8febc4dd61b8d1fdcac7b487d9af07a5d02a938
 pytest-sugar==0.9.4 \
     --hash=sha256:b1b2186b0a72aada6859bea2a5764145e3aaa2c1cfbb23c3a19b5f7b697563d3
-pytest-xdist==1.32.0 \
-    --hash=sha256:1d4166dcac69adb38eeaedb88c8fada8588348258a3492ab49ba9161f2971129 \
-    --hash=sha256:ba5ec9fde3410bd9a116ff7e4f26c92e02fa3d27975ef3ad03f330b3d4b54e91
+pytest-xdist==1.33.0 \
+    --hash=sha256:833b902b16473162cc0572d5bd7b63f8b843df63a4ada9c8af1270d31db17607 \
+    --hash=sha256:9149b4010240643a5e206fd0ece6f0a1cd5955dae014cf04610d359e22e22453
 scandir==1.10.0; python_version < "3.5" \
     --hash=sha256:92c85ac42f41ffdc35b6da57ed991575bdbe69db895507af88b9f499b701c188 \
     --hash=sha256:cb925555f43060a1745d0a321cca94bcea927c50114b623d73179189a4e100ac \
