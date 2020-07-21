@@ -9,13 +9,16 @@ homepage = "https://github.com/pavdmyt/yaspin"
 repository = "https://github.com/pavdmyt/yaspin"
 documentation = "https://github.com/pavdmyt/yaspin/blob/master/README.rst"
 keywords = ["spinner", "console", "terminal", "loader", "indicator"]
+packages = [
+    { include = "yaspin" },
+    { include = "tests", format = "sdist" },
+    { include = "examples", format = "sdist" },
+]
 include = [
     "README.rst",
     "HISTORY.rst",
     "LICENSE",
     "yaspin/data/spinners.json",
-    "tests/*.py",
-    "examples/*.py",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
