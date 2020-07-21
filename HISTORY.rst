@@ -1,6 +1,14 @@
 Release History
 ===============
 
+0.18.0 / 2020-07-21
+-------------------
+
+* Update cli-spinners to ``v2.4.0``
+* Update dependencies
+* fix(#59): remove ``tests/`` and ``examples/`` from wheels distribution
+
+
 0.17.0 / 2020-05-08
 -------------------
 
