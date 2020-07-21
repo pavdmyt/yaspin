@@ -62,10 +62,10 @@ python = "^2.7 || ^3.5"
 
 [tool.poetry.dev-dependencies]
 flake8 = "<3.7"  # Starting from 3.7.0 dislikes mypy notation
-isort = "^4.3"
-pytest = "^4.6"
-pytest-xdist = "^1.32"
-pytest-cov = "^2.8"
+isort = "^4.3"   # Starting from v5 drops Py2 support
+pytest = "^4.6"  # Starting from v5 drops Py2 support
+pytest-xdist = "^1.33"
+pytest-cov = "^2.10"
 pytest-sugar = "^0.9"
 
 [tool.poetry.urls]

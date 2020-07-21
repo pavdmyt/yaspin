@@ -78,7 +78,7 @@ description = "Code coverage measurement for Python"
 name = "coverage"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
-version = "5.1"
+version = "5.2"
 
 [package.extras]
 toml = ["toml"]
@@ -162,7 +162,7 @@ marker = "python_version < \"3.8\""
 name = "importlib-metadata"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
-version = "1.6.0"
+version = "1.7.0"
 
 [package.dependencies]
 zipp = ">=0.5"
@@ -181,7 +181,7 @@ version = "*"
 
 [package.extras]
 docs = ["sphinx", "rst.linker"]
-testing = ["packaging", "importlib-resources"]
+testing = ["packaging", "pep517", "importlib-resources (>=1.3)"]
 
 [[package]]
 category = "dev"
@@ -232,7 +232,7 @@ description = "Core utilities for Python packages"
 name = "packaging"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "20.3"
+version = "20.4"
 
 [package.dependencies]
 pyparsing = ">=2.0.2"
@@ -276,7 +276,7 @@ description = "library with cross-python path, ini-parsing, io, code, log facili
 name = "py"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "1.8.1"
+version = "1.9.0"
 
 [[package]]
 category = "dev"
@@ -308,7 +308,7 @@ description = "pytest: simple powerful testing with Python"
 name = "pytest"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
-version = "4.6.9"
+version = "4.6.11"
 
 [package.dependencies]
 atomicwrites = ">=1.0"
@@ -351,23 +351,23 @@ category = "dev"
 description = "Pytest plugin for measuring coverage."
 name = "pytest-cov"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "2.8.1"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "2.10.0"
 
 [package.dependencies]
 coverage = ">=4.4"
-pytest = ">=3.6"
+pytest = ">=4.6"
 
 [package.extras]
-testing = ["fields", "hunter", "process-tests (2.0.2)", "six", "virtualenv"]
+testing = ["fields", "hunter", "process-tests (2.0.2)", "six", "pytest-xdist", "virtualenv"]
 
 [[package]]
 category = "dev"
 description = "run tests in isolated forked subprocesses"
 name = "pytest-forked"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "1.1.3"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "1.2.0"
 
 [package.dependencies]
 pytest = ">=3.1.0"
@@ -378,7 +378,7 @@ description = "pytest-sugar is a plugin for pytest that changes the default look
 name = "pytest-sugar"
 optional = false
 python-versions = "*"
-version = "0.9.3"
+version = "0.9.4"
 
 [package.dependencies]
 packaging = ">=14.1"
@@ -391,7 +391,7 @@ description = "pytest xdist plugin for distributed testing and loop-on-failing m
 name = "pytest-xdist"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-version = "1.32.0"
+version = "1.33.0"
 
 [package.dependencies]
 execnet = ">=1.1"
@@ -417,7 +417,7 @@ description = "Python 2 and 3 compatibility utilities"
 name = "six"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
-version = "1.14.0"
+version = "1.15.0"
 
 [[package]]
 category = "dev"
@@ -429,11 +429,16 @@ version = "1.1.0"
 
 [[package]]
 category = "dev"
-description = "Measures number of Terminal column cells of wide-character codes"
+description = "Measures the displayed width of unicode strings in a terminal"
 name = "wcwidth"
 optional = false
 python-versions = "*"
-version = "0.1.9"
+version = "0.2.5"
+
+[package.dependencies]
+[package.dependencies."backports.functools-lru-cache"]
+python = "<3.2"
+version = ">=1.2.1"
 
 [[package]]
 category = "dev"
@@ -454,7 +459,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pathlib2", "unittest2", "jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "c8c64302dfe5a24887d3f49769103a058fce36b639e217abb538babdb4269cb0"
+content-hash = "436d3794b3cdf35207bfa249ae58e5eca3f6f2b1a831fada6b57750100494fff"
 python-versions = "^2.7 || ^3.5"
 
 [metadata.files]
@@ -487,37 +492,40 @@ contextlib2 = [
     {file = "contextlib2-0.6.0.post1.tar.gz", hash = "sha256:01f490098c18b19d2bd5bb5dc445b2054d2fa97f09a4280ba2c5f3c394c8162e"},
 ]
 coverage = [
-    {file = "coverage-5.1-cp27-cp27m-macosx_10_12_x86_64.whl", hash = "sha256:0cb4be7e784dcdc050fc58ef05b71aa8e89b7e6636b99967fadbdba694cf2b65"},
-    {file = "coverage-5.1-cp27-cp27m-macosx_10_13_intel.whl", hash = "sha256:c317eaf5ff46a34305b202e73404f55f7389ef834b8dbf4da09b9b9b37f76dd2"},
-    {file = "coverage-5.1-cp27-cp27m-manylinux1_i686.whl", hash = "sha256:b83835506dfc185a319031cf853fa4bb1b3974b1f913f5bb1a0f3d98bdcded04"},
-    {file = "coverage-5.1-cp27-cp27m-manylinux1_x86_64.whl", hash = "sha256:5f2294dbf7875b991c381e3d5af2bcc3494d836affa52b809c91697449d0eda6"},
-    {file = "coverage-5.1-cp27-cp27m-win32.whl", hash = "sha256:de807ae933cfb7f0c7d9d981a053772452217df2bf38e7e6267c9cbf9545a796"},
-    {file = "coverage-5.1-cp27-cp27m-win_amd64.whl", hash = "sha256:bf9cb9a9fd8891e7efd2d44deb24b86d647394b9705b744ff6f8261e6f29a730"},
-    {file = "coverage-5.1-cp27-cp27mu-manylinux1_i686.whl", hash = "sha256:acf3763ed01af8410fc36afea23707d4ea58ba7e86a8ee915dfb9ceff9ef69d0"},
-    {file = "coverage-5.1-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:dec5202bfe6f672d4511086e125db035a52b00f1648d6407cc8e526912c0353a"},
-    {file = "coverage-5.1-cp35-cp35m-macosx_10_12_x86_64.whl", hash = "sha256:7a5bdad4edec57b5fb8dae7d3ee58622d626fd3a0be0dfceda162a7035885ecf"},
-    {file = "coverage-5.1-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:1601e480b9b99697a570cea7ef749e88123c04b92d84cedaa01e117436b4a0a9"},
-    {file = "coverage-5.1-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:dbe8c6ae7534b5b024296464f387d57c13caa942f6d8e6e0346f27e509f0f768"},
-    {file = "coverage-5.1-cp35-cp35m-win32.whl", hash = "sha256:a027ef0492ede1e03a8054e3c37b8def89a1e3c471482e9f046906ba4f2aafd2"},
-    {file = "coverage-5.1-cp35-cp35m-win_amd64.whl", hash = "sha256:0e61d9803d5851849c24f78227939c701ced6704f337cad0a91e0972c51c1ee7"},
-    {file = "coverage-5.1-cp36-cp36m-macosx_10_13_x86_64.whl", hash = "sha256:2d27a3f742c98e5c6b461ee6ef7287400a1956c11421eb574d843d9ec1f772f0"},
-    {file = "coverage-5.1-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:66460ab1599d3cf894bb6baee8c684788819b71a5dc1e8fa2ecc152e5d752019"},
-    {file = "coverage-5.1-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:5c542d1e62eece33c306d66fe0a5c4f7f7b3c08fecc46ead86d7916684b36d6c"},
-    {file = "coverage-5.1-cp36-cp36m-win32.whl", hash = "sha256:2742c7515b9eb368718cd091bad1a1b44135cc72468c731302b3d641895b83d1"},
-    {file = "coverage-5.1-cp36-cp36m-win_amd64.whl", hash = "sha256:dead2ddede4c7ba6cb3a721870f5141c97dc7d85a079edb4bd8d88c3ad5b20c7"},
-    {file = "coverage-5.1-cp37-cp37m-macosx_10_13_x86_64.whl", hash = "sha256:01333e1bd22c59713ba8a79f088b3955946e293114479bbfc2e37d522be03355"},
-    {file = "coverage-5.1-cp37-cp37m-manylinux1_i686.whl", hash = "sha256:e1ea316102ea1e1770724db01998d1603ed921c54a86a2efcb03428d5417e489"},
-    {file = "coverage-5.1-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:adeb4c5b608574a3d647011af36f7586811a2c1197c861aedb548dd2453b41cd"},
-    {file = "coverage-5.1-cp37-cp37m-win32.whl", hash = "sha256:782caea581a6e9ff75eccda79287daefd1d2631cc09d642b6ee2d6da21fc0a4e"},
-    {file = "coverage-5.1-cp37-cp37m-win_amd64.whl", hash = "sha256:00f1d23f4336efc3b311ed0d807feb45098fc86dee1ca13b3d6768cdab187c8a"},
-    {file = "coverage-5.1-cp38-cp38-macosx_10_13_x86_64.whl", hash = "sha256:402e1744733df483b93abbf209283898e9f0d67470707e3c7516d84f48524f55"},
-    {file = "coverage-5.1-cp38-cp38-manylinux1_i686.whl", hash = "sha256:a3f3654d5734a3ece152636aad89f58afc9213c6520062db3978239db122f03c"},
-    {file = "coverage-5.1-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:6402bd2fdedabbdb63a316308142597534ea8e1895f4e7d8bf7476c5e8751fef"},
-    {file = "coverage-5.1-cp38-cp38-win32.whl", hash = "sha256:8fa0cbc7ecad630e5b0f4f35b0f6ad419246b02bc750de7ac66db92667996d24"},
-    {file = "coverage-5.1-cp38-cp38-win_amd64.whl", hash = "sha256:79a3cfd6346ce6c13145731d39db47b7a7b859c0272f02cdb89a3bdcbae233a0"},
-    {file = "coverage-5.1-cp39-cp39-win32.whl", hash = "sha256:a82b92b04a23d3c8a581fc049228bafde988abacba397d57ce95fe95e0338ab4"},
-    {file = "coverage-5.1-cp39-cp39-win_amd64.whl", hash = "sha256:bb28a7245de68bf29f6fb199545d072d1036a1917dca17a1e75bbb919e14ee8e"},
-    {file = "coverage-5.1.tar.gz", hash = "sha256:f90bfc4ad18450c80b024036eaf91e4a246ae287701aaa88eaebebf150868052"},
+    {file = "coverage-5.2-cp27-cp27m-macosx_10_13_intel.whl", hash = "sha256:d9ad0a988ae20face62520785ec3595a5e64f35a21762a57d115dae0b8fb894a"},
+    {file = "coverage-5.2-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:4bb385a747e6ae8a65290b3df60d6c8a692a5599dc66c9fa3520e667886f2e10"},
+    {file = "coverage-5.2-cp27-cp27m-manylinux1_i686.whl", hash = "sha256:9702e2cb1c6dec01fb8e1a64c015817c0800a6eca287552c47a5ee0ebddccf62"},
+    {file = "coverage-5.2-cp27-cp27m-manylinux1_x86_64.whl", hash = "sha256:42fa45a29f1059eda4d3c7b509589cc0343cd6bbf083d6118216830cd1a51613"},
+    {file = "coverage-5.2-cp27-cp27m-win32.whl", hash = "sha256:41d88736c42f4a22c494c32cc48a05828236e37c991bd9760f8923415e3169e4"},
+    {file = "coverage-5.2-cp27-cp27m-win_amd64.whl", hash = "sha256:bbb387811f7a18bdc61a2ea3d102be0c7e239b0db9c83be7bfa50f095db5b92a"},
+    {file = "coverage-5.2-cp27-cp27mu-manylinux1_i686.whl", hash = "sha256:3740b796015b889e46c260ff18b84683fa2e30f0f75a171fb10d2bf9fb91fc70"},
+    {file = "coverage-5.2-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:ebf2431b2d457ae5217f3a1179533c456f3272ded16f8ed0b32961a6d90e38ee"},
+    {file = "coverage-5.2-cp35-cp35m-macosx_10_13_x86_64.whl", hash = "sha256:d54d7ea74cc00482a2410d63bf10aa34ebe1c49ac50779652106c867f9986d6b"},
+    {file = "coverage-5.2-cp35-cp35m-manylinux1_i686.whl", hash = "sha256:87bdc8135b8ee739840eee19b184804e5d57f518578ffc797f5afa2c3c297913"},
+    {file = "coverage-5.2-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:ed9a21502e9223f563e071759f769c3d6a2e1ba5328c31e86830368e8d78bc9c"},
+    {file = "coverage-5.2-cp35-cp35m-win32.whl", hash = "sha256:509294f3e76d3f26b35083973fbc952e01e1727656d979b11182f273f08aa80b"},
+    {file = "coverage-5.2-cp35-cp35m-win_amd64.whl", hash = "sha256:ca63dae130a2e788f2b249200f01d7fa240f24da0596501d387a50e57aa7075e"},
+    {file = "coverage-5.2-cp36-cp36m-macosx_10_13_x86_64.whl", hash = "sha256:5c74c5b6045969b07c9fb36b665c9cac84d6c174a809fc1b21bdc06c7836d9a0"},
+    {file = "coverage-5.2-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:c32aa13cc3fe86b0f744dfe35a7f879ee33ac0a560684fef0f3e1580352b818f"},
+    {file = "coverage-5.2-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:1e58fca3d9ec1a423f1b7f2aa34af4f733cbfa9020c8fe39ca451b6071237405"},
+    {file = "coverage-5.2-cp36-cp36m-win32.whl", hash = "sha256:3b2c34690f613525672697910894b60d15800ac7e779fbd0fccf532486c1ba40"},
+    {file = "coverage-5.2-cp36-cp36m-win_amd64.whl", hash = "sha256:a4d511012beb967a39580ba7d2549edf1e6865a33e5fe51e4dce550522b3ac0e"},
+    {file = "coverage-5.2-cp37-cp37m-macosx_10_13_x86_64.whl", hash = "sha256:32ecee61a43be509b91a526819717d5e5650e009a8d5eda8631a59c721d5f3b6"},
+    {file = "coverage-5.2-cp37-cp37m-manylinux1_i686.whl", hash = "sha256:6f91b4492c5cde83bfe462f5b2b997cdf96a138f7c58b1140f05de5751623cf1"},
+    {file = "coverage-5.2-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:bfcc811883699ed49afc58b1ed9f80428a18eb9166422bce3c31a53dba00fd1d"},
+    {file = "coverage-5.2-cp37-cp37m-win32.whl", hash = "sha256:60a3d36297b65c7f78329b80120f72947140f45b5c7a017ea730f9112b40f2ec"},
+    {file = "coverage-5.2-cp37-cp37m-win_amd64.whl", hash = "sha256:12eaccd86d9a373aea59869bc9cfa0ab6ba8b1477752110cb4c10d165474f703"},
+    {file = "coverage-5.2-cp38-cp38-macosx_10_13_x86_64.whl", hash = "sha256:d82db1b9a92cb5c67661ca6616bdca6ff931deceebb98eecbd328812dab52032"},
+    {file = "coverage-5.2-cp38-cp38-manylinux1_i686.whl", hash = "sha256:214eb2110217f2636a9329bc766507ab71a3a06a8ea30cdeebb47c24dce5972d"},
+    {file = "coverage-5.2-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:8a3decd12e7934d0254939e2bf434bf04a5890c5bf91a982685021786a08087e"},
+    {file = "coverage-5.2-cp38-cp38-win32.whl", hash = "sha256:1dcebae667b73fd4aa69237e6afb39abc2f27520f2358590c1b13dd90e32abe7"},
+    {file = "coverage-5.2-cp38-cp38-win_amd64.whl", hash = "sha256:f50632ef2d749f541ca8e6c07c9928a37f87505ce3a9f20c8446ad310f1aa87b"},
+    {file = "coverage-5.2-cp39-cp39-macosx_10_13_x86_64.whl", hash = "sha256:7403675df5e27745571aba1c957c7da2dacb537c21e14007ec3a417bf31f7f3d"},
+    {file = "coverage-5.2-cp39-cp39-manylinux1_i686.whl", hash = "sha256:0fc4e0d91350d6f43ef6a61f64a48e917637e1dcfcba4b4b7d543c628ef82c2d"},
+    {file = "coverage-5.2-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:25fe74b5b2f1b4abb11e103bb7984daca8f8292683957d0738cd692f6a7cc64c"},
+    {file = "coverage-5.2-cp39-cp39-win32.whl", hash = "sha256:d67599521dff98ec8c34cd9652cbcfe16ed076a2209625fca9dc7419b6370e5c"},
+    {file = "coverage-5.2-cp39-cp39-win_amd64.whl", hash = "sha256:10f2a618a6e75adf64329f828a6a5b40244c1c50f5ef4ce4109e904e69c71bd2"},
+    {file = "coverage-5.2.tar.gz", hash = "sha256:1874bdc943654ba46d28f179c1846f5710eda3aeb265ff029e0ac2b52daae404"},
 ]
 enum34 = [
     {file = "enum34-1.1.10-py2-none-any.whl", hash = "sha256:a98a201d6de3f2ab3db284e70a33b0f896fbf35f8086594e8c9e74b909058d53"},
@@ -544,8 +552,8 @@ futures = [
     {file = "futures-3.3.0.tar.gz", hash = "sha256:7e033af76a5e35f58e56da7a91e687706faf4e7bdfb2cbc3f2cca6b9bcda9794"},
 ]
 importlib-metadata = [
-    {file = "importlib_metadata-1.6.0-py2.py3-none-any.whl", hash = "sha256:2a688cbaa90e0cc587f1df48bdc97a6eadccdcd9c35fb3f976a09e3b5016d90f"},
-    {file = "importlib_metadata-1.6.0.tar.gz", hash = "sha256:34513a8a0c4962bc66d35b359558fd8a5e10cd472d37aec5f66858addef32c1e"},
+    {file = "importlib_metadata-1.7.0-py2.py3-none-any.whl", hash = "sha256:dc15b2969b4ce36305c51eebe62d418ac7791e9a157911d58bfb1f9ccd8e2070"},
+    {file = "importlib_metadata-1.7.0.tar.gz", hash = "sha256:90bb658cdbbf6d1735b6341ce708fc7024a3e14e99ffdc5783edea9f9b077f83"},
 ]
 isort = [
     {file = "isort-4.3.21-py2.py3-none-any.whl", hash = "sha256:6e811fcb295968434526407adb8796944f1988c5b65e8139058f2014cbe100fd"},
@@ -561,8 +569,8 @@ more-itertools = [
     {file = "more_itertools-5.0.0-py3-none-any.whl", hash = "sha256:fe7a7cae1ccb57d33952113ff4fa1bc5f879963600ed74918f1236e212ee50b9"},
 ]
 packaging = [
-    {file = "packaging-20.3-py2.py3-none-any.whl", hash = "sha256:82f77b9bee21c1bafbf35a84905d604d5d1223801d639cf3ed140bd651c08752"},
-    {file = "packaging-20.3.tar.gz", hash = "sha256:3c292b474fda1671ec57d46d739d072bfd495a4f51ad01a055121d81e952b7a3"},
+    {file = "packaging-20.4-py2.py3-none-any.whl", hash = "sha256:998416ba6962ae7fbd6596850b80e17859a5753ba17c32284f67bfff33784181"},
+    {file = "packaging-20.4.tar.gz", hash = "sha256:4357f74f47b9c12db93624a82154e9b120fa8293699949152b22065d556079f8"},
 ]
 pathlib2 = [
     {file = "pathlib2-2.3.5-py2.py3-none-any.whl", hash = "sha256:0ec8205a157c80d7acc301c0b18fbd5d44fe655968f5d947b6ecef5290fc35db"},
@@ -573,8 +581,8 @@ pluggy = [
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
 ]
 py = [
-    {file = "py-1.8.1-py2.py3-none-any.whl", hash = "sha256:c20fdd83a5dbc0af9efd622bee9a5564e278f6380fffcacc43ba6f43db2813b0"},
-    {file = "py-1.8.1.tar.gz", hash = "sha256:5e27081401262157467ad6e7f851b7aa402c5852dbcb3dae06768434de5752aa"},
+    {file = "py-1.9.0-py2.py3-none-any.whl", hash = "sha256:366389d1db726cd2fcfc79732e75410e5fe4d31db13692115529d34069a043c2"},
+    {file = "py-1.9.0.tar.gz", hash = "sha256:9ca6883ce56b4e8da7e79ac18787889fa5206c79dcc67fb065376cd2fe03f342"},
 ]
 pycodestyle = [
     {file = "pycodestyle-2.4.0-py2.py3-none-any.whl", hash = "sha256:cbc619d09254895b0d12c2c691e237b2e91e9b2ecf5e84c26b35400f93dcfb83"},
@@ -590,23 +598,23 @@ pyparsing = [
     {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
 ]
 pytest = [
-    {file = "pytest-4.6.9-py2.py3-none-any.whl", hash = "sha256:c77a5f30a90e0ce24db9eaa14ddfd38d4afb5ea159309bdd2dae55b931bc9324"},
-    {file = "pytest-4.6.9.tar.gz", hash = "sha256:19e8f75eac01dd3f211edd465b39efbcbdc8fc5f7866d7dd49fedb30d8adf339"},
+    {file = "pytest-4.6.11-py2.py3-none-any.whl", hash = "sha256:a00a7d79cbbdfa9d21e7d0298392a8dd4123316bfac545075e6f8f24c94d8c97"},
+    {file = "pytest-4.6.11.tar.gz", hash = "sha256:50fa82392f2120cc3ec2ca0a75ee615be4c479e66669789771f1758332be4353"},
 ]
 pytest-cov = [
-    {file = "pytest-cov-2.8.1.tar.gz", hash = "sha256:cc6742d8bac45070217169f5f72ceee1e0e55b0221f54bcf24845972d3a47f2b"},
-    {file = "pytest_cov-2.8.1-py2.py3-none-any.whl", hash = "sha256:cdbdef4f870408ebdbfeb44e63e07eb18bb4619fae852f6e760645fa36172626"},
+    {file = "pytest-cov-2.10.0.tar.gz", hash = "sha256:1a629dc9f48e53512fcbfda6b07de490c374b0c83c55ff7a1720b3fccff0ac87"},
+    {file = "pytest_cov-2.10.0-py2.py3-none-any.whl", hash = "sha256:6e6d18092dce6fad667cd7020deed816f858ad3b49d5b5e2b1cc1c97a4dba65c"},
 ]
 pytest-forked = [
-    {file = "pytest-forked-1.1.3.tar.gz", hash = "sha256:1805699ed9c9e60cb7a8179b8d4fa2b8898098e82d229b0825d8095f0f261100"},
-    {file = "pytest_forked-1.1.3-py2.py3-none-any.whl", hash = "sha256:1ae25dba8ee2e56fb47311c9638f9e58552691da87e82d25b0ce0e4bf52b7d87"},
+    {file = "pytest-forked-1.2.0.tar.gz", hash = "sha256:65f96334863d9cbe53d21f73e8febc4dd61b8d1fdcac7b487d9af07a5d02a938"},
+    {file = "pytest_forked-1.2.0-py2.py3-none-any.whl", hash = "sha256:42a438336731465c5bd76ab38e1645647ac55914a08b507efbabe8783a08aa6c"},
 ]
 pytest-sugar = [
-    {file = "pytest-sugar-0.9.3.tar.gz", hash = "sha256:1630b5b7ea3624919b73fde37cffb87965c5087a4afab8a43074ff44e0d810c4"},
+    {file = "pytest-sugar-0.9.4.tar.gz", hash = "sha256:b1b2186b0a72aada6859bea2a5764145e3aaa2c1cfbb23c3a19b5f7b697563d3"},
 ]
 pytest-xdist = [
-    {file = "pytest-xdist-1.32.0.tar.gz", hash = "sha256:1d4166dcac69adb38eeaedb88c8fada8588348258a3492ab49ba9161f2971129"},
-    {file = "pytest_xdist-1.32.0-py2.py3-none-any.whl", hash = "sha256:ba5ec9fde3410bd9a116ff7e4f26c92e02fa3d27975ef3ad03f330b3d4b54e91"},
+    {file = "pytest-xdist-1.33.0.tar.gz", hash = "sha256:833b902b16473162cc0572d5bd7b63f8b843df63a4ada9c8af1270d31db17607"},
+    {file = "pytest_xdist-1.33.0-py2.py3-none-any.whl", hash = "sha256:9149b4010240643a5e206fd0ece6f0a1cd5955dae014cf04610d359e22e22453"},
 ]
 scandir = [
     {file = "scandir-1.10.0-cp27-cp27m-win32.whl", hash = "sha256:92c85ac42f41ffdc35b6da57ed991575bdbe69db895507af88b9f499b701c188"},
@@ -622,15 +630,15 @@ scandir = [
     {file = "scandir-1.10.0.tar.gz", hash = "sha256:4d4631f6062e658e9007ab3149a9b914f3548cb38bfb021c64f39a025ce578ae"},
 ]
 six = [
-    {file = "six-1.14.0-py2.py3-none-any.whl", hash = "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"},
-    {file = "six-1.14.0.tar.gz", hash = "sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a"},
+    {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
+    {file = "six-1.15.0.tar.gz", hash = "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"},
 ]
 termcolor = [
     {file = "termcolor-1.1.0.tar.gz", hash = "sha256:1d6d69ce66211143803fbc56652b41d73b4a400a2891d7bf7a1cdf4c02de613b"},
 ]
 wcwidth = [
-    {file = "wcwidth-0.1.9-py2.py3-none-any.whl", hash = "sha256:cafe2186b3c009a04067022ce1dcd79cb38d8d65ee4f4791b8888d6599d1bbe1"},
-    {file = "wcwidth-0.1.9.tar.gz", hash = "sha256:ee73862862a156bf77ff92b09034fc4825dd3af9cf81bc5b360668d425f3c5f1"},
+    {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},
+    {file = "wcwidth-0.2.5.tar.gz", hash = "sha256:c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"},
 ]
 zipp = [
     {file = "zipp-1.2.0-py2.py3-none-any.whl", hash = "sha256:e0d9e63797e483a30d27e09fffd308c59a700d365ec34e93cc100844168bf921"},
