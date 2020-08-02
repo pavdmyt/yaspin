@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "yaspin"
-version = "0.18.0"
+version = "1.0.0"
 description = "Yet Another Terminal Spinner"
 license = "MIT"
 authors = ["Pavlo Dmytrenko <mail@pavdmyt.com>"]
@@ -21,7 +21,7 @@ include = [
     "yaspin/data/spinners.json",
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Environment :: MacOS X",
     "Environment :: Other Environment",
