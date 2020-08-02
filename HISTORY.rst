@@ -1,6 +1,14 @@
 Release History
 ===============
 
+1.0.0 / 2020-08-02
+------------------
+
+* "Stabilize" yaspin; ``1.*`` branch will contain stable release with Python 2
+support. Drop Python 2 and switch to Python 3 completely is planned for versions
+``2.*``.
+
+
 0.18.0 / 2020-07-21
 -------------------
 
