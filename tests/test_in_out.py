@@ -180,3 +180,55 @@ def test_spinner_write_race_condition(capsys):
     assert "aaaa" in out  # spinner text is present
     assert "bbbb" in out  # write() text is present
     assert not re.search(r"aaaa[^\rb]*bbbb", out)
+
+
+def test_spinner_hiding_with_context_manager(capsys):
+    HIDDEN_START = "hidden start"
+    HIDDEN_END = "hidden end"
+    sp = yaspin(text="foo")
+    sp.start()
+
+    with sp.hidden():
+        assert sp._hide_spin.is_set()
+        sp.write(HIDDEN_START)
+
+        # give the spinner some time to spin if it would not be hidden
+        time.sleep(3 * sp._interval)
+
+        sp.write(HIDDEN_END)
+
+    assert not sp._hide_spin.is_set()
+    sp.stop()
+
+    # make sure no spinner text was printed while the spinner was hidden
+    out, _ = capsys.readouterr()
+    out = out.replace("\r\033[K", "")
+    assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
+
+
+def test_spinner_nested_hiding_with_context_manager(capsys):
+    HIDDEN_START = "hidden start"
+    HIDDEN_END = "hidden end"
+    sp = yaspin(text="foo")
+    sp.start()
+
+    with sp.hidden():
+        sp.write(HIDDEN_START)
+
+        with sp.hidden():
+            assert sp._hidden_level == 2
+            with sp.hidden():
+                assert sp._hidden_level == 3
+                time.sleep(3 * sp._interval)
+
+        assert sp._hidden_level == 1
+        assert sp._hide_spin.is_set()
+        sp.write(HIDDEN_END)
+
+    assert not sp._hide_spin.is_set()
+    sp.stop()
+
+    # make sure no spinner text was printed while the spinner was hidden
+    out, _ = capsys.readouterr()
+    out = out.replace("\r\033[K", "")
+    assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
