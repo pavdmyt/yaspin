@@ -232,3 +232,22 @@ def test_spinner_nested_hiding_with_context_manager(capsys):
     out, _ = capsys.readouterr()
     out = out.replace("\r\033[K", "")
     assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
+
+
+def test_spinner_hiding_with_context_manager_and_exception():
+    sp = yaspin(text="foo")
+    sp.start()
+
+    try:
+        with sp.hidden():
+            raise ValueError()
+    except ValueError:
+        pass
+    else:
+        assert False, "Expected a ValueError, something has eaten the exception"
+
+    # make sure spinner is unhidden again
+    assert sp._hidden_level == 0
+    assert not sp._hide_spin.is_set()
+
+    sp.stop()

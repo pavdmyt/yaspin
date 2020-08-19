@@ -272,11 +272,12 @@ class Yaspin(object):
             self.hide()
         self._hidden_level += 1
 
-        yield
-
-        self._hidden_level -= 1
-        if self._hidden_level == 0:
-            self.show()
+        try:
+            yield
+        finally:
+            self._hidden_level -= 1
+            if self._hidden_level == 0:
+                self.show()
 
     def show(self):
         """Show the hidden spinner."""
