@@ -234,7 +234,7 @@ def test_spinner_nested_hiding_with_context_manager(capsys):
     assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
 
 
-def test_spinner_nested_hiding_with_context_manager_and_exception(capsys):
+def test_spinner_hiding_with_context_manager_and_exception():
     sp = yaspin(text="foo")
     sp.start()
 
