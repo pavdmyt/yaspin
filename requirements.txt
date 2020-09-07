@@ -4,9 +4,9 @@ apipkg==1.5 \
 atomicwrites==1.4.0 \
     --hash=sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197 \
     --hash=sha256:ae70396ad1a434f9c7046fd2dd196fc04b12f9e91ffb859164193be8b6168a7a
-attrs==19.3.0 \
-    --hash=sha256:08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c \
-    --hash=sha256:f7b7ce16570fe9965acd6d30101a28f62fb4a7f9e926b3bbc9b61f8b04247e72
+attrs==20.2.0 \
+    --hash=sha256:26b54ddbbb9ee1d34d5d3668dd37d6cf74990ab23c828c2888dccdceee395594 \
+    --hash=sha256:fce7fc47dfc976152e82d53ff92fa0407700c21acd20886a13777a0d20e655dc
 backports.functools-lru-cache==1.6.1; python_version < "3.2" \
     --hash=sha256:0bada4c2f8a43d533e4ecb7a12214d9420e66eb206d54bf2d682581ca4b80848 \
     --hash=sha256:8fde5f188da2d593bd5bc0be98d9abc46c95bb8a9dde93429570192ee6cc2d4a
