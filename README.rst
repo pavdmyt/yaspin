@@ -420,8 +420,8 @@ License
    :alt: yaspin Logo
 .. |Build Status| image:: https://travis-ci.org/pavdmyt/yaspin.svg?branch=master
    :target: https://travis-ci.org/pavdmyt/yaspin
-.. |Coverage| image:: https://coveralls.io/repos/github/pavdmyt/yaspin/badge.svg?branch=master
-   :target: https://coveralls.io/github/pavdmyt/yaspin?branch=master
+.. |Coverage| image:: https://codecov.io/gh/pavdmyt/yaspin/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/pavdmyt/yaspin
 .. |Codacy| image:: https://api.codacy.com/project/badge/Grade/797c7772d0d3467c88a5e2e9dc79ec98
    :target: https://www.codacy.com/app/pavdmyt/yaspin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pavdmyt/yaspin&amp;utm_campaign=Badge_Grade
 .. |pypi| image:: https://img.shields.io/pypi/v/yaspin.svg

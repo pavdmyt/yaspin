@@ -55,7 +55,7 @@ ci:
 
 coverage: clean-pyc
 	@echo "$(OK_COLOR)==> Calculating coverage...$(NO_COLOR)"
-	@poetry run py.test --cov-report term --cov-report html --cov $(name) tests/
+	@poetry run py.test --cov-report=term --cov-report=html --cov-report=xml --cov $(name) tests/
 	@echo "open file://`pwd`/htmlcov/index.html"
 
 rm-build:

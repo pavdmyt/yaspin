@@ -25,4 +25,4 @@ jobs:
       script:
         - make coverage
       after_success:
-        - coveralls
+        - bash <(curl -s https://codecov.io/bash)
