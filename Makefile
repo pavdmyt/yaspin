@@ -64,7 +64,7 @@ rm-build:
 # https://github.com/pypa/readme_renderer#check-description-locally
 # https://github.com/pypa/twine#twine-check
 #
-# pylint should be available as external tool
+# twine should be available as external tool
 #
 # No way to add it as tool.poetry.dev-dependencies,
 # since versions "<2" have known security vulnerabilities
