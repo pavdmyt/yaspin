@@ -1,6 +1,15 @@
 Release History
 ===============
 
+1.1.0 / 2020-10-04
+------------------
+
+* Add ``hidden()`` context manager #68
+* fix(#70): ``hidden()`` exceptions handling
+* Replace coveralls.io with codecov.io
+* Update dependencies
+
+
 1.0.0 / 2020-08-02
 ------------------
 
