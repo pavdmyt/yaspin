@@ -5,6 +5,7 @@ examples.hide_show_prompt_toolkit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Usage of the ``hide`` and ``show`` methods with prompt_toolkit's printing.
+Starting from yaspin v1.1.0 handled by ``hidden`` context manager.
 
 Requires python-prompt-tooklit >= 2.0.1
 https://github.com/jonathanslenders/python-prompt-toolkit/
@@ -44,25 +45,23 @@ with yaspin(text="Downloading images") as sp:
 
     # task 1
     time.sleep(1)
-    sp.hide()
-    print(
-        HTML(
-            u"<b>></b> <msg>image 1</msg> <sub-msg>download complete</sub-msg>"
-        ),
-        style=style,
-    )
-    sp.show()
+    with sp.hidden():
+        print(
+            HTML(
+                u"<b>></b> <msg>image 1</msg> <sub-msg>download complete</sub-msg>"
+            ),
+            style=style,
+        )
 
     # task 2
     time.sleep(2)
-    sp.hide()
-    print(
-        HTML(
-            u"<b>></b> <msg>image 2</msg> <sub-msg>download complete</sub-msg>"
-        ),
-        style=style,
-    )
-    sp.show()
+    with sp.hidden():
+        print(
+            HTML(
+                u"<b>></b> <msg>image 2</msg> <sub-msg>download complete</sub-msg>"
+            ),
+            style=style,
+        )
 
     # finalize
     sp.green.ok("✔")
