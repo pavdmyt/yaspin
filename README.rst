@@ -51,7 +51,7 @@ Features
 --------
 
 - No external dependencies
-- Runs at all major **CPython** versions (*2.7*, *3.5*, *3.6*, *3.7*, *3.8*), **PyPy** and **PyPy3**
+- Runs at all major **CPython** versions (*2.7*, *3.5*, *3.6*, *3.7*, *3.8*, *3.9*), **PyPy** and **PyPy3**
 - Supports all (70+) spinners from `cli-spinners`_
 - Supports all *colors*, *highlights*, *attributes* and their mixes from `termcolor`_ library
 - Easy to combine with other command-line libraries, e.g. `prompt-toolkit`_
