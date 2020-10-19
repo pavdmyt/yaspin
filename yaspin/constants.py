@@ -41,6 +41,7 @@ COLOR_ATTRS = COLOR_MAP.keys()
 # Get spinner names:
 # $ < yaspin/data/spinners.json | jq '. | keys'
 SPINNER_ATTRS = [
+    "aesthetic",
     "arc",
     "arrow",
     "arrow2",
