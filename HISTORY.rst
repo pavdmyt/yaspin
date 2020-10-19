@@ -1,6 +1,13 @@
 Release History
 ===============
 
+1.2.0 / 2020-10-19
+------------------
+
+* Update cli-spinners to ``v2.5.0``
+* Add support for Python 3.9
+
+
 1.1.0 / 2020-10-04
 ------------------
 
