@@ -15,11 +15,6 @@ flake:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
 	@poetry run flake8 .
 
-# pylint should be available as external tool
-#
-# No way to add it as tool.poetry.dev-dependencies,
-# since versions "^1.9" have known security vulnerabilities, affecting versions
-# <2.5.0 (as reported by pyup.io). At the same time v2.0.0 deprecates Py2 support.
 lint:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
 	@pylint $(name)/ ./tests -rn -f colorized --ignore termcolor.py
@@ -27,10 +22,6 @@ lint:
 isort-all:
 	@poetry run isort -rc --atomic --verbose $(name)/ ./tests ./examples
 
-# black should be available as external tool
-#
-# No way to add it as tool.poetry.dev-dependencies,
-# since it conflicts with any Py <3.6
 black-fmt:
 	black --line-length 79 --exclude "termcolor.py" \
 	./yaspin ./tests ./examples
@@ -61,14 +52,6 @@ coverage: clean-pyc
 rm-build:
 	@rm -rf build dist .egg $(name).egg-info
 
-# https://github.com/pypa/readme_renderer#check-description-locally
-# https://github.com/pypa/twine#twine-check
-#
-# twine should be available as external tool
-#
-# No way to add it as tool.poetry.dev-dependencies,
-# since versions "<2" have known security vulnerabilities
-# (as reported by pyup.io). At the same time v2.0.0 deprecates Py2 support.
 check-rst:
 	@echo "$(OK_COLOR)==> Checking RST will render...$(NO_COLOR)"
 	@twine check dist/*

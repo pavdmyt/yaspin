@@ -64,6 +64,7 @@ pytest = "^6.1.1"
 pytest-xdist = "^2.1.0"
 pytest-cov = "^2.10.1"
 pytest-sugar = "^0.9.4"
+pylint = "^2.6.0"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/pavdmyt/yaspin/issues"
