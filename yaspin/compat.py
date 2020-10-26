@@ -20,15 +20,7 @@ if PY2:
     builtin_str = str
     str = unicode  # noqa
     basestring = basestring  # noqa
-
-    def iteritems(dct):
-        return dct.iteritems()
-
-
 else:
     builtin_str = str
     str = str
     basestring = (str, bytes)
-
-    def iteritems(dct):
-        return dct.items()
