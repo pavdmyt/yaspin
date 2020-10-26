@@ -21,7 +21,7 @@ import threading
 import time
 
 from .base_spinner import default_spinner
-from .compat import PY2, basestring, builtin_str, bytes, iteritems, str
+from .compat import PY2, basestring, builtin_str, iteritems, str
 from .constants import COLOR_ATTRS, COLOR_MAP, ENCODING, SPINNER_ATTRS
 from .helpers import to_unicode
 from .termcolor import colored
