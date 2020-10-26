@@ -22,7 +22,7 @@ lint:
 isort-all:
 	@poetry run isort -rc --atomic --verbose $(name)/ ./tests ./examples
 
-black-fmt:
+fmt:
 	black --line-length 79 --exclude "termcolor.py" \
 	./yaspin ./tests ./examples
 
