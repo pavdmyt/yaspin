@@ -19,6 +19,7 @@ import signal
 import sys
 import threading
 import time
+import datetime
 
 from .base_spinner import default_spinner
 from .compat import PY2, basestring, builtin_str, bytes, iteritems, str
@@ -57,6 +58,7 @@ class Yaspin(object):
         reversal=False,
         side="left",
         sigmap=None,
+        timer=False,
     ):
         # Spinner
         self._spinner = self._set_spinner(spinner)
@@ -74,6 +76,7 @@ class Yaspin(object):
         self._text = self._set_text(text)
         self._side = self._set_side(side)
         self._reversal = reversal
+        self._timer = timer
 
         # Helper flags
         self._stop_spin = None
@@ -228,6 +231,7 @@ class Yaspin(object):
         if sys.stdout.isatty():
             self._hide_cursor()
 
+        self._start_time = time.time()
         self._stop_spin = threading.Event()
         self._hide_spin = threading.Event()
         self._spin_thread = threading.Thread(target=self._spin)
@@ -379,11 +383,18 @@ class Yaspin(object):
         if self._side == "right":
             frame, text = text, frame
 
+        if self._timer:
+            elapsed = " ({})".format(
+                datetime.timedelta(seconds=int(time.time() - self._start_time))
+            )
+        else:
+            elapsed = ""
+
         # Mode
         if not mode:
-            out = "\r{0} {1}".format(frame, text)
+            out = "\r{0} {1}{2}".format(frame, text, elapsed)
         else:
-            out = "{0} {1}\n".format(frame, text)
+            out = "{0} {1}{2}\n".format(frame, text, elapsed)
 
         # Ensure output is bytes for Py2 and Unicode for Py3
         assert isinstance(out, builtin_str)
