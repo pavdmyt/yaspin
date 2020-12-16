@@ -220,6 +220,10 @@ class Yaspin(object):
         self._reversal = value
         self._frames = self._set_frames(self._spinner, self._reversal)
         self._cycle = self._set_cycle(self._frames)
+    
+    @property
+    def elapsed_time(self):
+        return time.time() - self._start_time
 
     #
     # Public
@@ -384,17 +388,15 @@ class Yaspin(object):
             frame, text = text, frame
 
         if self._timer:
-            elapsed = " ({})".format(
-                datetime.timedelta(seconds=int(time.time() - self._start_time))
+            text += " ({})".format(
+                datetime.timedelta(seconds=int(self.elapsed_time))
             )
-        else:
-            elapsed = ""
 
         # Mode
         if not mode:
-            out = "\r{0} {1}{2}".format(frame, text, elapsed)
+            out = "\r{0} {1}".format(frame, text)
         else:
-            out = "{0} {1}{2}\n".format(frame, text, elapsed)
+            out = "{0} {1}\n".format(frame, text)
 
         # Ensure output is bytes for Py2 and Unicode for Py3
         assert isinstance(out, builtin_str)
