@@ -77,6 +77,8 @@ class Yaspin(object):
         self._side = self._set_side(side)
         self._reversal = reversal
         self._timer = timer
+        self._start_time = None
+        self._stop_time = None
 
         # Helper flags
         self._stop_spin = None
@@ -220,10 +222,16 @@ class Yaspin(object):
         self._reversal = value
         self._frames = self._set_frames(self._spinner, self._reversal)
         self._cycle = self._set_cycle(self._frames)
-    
+
     @property
     def elapsed_time(self):
-        return time.time() - self._start_time
+        if self._start_time is None:
+            return 0
+
+        if self._stop_time is None:
+            return time.time() - self._start_time
+
+        return self._stop_time - self._start_time
 
     #
     # Public
@@ -236,12 +244,15 @@ class Yaspin(object):
             self._hide_cursor()
 
         self._start_time = time.time()
+        self._stop_time = None
         self._stop_spin = threading.Event()
         self._hide_spin = threading.Event()
         self._spin_thread = threading.Thread(target=self._spin)
         self._spin_thread.start()
 
     def stop(self):
+        self._stop_time = time.time()
+
         if self._dfl_sigmap:
             # Reset registered signal handlers to default ones
             self._reset_signal_handlers()
