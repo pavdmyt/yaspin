@@ -9,9 +9,9 @@ pytest-cov==2.10.1 \
     --hash=sha256:45ec2d5182f89a81fc3eb29e3d1ed3113b9e9a873bcddb2a71faaab066110191
 pytest-sugar==0.9.4 \
     --hash=sha256:b1b2186b0a72aada6859bea2a5764145e3aaa2c1cfbb23c3a19b5f7b697563d3
-pytest-xdist==1.34.0 \
-    --hash=sha256:340e8e83e2a4c0d861bdd8d05c5d7b7143f6eea0aba902997db15c2a86be04ee \
-    --hash=sha256:ba5d10729372d65df3ac150872f9df5d2ed004a3b0d499cc0164aafedd8c7b66
+pytest-xdist==2.2.0 \
+    --hash=sha256:1d8edbb1a45e8e1f8e44b1260583107fc23f8bc8da6d18cb331ff61d41258ecf \
+    --hash=sha256:f127e11e84ad37cc1de1088cb2990f3c354630d428af3f71282de589c5bb779b
 pytest==4.6.11 \
     --hash=sha256:a00a7d79cbbdfa9d21e7d0298392a8dd4123316bfac545075e6f8f24c94d8c97 \
     --hash=sha256:50fa82392f2120cc3ec2ca0a75ee615be4c479e66669789771f1758332be4353
