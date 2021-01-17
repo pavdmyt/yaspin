@@ -13,13 +13,13 @@ A lightweight terminal spinner.
 from __future__ import absolute_import
 
 import contextlib
+import datetime
 import functools
 import itertools
 import signal
 import sys
 import threading
 import time
-import datetime
 
 from .base_spinner import default_spinner
 from .compat import PY2, basestring, builtin_str, bytes, iteritems, str
