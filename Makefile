@@ -1,5 +1,5 @@
-OK_COLOR=\033[32;01m
-NO_COLOR=\033[0m
+OK_COLOR := $(shell tput -Txterm setaf 2)
+NO_COLOR := $(shell tput -Txterm sgr0)
 
 .PHONY: build
 
