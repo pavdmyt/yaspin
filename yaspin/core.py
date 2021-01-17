@@ -399,8 +399,10 @@ class Yaspin(object):
             frame, text = text, frame
 
         if self._timer:
-            text += " ({})".format(
-                datetime.timedelta(seconds=int(self.elapsed_time))
+            sec, fsec = divmod(self.elapsed_time, 1)
+            text += " ({}.{:02.0f})".format(
+                datetime.timedelta(seconds=sec),
+                100*fsec
             )
 
         # Mode
