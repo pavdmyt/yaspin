@@ -1,6 +1,13 @@
 Release History
 ===============
 
+1.3.0 / 2021-01-17
+------------------
+
+* Optimization: wait of stop event instead of sleep
+* Update dependencies
+
+
 1.2.0 / 2020-10-19
 ------------------
 
