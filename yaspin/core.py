@@ -244,7 +244,7 @@ class Yaspin(object):
             self._hide_cursor()
 
         self._start_time = time.time()
-        self._stop_time = None
+        self._stop_time = None  # Reset value to properly calculate subsequent spinner starts (if any)
         self._stop_spin = threading.Event()
         self._hide_spin = threading.Event()
         self._spin_thread = threading.Thread(target=self._spin)
