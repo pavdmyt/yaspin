@@ -16,7 +16,7 @@ def test_no_timer():
     sp = yaspin(timer=False)
     sp._freeze("")
 
-    assert re.search(r"\(\d+:\d{2}:\d{2}\)", sp._last_frame) is None
+    assert re.search(r"\(\d+:\d{2}:\d{2}.\d{2}\)", sp._last_frame) is None
 
 
 def test_timer_idle():
@@ -26,7 +26,7 @@ def test_timer_idle():
 
     sp._freeze("")
 
-    assert "(0:00:00)" in sp._last_frame
+    assert "(0:00:00.00)" in sp._last_frame
 
 
 def test_timer_in_progress():
@@ -43,7 +43,7 @@ def test_timer_in_progress():
 
     sp._freeze("")
 
-    assert re.search(r"\(\d+:\d{2}:\d{2}\)", sp._last_frame) is not None
+    assert re.search(r"\(\d+:\d{2}:\d{2}.\d{2}\)", sp._last_frame) is not None
 
 
 def test_timer_finished():
@@ -64,4 +64,4 @@ def test_timer_finished():
 
     sp._freeze("")
 
-    assert re.search(r"\(\d+:\d{2}:\d{2}\)", sp._last_frame) is not None
+    assert re.search(r"\(\d+:\d{2}:\d{2}.\d{2}\)", sp._last_frame) is not None
