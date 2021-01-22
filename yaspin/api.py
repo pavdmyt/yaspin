@@ -32,6 +32,7 @@ def yaspin(*args, **kwargs):
             of the text string.
         sigmap (dict, optional): Maps POSIX signals to their respective
             handlers.
+        timer (bool, optional): Prints a timer showing the elapsed time.
 
     Returns:
         core.Yaspin: instance of the Yaspin class.

@@ -13,6 +13,7 @@ A lightweight terminal spinner.
 from __future__ import absolute_import
 
 import contextlib
+import datetime
 import functools
 import itertools
 import signal
@@ -57,6 +58,7 @@ class Yaspin(object):
         reversal=False,
         side="left",
         sigmap=None,
+        timer=False,
     ):
         # Spinner
         self._spinner = self._set_spinner(spinner)
@@ -74,6 +76,9 @@ class Yaspin(object):
         self._text = self._set_text(text)
         self._side = self._set_side(side)
         self._reversal = reversal
+        self._timer = timer
+        self._start_time = None
+        self._stop_time = None
 
         # Helper flags
         self._stop_spin = None
@@ -218,6 +223,16 @@ class Yaspin(object):
         self._frames = self._set_frames(self._spinner, self._reversal)
         self._cycle = self._set_cycle(self._frames)
 
+    @property
+    def elapsed_time(self):
+        if self._start_time is None:
+            return 0
+
+        if self._stop_time is None:
+            return time.time() - self._start_time
+
+        return self._stop_time - self._start_time
+
     #
     # Public
     #
@@ -228,12 +243,16 @@ class Yaspin(object):
         if sys.stdout.isatty():
             self._hide_cursor()
 
+        self._start_time = time.time()
+        self._stop_time = None  # Reset value to properly calculate subsequent spinner starts (if any)
         self._stop_spin = threading.Event()
         self._hide_spin = threading.Event()
         self._spin_thread = threading.Thread(target=self._spin)
         self._spin_thread.start()
 
     def stop(self):
+        self._stop_time = time.time()
+
         if self._dfl_sigmap:
             # Reset registered signal handlers to default ones
             self._reset_signal_handlers()
@@ -378,6 +397,13 @@ class Yaspin(object):
         # Position
         if self._side == "right":
             frame, text = text, frame
+
+        if self._timer:
+            sec, fsec = divmod(self.elapsed_time, 1)
+            text += " ({}.{:02.0f})".format(
+                datetime.timedelta(seconds=sec),
+                100*fsec
+            )
 
         # Mode
         if not mode:
