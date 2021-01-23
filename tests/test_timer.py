@@ -2,12 +2,13 @@
 
 """
 tests.test_timer
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
+Test timer feature.
 """
 
-import time
 import re
+import time
 
 from yaspin import yaspin
 
@@ -55,7 +56,7 @@ def test_timer_finished():
     sp.stop()
 
     assert sp.elapsed_time >= 0.001
-    
+
     t1 = sp.elapsed_time
     time.sleep(0.001)
     t2 = sp.elapsed_time

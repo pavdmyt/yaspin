@@ -25,7 +25,7 @@ lint:
 	@pylint $(name)/ -rn -f colorized --ignore termcolor.py
 
 isort-all:
-	@poetry run isort -rc --atomic --verbose $(name)/
+	@poetry run isort -rc --atomic --verbose $(name)/ tests/ examples/
 
 # black should be available as external tool
 #
