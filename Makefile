@@ -22,10 +22,10 @@ flake:
 # <2.5.0 (as reported by pyup.io). At the same time v2.0.0 deprecates Py2 support.
 lint:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
-	@pylint setup.py $(name)/ -rn -f colorized --ignore termcolor.py
+	@pylint $(name)/ -rn -f colorized --ignore termcolor.py
 
 isort-all:
-	@poetry run isort -rc --atomic --verbose setup.py $(name)/
+	@poetry run isort -rc --atomic --verbose $(name)/
 
 # black should be available as external tool
 #
@@ -33,7 +33,7 @@ isort-all:
 # since it conflicts with any Py <3.6
 black-fmt:
 	black --line-length 79 --exclude "termcolor.py" \
-	./yaspin ./tests ./examples ./setup.py
+	./yaspin ./tests ./examples
 
 clean:
 	@echo "$(OK_COLOR)==> Cleaning up files that are already in .gitignore...$(NO_COLOR)"
