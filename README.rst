@@ -235,6 +235,20 @@ Change spinner properties on the fly
         time.sleep(2)
 
 
+Spinner with timer
+//////////////////
+
+.. code:: python
+
+    # -*- coding: utf-8 -*-
+    import time
+    from yaspin import yaspin
+
+    with yaspin(text="elapsed time", timer=True) as sp:
+        time.sleep(3.1415)
+        sp.ok()
+
+
 Writing messages
 ////////////////
 
