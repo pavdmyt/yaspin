@@ -22,8 +22,7 @@ import threading
 import time
 
 from .base_spinner import default_spinner
-from .compat import PY2, basestring, builtin_str, bytes, iteritems, str
-from .constants import COLOR_ATTRS, COLOR_MAP, ENCODING, SPINNER_ATTRS
+from .constants import COLOR_ATTRS, COLOR_MAP, SPINNER_ATTRS
 from .helpers import to_unicode
 from .termcolor import colored
 
@@ -38,15 +37,6 @@ class Yaspin(object):
     # it sets the sys.stdout.encoding attribute to the terminal's encoding.
     # The print statement's handler will automatically encode unicode
     # arguments into bytes.
-    #
-    # In Py2 when piping or redirecting output, Python does not detect
-    # the desired character set of the output, it sets sys.stdout.encoding
-    # to None, and print will invoke the default "ascii" codec.
-    #
-    # Py3 invokes "UTF-8" codec by default.
-    #
-    # Thats why in Py2, output should be encoded manually with desired
-    # encoding in order to support pipes and redirects.
 
     def __init__(
         self,
@@ -105,8 +95,6 @@ class Yaspin(object):
     #
     def __repr__(self):
         repr_ = u"<Yaspin frames={0!s}>".format(self._frames)
-        if PY2:
-            return repr_.encode(ENCODING)
         return repr_
 
     def __enter__(self):
@@ -320,11 +308,9 @@ class Yaspin(object):
             self._clear_line()
 
             _text = to_unicode(text)
-            if PY2:
-                _text = _text.encode(ENCODING)
 
-            # Ensure output is bytes for Py2 and Unicode for Py3
-            assert isinstance(_text, builtin_str)
+            # Ensure output is Unicode
+            assert isinstance(_text, str)
 
             sys.stdout.write("{0}\n".format(_text))
 
@@ -387,8 +373,7 @@ class Yaspin(object):
         assert isinstance(frame, str)
         assert isinstance(self._text, str)
 
-        frame = frame.encode(ENCODING) if PY2 else frame
-        text = self._text.encode(ENCODING) if PY2 else self._text
+        text = self._text
 
         # Colors
         if self._color_func is not None:
@@ -410,8 +395,8 @@ class Yaspin(object):
         else:
             out = "{0} {1}\n".format(frame, text)
 
-        # Ensure output is bytes for Py2 and Unicode for Py3
-        assert isinstance(out, builtin_str)
+        # Ensure output is Unicode
+        assert isinstance(out, str)
 
         return out
 
@@ -425,7 +410,7 @@ class Yaspin(object):
                 "SIGKILL cannot be cought or ignored in POSIX systems."
             )
 
-        for sig, sig_handler in iteritems(self._sigmap):
+        for sig, sig_handler in self._sigmap.items():
             # A handler for a particular signal, once set, remains
             # installed until it is explicitly reset. Store default
             # signal handlers for subsequent reset at cleanup phase.
@@ -445,7 +430,7 @@ class Yaspin(object):
             signal.signal(sig, sig_handler)
 
     def _reset_signal_handlers(self):
-        for sig, sig_handler in iteritems(self._dfl_sigmap):
+        for sig, sig_handler in self._dfl_sigmap.items():
             signal.signal(sig, sig_handler)
 
     #
@@ -454,7 +439,7 @@ class Yaspin(object):
     @staticmethod
     def _set_color(value):
         # type: (str) -> str
-        available_values = [k for k, v in iteritems(COLOR_MAP) if v == "color"]
+        available_values = [k for k, v in COLOR_MAP.items() if v == "color"]
 
         if value not in available_values:
             raise ValueError(
@@ -468,7 +453,7 @@ class Yaspin(object):
     def _set_on_color(value):
         # type: (str) -> str
         available_values = [
-            k for k, v in iteritems(COLOR_MAP) if v == "on_color"
+            k for k, v in COLOR_MAP.items() if v == "on_color"
         ]
         if value not in available_values:
             raise ValueError(
@@ -482,7 +467,7 @@ class Yaspin(object):
     @staticmethod
     def _set_attrs(attrs):
         # type: (List[str]) -> Set[str]
-        available_values = [k for k, v in iteritems(COLOR_MAP) if v == "attrs"]
+        available_values = [k for k, v in COLOR_MAP.items() if v == "attrs"]
 
         for attr in attrs:
             if attr not in available_values:
@@ -522,8 +507,8 @@ class Yaspin(object):
         uframes = None  # unicode frames
         uframes_seq = None  # sequence of unicode frames
 
-        if isinstance(spinner.frames, basestring):
-            uframes = to_unicode(spinner.frames) if PY2 else spinner.frames
+        if isinstance(spinner.frames, str):
+            uframes = spinner.frames
 
         # TODO (pavdmyt): support any type that implements iterable
         if isinstance(spinner.frames, (list, tuple)):
@@ -562,8 +547,6 @@ class Yaspin(object):
 
     @staticmethod
     def _set_text(text):
-        if PY2:
-            return to_unicode(text)
         return text
 
     @staticmethod

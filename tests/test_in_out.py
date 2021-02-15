@@ -15,17 +15,13 @@ import time
 import pytest
 
 from yaspin import Spinner, yaspin
-from yaspin.compat import PY2, basestring, builtin_str, str
-from yaspin.constants import ENCODING
-from yaspin.helpers import to_unicode
 
 
 def test_input_converted_to_unicode(text, frames, interval, reversal, side):
     sp = Spinner(frames, interval)
     sp = yaspin(sp, text, side=side, reversal=reversal)
 
-    if isinstance(sp._frames, basestring):
-        assert isinstance(sp._frames, str)
+    assert not isinstance(sp._frames, bytes)
 
     if isinstance(sp._frames, (list, tuple)):
         assert isinstance(sp._frames[0], str)
@@ -40,14 +36,14 @@ def test_out_converted_to_builtin_str(text, frames, interval, reversal, side):
     for _ in range(len(frames)):
         frame = next(sp._cycle)
         out = sp._compose_out(frame)
-        assert isinstance(out, builtin_str)
+        assert isinstance(out, str)
 
 
 def test_repr(text, frames, interval):
     sp = Spinner(frames, interval)
     sp = yaspin(sp, text)
 
-    assert isinstance(repr(sp), builtin_str)
+    assert isinstance(repr(sp), str)
 
 
 def test_compose_out_with_color(
@@ -78,7 +74,7 @@ def test_compose_out_with_color(
 
     out = sp._compose_out(frame=u"/")
     assert out.startswith("\r\033")
-    assert isinstance(out, builtin_str)
+    assert isinstance(out, str)
 
 
 def test_write(capsys, text):
@@ -89,16 +85,7 @@ def test_write(capsys, text):
     # cleans stdout from _clear_line and \r
     out = out.replace("\r\033[K", "")
 
-    # handle out and text encodings (come out messy in PY2)
-    # Under PY2 ``capsys.readouterr`` always produces ``out``
-    # of type ``unicode``. Conversion to bytes is required
-    # for proper ``out`` and ``text`` comparison.
-    if PY2:
-        out = out.encode(ENCODING)
-        if isinstance(text, str):
-            text = text.encode(ENCODING)
-
-    assert isinstance(out, basestring)
+    assert isinstance(out, (str, bytes))
     assert out[-1] == "\n"
     if text:
         assert out[:-1] == text
@@ -127,10 +114,6 @@ def test_hide_show(capsys, text, request):
     # ensure that text was cleared with the hide method
     assert out[-4:] == "\r\033[K"
 
-    # properly encode text to unicode if running in PY2
-    if PY2:
-        text = to_unicode(text).encode(ENCODING)
-
     # ``\n`` is required to flush stdout during
     # the hidden state of the spinner
     sys.stdout.write("{0}\n".format(text))
@@ -139,16 +122,7 @@ def test_hide_show(capsys, text, request):
     # cleans stdout from _clear_line and \r
     out = out.replace("\r\033[K", "")
 
-    # handle out and text encodings (come out messy in PY2)
-    # Under PY2 ``capsys.readouterr`` always produces ``out``
-    # of type ``unicode``. Conversion to bytes is required
-    # for proper ``out`` and ``text`` comparison.
-    if PY2:
-        out = out.encode(ENCODING)
-        if isinstance(text, str):
-            text = text.encode(ENCODING)
-
-    assert isinstance(out, basestring)
+    assert isinstance(out, (str, bytes))
     assert out[-1] == "\n"
     if text:
         assert out[:-1] == text

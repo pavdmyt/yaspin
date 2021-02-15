@@ -12,7 +12,6 @@ Helper functions.
 
 from __future__ import absolute_import
 
-from .compat import bytes
 from .constants import ENCODING
 
 
