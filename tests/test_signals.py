@@ -15,7 +15,6 @@ import signal
 import pytest
 
 from yaspin import kbi_safe_yaspin, yaspin
-from yaspin.compat import iteritems
 
 
 def test_sigmap_setting(sigmap_test_cases):
@@ -38,7 +37,7 @@ def test_sigmap_signals_get_registered(sigmap_test_cases):
     # that spinner get stopped.
     try:
         sp.start()
-        for sig, sig_handler in iteritems(sigmap):
+        for sig, sig_handler in sigmap.items():
             handler = signal.getsignal(sig)
             is_partial = isinstance(handler, functools.partial)
 

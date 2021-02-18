@@ -18,7 +18,6 @@ import uuid
 
 import pytest
 
-from yaspin.compat import basestring, str
 from yaspin.constants import ENCODING
 
 
@@ -60,12 +59,6 @@ def test_piping_output(text, frames, interval, case_id):
         os.remove(fname)
 
     with open(py_fname, "wb") as f:
-        if isinstance(frames, basestring):
-            # enclosing characters in quotes
-            # for basestring entries
-            # to avoid SyntaxError
-            frames = repr(to_unicode(frames))
-
         text = to_unicode(text)
         interval = to_unicode(interval)
         code = to_unicode(TEST_CODE)
