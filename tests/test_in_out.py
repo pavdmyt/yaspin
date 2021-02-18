@@ -253,3 +253,20 @@ def test_spinner_hiding_with_context_manager_and_exception():
     assert not sp._hide_spin.is_set()
 
     sp.stop()
+
+
+@pytest.mark.parametrize(
+    "obj,obj_str",
+    [
+        ("foo", "foo"),
+        (dict(cat="meow"), "{'cat': 'meow'}"),
+        (23, "23"),
+        (["foo", "bar", "'", 23], """['foo', 'bar', "'", 23]"""),
+    ]
+)
+def test_write_non_str_objects(capsys, obj, obj_str):
+    sp = yaspin()
+    capsys.readouterr()
+    sp.write(obj)
+    out, _ = capsys.readouterr()
+    assert out == "\r\033[K{}\n".format(obj_str)

@@ -319,9 +319,12 @@ class Yaspin(object):
             sys.stdout.write("\r")
             self._clear_line()
 
-            _text = to_unicode(text)
-            if PY2:
-                _text = _text.encode(ENCODING)
+            if isinstance(text, (builtin_str, str, bytes)):
+                _text = to_unicode(text)
+                if PY2:
+                    _text = _text.encode(ENCODING)
+            else:
+                _text = builtin_str(text)
 
             # Ensure output is bytes for Py2 and Unicode for Py3
             assert isinstance(_text, builtin_str)
