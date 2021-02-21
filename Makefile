@@ -13,7 +13,7 @@ pypi_pwd := $(shell grep password ~/.pypirc | awk -F"= " '{ print $$2 }')
 
 flake:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
-	@poetry run flake8 .
+	@poetry run flake8 --ignore=F821,E501 .
 
 # pylint should be available as external tool
 #

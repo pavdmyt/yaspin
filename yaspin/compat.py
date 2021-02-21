@@ -18,9 +18,9 @@ PY2 = sys.version_info[0] == 2
 
 if PY2:
     builtin_str = str
-    bytes = str
-    str = unicode  # noqa
-    basestring = basestring  # noqa
+    bytes = str  # pylint: disable=redefined-builtin
+    str = unicode  # pylint: disable=redefined-builtin,undefined-variable
+    basestring = basestring  # pylint: disable=undefined-variable,self-assigning-variable
 
     def iteritems(dct):
         return dct.iteritems()
@@ -28,8 +28,8 @@ if PY2:
 
 else:
     builtin_str = str
-    bytes = bytes
-    str = str
+    bytes = bytes  # pylint: disable=self-assigning-variable
+    str = str  # pylint: disable=self-assigning-variable
     basestring = (str, bytes)
 
     def iteritems(dct):

@@ -12,7 +12,7 @@ Helper functions.
 
 from __future__ import absolute_import
 
-from .compat import bytes
+from .compat import bytes  # pylint: disable=redefined-builtin
 from .constants import ENCODING
 
 
