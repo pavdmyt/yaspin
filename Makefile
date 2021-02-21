@@ -13,7 +13,7 @@ pypi_pwd := $(shell grep password ~/.pypirc | awk -F"= " '{ print $$2 }')
 
 flake:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
-	@poetry run flake8 .
+	@poetry run flake8 --ignore=F821,E501 .
 
 # pylint should be available as external tool
 #
@@ -25,7 +25,7 @@ lint:
 	@pylint $(name)/ -rn -f colorized --ignore termcolor.py
 
 isort-all:
-	@poetry run isort -rc --atomic --verbose $(name)/ tests/ examples/
+	@poetry run isort --atomic --verbose $(name)/ tests/ examples/
 
 # black should be available as external tool
 #

@@ -6,7 +6,9 @@
 
 |Build Status| |Coverage| |Codacy| |pyup| |black-fmt|
 
-|pypi| |Versions| |Wheel| |Examples| |Downloads|
+|pypi| |Versions| |Wheel| |Examples|
+
+|DownloadsTot| |DownloadsW|
 
 
 ``Yaspin`` provides a full-featured terminal spinner to show the progress during long-hanging operations.
@@ -448,7 +450,9 @@ License
    :target: https://pyup.io/repos/github/pavdmyt/yaspin/
 .. |black-fmt| image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/ambv/black
-.. |Downloads| image:: https://pepy.tech/badge/yaspin
+.. |DownloadsTot| image:: https://pepy.tech/badge/yaspin
+   :target: https://pepy.tech/project/yaspin
+.. |DownloadsW| image:: https://pepy.tech/badge/yaspin/week
    :target: https://pepy.tech/project/yaspin
 
 

@@ -256,13 +256,13 @@ def test_spinner_hiding_with_context_manager_and_exception():
 
 
 @pytest.mark.parametrize(
-    "obj,obj_str",
+    "obj, obj_str",
     [
         ("foo", "foo"),
         (dict(cat="meow"), "{'cat': 'meow'}"),
         (23, "23"),
         (["foo", "bar", "'", 23], """['foo', 'bar', "'", 23]"""),
-    ]
+    ],
 )
 def test_write_non_str_objects(capsys, obj, obj_str):
     sp = yaspin()

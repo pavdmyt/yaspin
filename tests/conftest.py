@@ -216,7 +216,7 @@ def supported_highlights(request):
     ids=attrs_id_func,
     params=sorted(
         [[k] for k, v in iteritems(COLOR_MAP) if v == "attrs"]
-        + [
+        + [  # noqa: W503
             ["bold", "dark"],
             ["blink", "concealed", "reverse"],
             ["underline", "concealed", "bold", "dark", "blink", "reverse"],

@@ -1,6 +1,15 @@
 Release History
 ===============
 
+1.4.0 / 2021-02-21
+------------------
+
+* Add spinner timer (#99, #108)
+* fix(#107): use ``poetry_core`` as build backend
+* fix(#34): allow ``write()`` to print non-string objects
+* Update dependencies
+
+
 1.3.0 / 2021-01-17
 ------------------
 

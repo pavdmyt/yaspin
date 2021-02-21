@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# :copyright: (c) 2020 by Pavlo Dmytrenko.
+# :copyright: (c) 2021 by Pavlo Dmytrenko.
 # :license: MIT, see LICENSE for more details.
 
 """
@@ -22,13 +22,13 @@ import threading
 import time
 
 from .base_spinner import default_spinner
-from .compat import PY2, basestring, builtin_str, bytes, iteritems, str
+from .compat import PY2, basestring, builtin_str, bytes, iteritems, str  # pylint: disable=redefined-builtin
 from .constants import COLOR_ATTRS, COLOR_MAP, ENCODING, SPINNER_ATTRS
 from .helpers import to_unicode
 from .termcolor import colored
 
 
-class Yaspin(object):
+class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-instance-attributes
     """Implements a context manager that spawns a thread
     to write spinner frames into a tty (stdout) during
     context execution.
@@ -48,7 +48,7 @@ class Yaspin(object):
     # Thats why in Py2, output should be encoded manually with desired
     # encoding in order to support pipes and redirects.
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         spinner=None,
         text="",
@@ -130,7 +130,7 @@ class Yaspin(object):
     def __getattr__(self, name):
         # CLI spinners
         if name in SPINNER_ATTRS:
-            from .spinners import Spinners
+            from .spinners import Spinners  # pylint: disable=import-outside-toplevel
 
             sp = getattr(Spinners, name)
             self.spinner = sp
@@ -244,7 +244,7 @@ class Yaspin(object):
             self._hide_cursor()
 
         self._start_time = time.time()
-        self._stop_time = None  # Reset value to properly calculate subsequent spinner starts (if any)
+        self._stop_time = None  # Reset value to properly calculate subsequent spinner starts (if any)  # pylint: disable=line-too-long
         self._stop_spin = threading.Event()
         self._hide_spin = threading.Event()
         self._spin_thread = threading.Thread(target=self._spin)
