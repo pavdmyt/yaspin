@@ -402,9 +402,9 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
             frame, text = text, frame
 
         if self._timer:
-            sec, fsec = divmod(self.elapsed_time, 1)
+            sec, fsec = divmod(round(100*self.elapsed_time), 100)
             text += " ({}.{:02.0f})".format(
-                datetime.timedelta(seconds=sec), 100 * fsec
+                datetime.timedelta(seconds=sec), fsec
             )
 
         # Mode
