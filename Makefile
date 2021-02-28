@@ -32,7 +32,7 @@ isort-all:
 # No way to add it as tool.poetry.dev-dependencies,
 # since it conflicts with any Py <3.6
 black-fmt:
-	black --line-length 79 --exclude "termcolor.py" \
+	black --exclude "termcolor.py" \
 	./yaspin ./tests ./examples
 
 clean:

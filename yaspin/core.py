@@ -402,10 +402,8 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
             frame, text = text, frame
 
         if self._timer:
-            sec, fsec = divmod(round(100*self.elapsed_time), 100)
-            text += " ({}.{:02.0f})".format(
-                datetime.timedelta(seconds=sec), fsec
-            )
+            sec, fsec = divmod(round(100 * self.elapsed_time), 100)
+            text += " ({}.{:02.0f})".format(datetime.timedelta(seconds=sec), fsec)
 
         # Mode
         if not mode:
@@ -470,15 +468,11 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
     @staticmethod
     def _set_on_color(value):
         # type: (str) -> str
-        available_values = [
-            k for k, v in iteritems(COLOR_MAP) if v == "on_color"
-        ]
+        available_values = [k for k, v in iteritems(COLOR_MAP) if v == "on_color"]
         if value not in available_values:
             raise ValueError(
                 "'{0}': unsupported on_color value. "
-                "Use one of the: {1}".format(
-                    value, ", ".join(available_values)
-                )
+                "Use one of the: {1}".format(value, ", ".join(available_values))
             )
         return value
 
@@ -491,9 +485,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
             if attr not in available_values:
                 raise ValueError(
                     "'{0}': unsupported attribute value. "
-                    "Use one of the: {1}".format(
-                        attr, ", ".join(available_values)
-                    )
+                    "Use one of the: {1}".format(attr, ", ".join(available_values))
                 )
         return set(attrs)
 
@@ -514,8 +506,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
         # type: (str) -> str
         if side not in ("left", "right"):
             raise ValueError(
-                "'{0}': unsupported side value. "
-                "Use either 'left' or 'right'."
+                "'{0}': unsupported side value. " "Use either 'left' or 'right'."
             )
         return side
 
@@ -542,9 +533,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
             # Empty ``spinner.frames`` is handled by ``Yaspin._set_spinner``.
             # This code is very unlikely to be executed. However, it's still
             # here to be on a safe side.
-            raise ValueError(
-                "{0!r}: no frames found in spinner".format(spinner)
-            )
+            raise ValueError("{0!r}: no frames found in spinner".format(spinner))
 
         # Builtin ``reversed`` returns reverse iterator,
         # which adds unnecessary difficulty for returning

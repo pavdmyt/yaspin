@@ -93,9 +93,7 @@ def side(request):
     return request.param
 
 
-@pytest.fixture(
-    scope="session", params=[False, True], ids=["default", "reversal"]
-)
+@pytest.fixture(scope="session", params=[False, True], ids=["default", "reversal"])
 def reversal(request):
     return request.param
 
