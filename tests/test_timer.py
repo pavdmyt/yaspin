@@ -10,6 +10,8 @@ Test timer feature.
 import re
 import time
 
+import pytest
+
 from yaspin import yaspin
 
 
@@ -47,28 +49,18 @@ def test_timer_in_progress():
     assert re.search(r"\(\d+:\d{2}:\d{2}.\d{2}\)", sp._last_frame) is not None
 
 
-def test_timer_rounding_down():
+@pytest.mark.parametrize(
+    "interval, expected", [(0.994, "(0:00:00.99)"), (0.996, "(0:00:01.00)")]
+)
+def test_timer_rounding(interval, expected):
     sp = yaspin(timer=True)
     sp.start()
     sp.stop()
 
-    sp._stop_time = sp._start_time + 0.994
-
+    sp._stop_time = sp._start_time + interval
     sp._freeze("")
 
-    assert "(0:00:00.99)" in sp._last_frame
-
-
-def test_timer_rounding_up():
-    sp = yaspin(timer=True)
-    sp.start()
-    sp.stop()
-
-    sp._stop_time = sp._start_time + 0.996
-
-    sp._freeze("")
-
-    assert "(0:00:01.00)" in sp._last_frame
+    assert expected in sp._last_frame
 
 
 def test_timer_finished():
