@@ -20,9 +20,7 @@ except ImportError:
     import json
 
 
-SPINNERS_DATA = pkgutil.get_data(__name__, "data/spinners.json").decode(
-    "utf-8"
-)
+SPINNERS_DATA = pkgutil.get_data(__name__, "data/spinners.json").decode("utf-8")
 
 
 def _hook(dct):

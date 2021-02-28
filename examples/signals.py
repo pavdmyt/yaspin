@@ -70,9 +70,7 @@ def passing_additional_info_into_signal_handler():
     heads = random.randint(0, 1) == 1
     tails = not heads
 
-    def my_handler(
-        signum, frame, spinner, context={"heads": heads, "tails": tails}
-    ):
+    def my_handler(signum, frame, spinner, context={"heads": heads, "tails": tails}):
         if context["heads"]:
             spinner.text = "heads!"
             spinner.ok("🌕")
@@ -109,9 +107,7 @@ def handling_multiple_signals():
 
 
 def ignore_signal():
-    with yaspin(
-        sigmap={signal.SIGINT: signal.SIG_IGN}, text="You can't interrupt me!"
-    ):
+    with yaspin(sigmap={signal.SIGINT: signal.SIG_IGN}, text="You can't interrupt me!"):
         time.sleep(5)
 
 

@@ -244,9 +244,7 @@ def test_spinner_hiding_with_context_manager_and_exception():
     except ValueError:
         pass
     else:
-        assert (
-            False
-        ), "Expected a ValueError, something has eaten the exception"
+        assert False, "Expected a ValueError, something has eaten the exception"
 
     # make sure spinner is unhidden again
     assert sp._hidden_level == 0
