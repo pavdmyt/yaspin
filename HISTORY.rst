@@ -1,6 +1,13 @@
 Release History
 ===============
 
+1.5.0 / 2021-03-21
+------------------
+
+* Update cli-spinners to ``v2.6.0``
+* Update dependencies
+
+
 1.4.1 / 2021-02-28
 ------------------
 
