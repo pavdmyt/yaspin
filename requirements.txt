@@ -13,9 +13,9 @@ backports.functools-lru-cache==1.6.3; python_version >= "2.7" and python_full_ve
 colorama==0.4.4; python_version >= "2.7" and python_full_version < "3.0.0" and sys_platform == "win32" and python_version != "3.4" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0") and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0") or sys_platform == "win32" and python_version != "3.4" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0") and python_full_version >= "3.5.0" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0") \
     --hash=sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2 \
     --hash=sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b
-configparser==4.0.2; python_version >= "2.7" and python_full_version < "3.0.0" and python_version < "3" or python_full_version >= "3.5.0" and python_version < "3" and python_version >= "2.6" \
-    --hash=sha256:254c1d9c79f60c45dfde850850883d5aaa7f19a23f13561243a050d5a7c3fe4c \
-    --hash=sha256:c7d282687a5308319bf3d2e7706e575c635b0a470342641c93bea0ea3b5331df
+configparser==5.0.2; python_version >= "2.7" and python_full_version < "3.0.0" and python_version < "3" or python_full_version >= "3.5.0" and python_version < "3" and python_version >= "2.6" \
+    --hash=sha256:85d5de102cfe6d14a5172676f09d19c465ce63d6019cf0a4ef13385fc535e828 \
+    --hash=sha256:af59f2cdd7efbdd5d111c1976ecd0b82db9066653362f0962d7bf1d3ab89a1fa
 contextlib2==0.6.0.post1; python_version >= "2.7" and python_full_version < "3.0.0" and python_version < "3" or python_full_version >= "3.5.0" and python_version < "3" and python_version >= "2.7" \
     --hash=sha256:3355078a159fbb44ee60ea80abd0d87b80b78c248643b49aa6d94673b413609b \
     --hash=sha256:01f490098c18b19d2bd5bb5dc445b2054d2fa97f09a4280ba2c5f3c394c8162e
