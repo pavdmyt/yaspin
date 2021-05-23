@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 tests.test_finalizers
 ~~~~~~~~~~~~~~~~~~~~~

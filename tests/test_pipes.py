@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 tests.test_pipes
 ~~~~~~~~~~~~~~~~
@@ -22,8 +20,6 @@ from yaspin.constants import ENCODING
 
 
 TEST_CODE = """\
-# -*- coding: utf-8 -*-
-
 import time
 from yaspin import yaspin, Spinner
 

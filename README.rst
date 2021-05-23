@@ -94,7 +94,6 @@ Basic Example
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from random import randint
     from yaspin import yaspin
@@ -113,7 +112,6 @@ It is also possible to control spinner manually:
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
 
@@ -132,7 +130,6 @@ Run any spinner from `cli-spinners`_
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
     from yaspin.spinners import Spinners
@@ -154,7 +151,6 @@ Any Colour You Like `🌈`_
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
 
@@ -174,7 +170,6 @@ Advanced colors usage
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
     from yaspin.spinners import Spinners
@@ -202,7 +197,6 @@ Run any spinner you want
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin, Spinner
 
@@ -220,7 +214,6 @@ Change spinner properties on the fly
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
     from yaspin.spinners import Spinners
@@ -242,7 +235,6 @@ Spinner with timer
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
 
@@ -261,7 +253,6 @@ To write messages in the terminal without any collision with ``yaspin`` spinner,
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
 
@@ -291,7 +282,6 @@ HTML formats and CSS styles to the output:
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     from __future__ import print_function
 
     import sys
@@ -337,7 +327,6 @@ Handling keyboard interrupts (pressing Control-C):
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
 
     from yaspin import kbi_safe_yaspin
@@ -351,7 +340,6 @@ Handling other types of signals:
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import os
     import time
     from signal import SIGTERM, SIGUSR1

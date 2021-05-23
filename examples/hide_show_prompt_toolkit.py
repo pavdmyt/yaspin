@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 examples.hide_show_prompt_toolkit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
