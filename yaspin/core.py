@@ -22,13 +22,13 @@ import threading
 import time
 
 from .base_spinner import default_spinner
-from .compat import PY2, basestring, builtin_str, bytes, iteritems, str  # pylint: disable=redefined-builtin
+from .compat import PY2, basestring, builtin_str, str
 from .constants import COLOR_ATTRS, COLOR_MAP, ENCODING, SPINNER_ATTRS
 from .helpers import to_unicode
 from .termcolor import colored
 
 
-class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-instance-attributes
+class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-attributes
     """Implements a context manager that spawns a thread
     to write spinner frames into a tty (stdout) during
     context execution.
@@ -426,7 +426,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
                 "SIGKILL cannot be cought or ignored in POSIX systems."
             )
 
-        for sig, sig_handler in iteritems(self._sigmap):
+        for sig, sig_handler in self._sigmap.items():
             # A handler for a particular signal, once set, remains
             # installed until it is explicitly reset. Store default
             # signal handlers for subsequent reset at cleanup phase.
@@ -446,7 +446,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
             signal.signal(sig, sig_handler)
 
     def _reset_signal_handlers(self):
-        for sig, sig_handler in iteritems(self._dfl_sigmap):
+        for sig, sig_handler in self._dfl_sigmap.items():
             signal.signal(sig, sig_handler)
 
     #
@@ -455,7 +455,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
     @staticmethod
     def _set_color(value):
         # type: (str) -> str
-        available_values = [k for k, v in iteritems(COLOR_MAP) if v == "color"]
+        available_values = [k for k, v in COLOR_MAP.items() if v == "color"]
 
         if value not in available_values:
             raise ValueError(
@@ -468,7 +468,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
     @staticmethod
     def _set_on_color(value):
         # type: (str) -> str
-        available_values = [k for k, v in iteritems(COLOR_MAP) if v == "on_color"]
+        available_values = [k for k, v in COLOR_MAP.items() if v == "on_color"]
         if value not in available_values:
             raise ValueError(
                 "'{0}': unsupported on_color value. "
@@ -479,7 +479,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
     @staticmethod
     def _set_attrs(attrs):
         # type: (List[str]) -> Set[str]
-        available_values = [k for k, v in iteritems(COLOR_MAP) if v == "attrs"]
+        available_values = [k for k, v in COLOR_MAP.items() if v == "attrs"]
 
         for attr in attrs:
             if attr not in available_values:
