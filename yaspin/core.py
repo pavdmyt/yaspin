@@ -22,8 +22,7 @@ import threading
 import time
 
 from .base_spinner import default_spinner
-from .compat import PY2, basestring, builtin_str, str
-from .constants import COLOR_ATTRS, COLOR_MAP, ENCODING, SPINNER_ATTRS
+from .constants import COLOR_ATTRS, COLOR_MAP, SPINNER_ATTRS
 from .helpers import to_unicode
 from .termcolor import colored
 
@@ -38,15 +37,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     # it sets the sys.stdout.encoding attribute to the terminal's encoding.
     # The print statement's handler will automatically encode unicode
     # arguments into bytes.
-    #
-    # In Py2 when piping or redirecting output, Python does not detect
-    # the desired character set of the output, it sets sys.stdout.encoding
-    # to None, and print will invoke the default "ascii" codec.
-    #
-    # Py3 invokes "UTF-8" codec by default.
-    #
-    # Thats why in Py2, output should be encoded manually with desired
-    # encoding in order to support pipes and redirects.
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -105,8 +95,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     #
     def __repr__(self):
         repr_ = u"<Yaspin frames={0!s}>".format(self._frames)
-        if PY2:
-            return repr_.encode(ENCODING)
         return repr_
 
     def __enter__(self):
@@ -319,15 +307,13 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             sys.stdout.write("\r")
             self._clear_line()
 
-            if isinstance(text, (builtin_str, str, bytes)):
+            if isinstance(text, (str, bytes)):
                 _text = to_unicode(text)
-                if PY2:
-                    _text = _text.encode(ENCODING)
             else:
-                _text = builtin_str(text)
+                _text = str(text)
 
-            # Ensure output is bytes for Py2 and Unicode for Py3
-            assert isinstance(_text, builtin_str)
+            # Ensure output is Unicode
+            assert isinstance(_text, str)
 
             sys.stdout.write("{0}\n".format(_text))
 
@@ -390,8 +376,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         assert isinstance(frame, str)
         assert isinstance(self._text, str)
 
-        frame = frame.encode(ENCODING) if PY2 else frame
-        text = self._text.encode(ENCODING) if PY2 else self._text
+        text = self._text
 
         # Colors
         if self._color_func is not None:
@@ -411,8 +396,8 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         else:
             out = "{0} {1}\n".format(frame, text)
 
-        # Ensure output is bytes for Py2 and Unicode for Py3
-        assert isinstance(out, builtin_str)
+        # Ensure output is Unicode
+        assert isinstance(out, str)
 
         return out
 
@@ -516,8 +501,8 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         uframes = None  # unicode frames
         uframes_seq = None  # sequence of unicode frames
 
-        if isinstance(spinner.frames, basestring):
-            uframes = to_unicode(spinner.frames) if PY2 else spinner.frames
+        if isinstance(spinner.frames, str):
+            uframes = spinner.frames
 
         # TODO (pavdmyt): support any type that implements iterable
         if isinstance(spinner.frames, (list, tuple)):
@@ -554,8 +539,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
     @staticmethod
     def _set_text(text):
-        if PY2:
-            return to_unicode(text)
         return text
 
     @staticmethod
