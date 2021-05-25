@@ -5,8 +5,6 @@ tests.test_spinners
 Tests for spinners collection.
 """
 
-from __future__ import absolute_import
-
 import json
 from collections import OrderedDict
 
@@ -16,8 +14,6 @@ from yaspin.spinners import SPINNERS_DATA, Spinners
 
 
 spinners_dict = OrderedDict(json.loads(SPINNERS_DATA))
-
-
 test_cases = [(name, v["frames"], v["interval"]) for name, v in spinners_dict.items()]
 
 

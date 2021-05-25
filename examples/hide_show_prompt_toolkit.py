@@ -12,8 +12,6 @@ https://github.com/jonathanslenders/python-prompt-toolkit/
     pip install "prompt_toolkit>=2.0.1"
 """
 
-from __future__ import print_function
-
 import sys
 import time
 

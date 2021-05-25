@@ -7,9 +7,6 @@ yaspin.base_spinner
 
 Spinner class, used to construct other spinners.
 """
-
-from __future__ import absolute_import
-
 from collections import namedtuple
 
 

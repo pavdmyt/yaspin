@@ -8,8 +8,6 @@ yaspin.yaspin
 A lightweight terminal spinner.
 """
 
-from __future__ import absolute_import
-
 import contextlib
 import datetime
 import functools
@@ -18,8 +16,9 @@ import signal
 import sys
 import threading
 import time
+from typing import List, Set, Union
 
-from .base_spinner import default_spinner
+from .base_spinner import Spinner, default_spinner
 from .constants import COLOR_ATTRS, COLOR_MAP, SPINNER_ATTRS
 from .helpers import to_unicode
 from .termcolor import colored
@@ -61,7 +60,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         self._color_func = self._compose_color_func()
 
         # Other
-        self._text = self._set_text(text)
+        self._text = text
         self._side = self._set_side(side)
         self._reversal = reversal
         self._timer = timer
@@ -92,8 +91,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     # Dunders
     #
     def __repr__(self):
-        repr_ = u"<Yaspin frames={0!s}>".format(self._frames)
-        return repr_
+        return "<Yaspin frames={0!s}>".format(self._frames)
 
     def __enter__(self):
         self.start()
@@ -161,7 +159,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
     @text.setter
     def text(self, txt):
-        self._text = self._set_text(txt)
+        self._text = txt
 
     @property
     def color(self):
@@ -361,13 +359,12 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             self._stop_spin.wait(self._interval)
 
     def _compose_color_func(self):
-        fn = functools.partial(
+        return functools.partial(
             colored,
             color=self._color,
             on_color=self._on_color,
             attrs=list(self._attrs),
         )
-        return fn
 
     def _compose_out(self, frame, mode=None):
         # Ensure Unicode input
@@ -436,10 +433,8 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     # Static
     #
     @staticmethod
-    def _set_color(value):
-        # type: (str) -> str
+    def _set_color(value: str) -> str:
         available_values = [k for k, v in COLOR_MAP.items() if v == "color"]
-
         if value not in available_values:
             raise ValueError(
                 "'{0}': unsupported color value. Use one of the: {1}".format(
@@ -449,8 +444,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         return value
 
     @staticmethod
-    def _set_on_color(value):
-        # type: (str) -> str
+    def _set_on_color(value: str) -> str:
         available_values = [k for k, v in COLOR_MAP.items() if v == "on_color"]
         if value not in available_values:
             raise ValueError(
@@ -460,10 +454,8 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         return value
 
     @staticmethod
-    def _set_attrs(attrs):
-        # type: (List[str]) -> Set[str]
+    def _set_attrs(attrs: List[str]) -> Set[str]:
         available_values = [k for k, v in COLOR_MAP.items() if v == "attrs"]
-
         for attr in attrs:
             if attr not in available_values:
                 raise ValueError(
@@ -485,8 +477,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         return sp
 
     @staticmethod
-    def _set_side(side):
-        # type: (str) -> str
+    def _set_side(side: str) -> str:
         if side not in ("left", "right"):
             raise ValueError(
                 "'{0}': unsupported side value. " "Use either 'left' or 'right'."
@@ -494,8 +485,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         return side
 
     @staticmethod
-    def _set_frames(spinner, reversal):
-        # type: (base_spinner.Spinner, bool) -> Union[str, List]
+    def _set_frames(spinner: Spinner, reversal: bool) -> Union[str, List]:
         uframes = None  # unicode frames
         uframes_seq = None  # sequence of unicode frames
 
@@ -534,10 +524,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     @staticmethod
     def _set_cycle(frames):
         return itertools.cycle(frames)
-
-    @staticmethod
-    def _set_text(text):
-        return text
 
     @staticmethod
     def _hide_cursor():

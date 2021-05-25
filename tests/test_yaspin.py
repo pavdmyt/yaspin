@@ -5,8 +5,6 @@ tests.test_yaspin
 Basic unittests.
 """
 
-from __future__ import absolute_import
-
 from collections import namedtuple
 
 import pytest

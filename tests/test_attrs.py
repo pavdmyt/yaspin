@@ -5,8 +5,6 @@ tests.test_attrs
 Test Yaspin attributes magic hidden in __getattr__.
 """
 
-from __future__ import absolute_import
-
 import pytest
 
 from yaspin import yaspin

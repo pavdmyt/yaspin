@@ -20,4 +20,6 @@ jobs=0
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
 disable=invalid-name,
-  missing-module-docstring
+  missing-module-docstring,
+  protected-access,
+  missing-function-docstring
