@@ -1,28 +1,34 @@
 language: python
-dist: bionic
+dist: focal
 cache: pip
 env:
   - PYTHONHASHSEED=0
 install:
   - make travis-setup
 python:
-  - "2.7"
-  - "3.5"
   - "3.6"
   - "3.7"
   - "3.8"
-  - "3.9-dev"
-  # PyPy versions
-  - "pypy2"
-  - "pypy3"
+  - "3.9"
 script:
   - make ci
 
 jobs:
   include:
+    - stage: test-pypy
+      dist: focal
+      python: "pypy3"
+      # typed-ast installation fails under pypy3.6-7.3.1 (currently in Travis CI);
+      # So, installing only pytest and pytest-xdist that don't rely on typed-ast
+      # https://github.com/python/typed_ast/issues/97
+      install:
+        - pip install termcolor==1.1.0 pytest==6.2.4 pytest-xdist==2.2.1
+      script:
+        - py.test -n auto
     - stage: coverage
+      dist: focal
       python:
-        - "3.6"
+        - "3.9"
       script:
         - make coverage
       after_success:

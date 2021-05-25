@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 examples.hide_show_prompt_toolkit
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -13,8 +11,6 @@ https://github.com/jonathanslenders/python-prompt-toolkit/
 .. code:: bash
     pip install "prompt_toolkit>=2.0.1"
 """
-
-from __future__ import print_function
 
 import sys
 import time

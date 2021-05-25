@@ -52,8 +52,7 @@ or as a function `decorator`_:
 Features
 --------
 
-- No external dependencies
-- Runs at all major **CPython** versions (*2.7*, *3.5*, *3.6*, *3.7*, *3.8*, *3.9*), **PyPy** and **PyPy3**
+- Runs at all major **CPython** versions (*3.6*, *3.7*, *3.8*, *3.9*), **PyPy**
 - Supports all (70+) spinners from `cli-spinners`_
 - Supports all *colors*, *highlights*, *attributes* and their mixes from `termcolor`_ library
 - Easy to combine with other command-line libraries, e.g. `prompt-toolkit`_
@@ -94,7 +93,6 @@ Basic Example
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from random import randint
     from yaspin import yaspin
@@ -113,7 +111,6 @@ It is also possible to control spinner manually:
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
 
@@ -132,7 +129,6 @@ Run any spinner from `cli-spinners`_
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
     from yaspin.spinners import Spinners
@@ -154,7 +150,6 @@ Any Colour You Like `🌈`_
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
 
@@ -174,7 +169,6 @@ Advanced colors usage
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
     from yaspin.spinners import Spinners
@@ -202,7 +196,6 @@ Run any spinner you want
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin, Spinner
 
@@ -220,7 +213,6 @@ Change spinner properties on the fly
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
     from yaspin.spinners import Spinners
@@ -242,7 +234,6 @@ Spinner with timer
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
 
@@ -261,7 +252,6 @@ To write messages in the terminal without any collision with ``yaspin`` spinner,
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
     from yaspin import yaspin
 
@@ -290,9 +280,6 @@ Using the powerful ``print_formatted_text`` function allows you even to apply
 HTML formats and CSS styles to the output:
 
 .. code:: python
-
-    # -*- coding: utf-8 -*-
-    from __future__ import print_function
 
     import sys
     import time
@@ -337,7 +324,6 @@ Handling keyboard interrupts (pressing Control-C):
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import time
 
     from yaspin import kbi_safe_yaspin
@@ -351,7 +337,6 @@ Handling other types of signals:
 
 .. code:: python
 
-    # -*- coding: utf-8 -*-
     import os
     import time
     from signal import SIGTERM, SIGUSR1
@@ -426,7 +411,6 @@ License
 -------
 
 * MIT - Pavlo Dmytrenko; https://twitter.com/pavdmyt
-* Contains `termcolor`_ package: MIT License, Copyright (c) 2008-2011 Volvox Development Team
 * Contains data from `cli-spinners`_: MIT License, Copyright (c) Sindre Sorhus sindresorhus@gmail.com (sindresorhus.com)
 
 

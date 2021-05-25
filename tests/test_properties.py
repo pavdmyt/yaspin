@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 tests.test_properties
 ~~~~~~~~~~~~~~~~~~~~~
@@ -11,7 +9,6 @@ import pytest
 
 from yaspin import Spinner, yaspin
 from yaspin.base_spinner import default_spinner
-from yaspin.compat import basestring, builtin_str, str
 from yaspin.helpers import to_unicode
 
 
@@ -32,20 +29,19 @@ def test_spinner_setter(frames, interval):
     assert sp._spinner == default_spinner
     assert isinstance(sp._frames, str)
     assert sp._interval == sp._spinner.interval * 0.001
-    assert isinstance(repr(sp), builtin_str)
+    assert isinstance(repr(sp), str)
 
     new_spinner = Spinner(frames, interval)
     sp.spinner = new_spinner
     assert sp._spinner == sp._set_spinner(new_spinner)
 
-    if isinstance(sp._frames, basestring):
-        assert isinstance(sp._frames, str)
+    assert not isinstance(sp._frames, bytes)
 
     if isinstance(sp._frames, (list, tuple)):
         assert isinstance(sp._frames[0], str)
 
     assert sp._interval == sp._spinner.interval * 0.001
-    assert isinstance(repr(sp), builtin_str)
+    assert isinstance(repr(sp), str)
 
 
 #

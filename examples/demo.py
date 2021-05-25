@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 examples.demo
 ~~~~~~~~~~~~~
@@ -11,13 +9,12 @@ import random
 import time
 
 from yaspin import yaspin
-from yaspin.compat import iteritems
 from yaspin.constants import COLOR_MAP
 from yaspin.spinners import Spinners
 
 
-COLORS = (k for k, v in iteritems(COLOR_MAP) if v == "color")
-HIGHLIGHTS = (k for k, v in iteritems(COLOR_MAP) if v == "on_color")
+COLORS = (k for k, v in COLOR_MAP.items() if v == "color")
+HIGHLIGHTS = (k for k, v in COLOR_MAP.items() if v == "on_color")
 
 
 def any_spinner_you_like():

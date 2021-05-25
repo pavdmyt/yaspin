@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 tests.conftest
 ~~~~~~~~~~~~~~
@@ -12,7 +10,6 @@ import sys
 
 import pytest
 
-from yaspin.compat import iteritems
 from yaspin.constants import COLOR_MAP
 from yaspin.signal_handlers import default_handler, fancy_handler
 
@@ -194,7 +191,7 @@ def attrs_test_cases(request):
 @pytest.fixture(
     scope="session",
     ids=color_id_func,
-    params=sorted([k for k, v in iteritems(COLOR_MAP) if v == "color"]),
+    params=sorted([k for k, v in COLOR_MAP.items() if v == "color"]),
 )
 def supported_colors(request):
     return request.param
@@ -203,7 +200,7 @@ def supported_colors(request):
 @pytest.fixture(
     scope="session",
     ids=color_id_func,
-    params=sorted([k for k, v in iteritems(COLOR_MAP) if v == "on_color"]),
+    params=sorted([k for k, v in COLOR_MAP.items() if v == "on_color"]),
 )
 def supported_highlights(request):
     return request.param
@@ -213,7 +210,7 @@ def supported_highlights(request):
     scope="session",
     ids=attrs_id_func,
     params=sorted(
-        [[k] for k, v in iteritems(COLOR_MAP) if v == "attrs"]
+        [[k] for k, v in COLOR_MAP.items() if v == "attrs"]
         + [  # noqa: W503
             ["bold", "dark"],
             ["blink", "concealed", "reverse"],

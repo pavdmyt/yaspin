@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 examples.right_spinner
 ~~~~~~~~~~~~~~~~~~~~~~

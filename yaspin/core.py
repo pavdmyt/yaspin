@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # :copyright: (c) 2021 by Pavlo Dmytrenko.
 # :license: MIT, see LICENSE for more details.
 
@@ -10,8 +8,6 @@ yaspin.yaspin
 A lightweight terminal spinner.
 """
 
-from __future__ import absolute_import
-
 import contextlib
 import datetime
 import functools
@@ -20,15 +16,16 @@ import signal
 import sys
 import threading
 import time
+from typing import List, Set, Union
 
-from .base_spinner import default_spinner
-from .compat import PY2, basestring, builtin_str, bytes, iteritems, str  # pylint: disable=redefined-builtin
-from .constants import COLOR_ATTRS, COLOR_MAP, ENCODING, SPINNER_ATTRS
+from termcolor import colored
+
+from .base_spinner import Spinner, default_spinner
+from .constants import COLOR_ATTRS, COLOR_MAP, SPINNER_ATTRS
 from .helpers import to_unicode
-from .termcolor import colored
 
 
-class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-instance-attributes
+class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-attributes
     """Implements a context manager that spawns a thread
     to write spinner frames into a tty (stdout) during
     context execution.
@@ -38,15 +35,6 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
     # it sets the sys.stdout.encoding attribute to the terminal's encoding.
     # The print statement's handler will automatically encode unicode
     # arguments into bytes.
-    #
-    # In Py2 when piping or redirecting output, Python does not detect
-    # the desired character set of the output, it sets sys.stdout.encoding
-    # to None, and print will invoke the default "ascii" codec.
-    #
-    # Py3 invokes "UTF-8" codec by default.
-    #
-    # Thats why in Py2, output should be encoded manually with desired
-    # encoding in order to support pipes and redirects.
 
     def __init__(  # pylint: disable=too-many-arguments
         self,
@@ -73,7 +61,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
         self._color_func = self._compose_color_func()
 
         # Other
-        self._text = self._set_text(text)
+        self._text = text
         self._side = self._set_side(side)
         self._reversal = reversal
         self._timer = timer
@@ -104,10 +92,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
     # Dunders
     #
     def __repr__(self):
-        repr_ = u"<Yaspin frames={0!s}>".format(self._frames)
-        if PY2:
-            return repr_.encode(ENCODING)
-        return repr_
+        return "<Yaspin frames={0!s}>".format(self._frames)
 
     def __enter__(self):
         self.start()
@@ -175,7 +160,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
 
     @text.setter
     def text(self, txt):
-        self._text = self._set_text(txt)
+        self._text = txt
 
     @property
     def color(self):
@@ -319,15 +304,13 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
             sys.stdout.write("\r")
             self._clear_line()
 
-            if isinstance(text, (builtin_str, str, bytes)):
+            if isinstance(text, (str, bytes)):
                 _text = to_unicode(text)
-                if PY2:
-                    _text = _text.encode(ENCODING)
             else:
-                _text = builtin_str(text)
+                _text = str(text)
 
-            # Ensure output is bytes for Py2 and Unicode for Py3
-            assert isinstance(_text, builtin_str)
+            # Ensure output is Unicode
+            assert isinstance(_text, str)
 
             sys.stdout.write("{0}\n".format(_text))
 
@@ -377,21 +360,19 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
             self._stop_spin.wait(self._interval)
 
     def _compose_color_func(self):
-        fn = functools.partial(
+        return functools.partial(
             colored,
             color=self._color,
             on_color=self._on_color,
             attrs=list(self._attrs),
         )
-        return fn
 
     def _compose_out(self, frame, mode=None):
         # Ensure Unicode input
         assert isinstance(frame, str)
         assert isinstance(self._text, str)
 
-        frame = frame.encode(ENCODING) if PY2 else frame
-        text = self._text.encode(ENCODING) if PY2 else self._text
+        text = self._text
 
         # Colors
         if self._color_func is not None:
@@ -411,8 +392,8 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
         else:
             out = "{0} {1}\n".format(frame, text)
 
-        # Ensure output is bytes for Py2 and Unicode for Py3
-        assert isinstance(out, builtin_str)
+        # Ensure output is Unicode
+        assert isinstance(out, str)
 
         return out
 
@@ -426,7 +407,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
                 "SIGKILL cannot be cought or ignored in POSIX systems."
             )
 
-        for sig, sig_handler in iteritems(self._sigmap):
+        for sig, sig_handler in self._sigmap.items():
             # A handler for a particular signal, once set, remains
             # installed until it is explicitly reset. Store default
             # signal handlers for subsequent reset at cleanup phase.
@@ -446,17 +427,15 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
             signal.signal(sig, sig_handler)
 
     def _reset_signal_handlers(self):
-        for sig, sig_handler in iteritems(self._dfl_sigmap):
+        for sig, sig_handler in self._dfl_sigmap.items():
             signal.signal(sig, sig_handler)
 
     #
     # Static
     #
     @staticmethod
-    def _set_color(value):
-        # type: (str) -> str
-        available_values = [k for k, v in iteritems(COLOR_MAP) if v == "color"]
-
+    def _set_color(value: str) -> str:
+        available_values = [k for k, v in COLOR_MAP.items() if v == "color"]
         if value not in available_values:
             raise ValueError(
                 "'{0}': unsupported color value. Use one of the: {1}".format(
@@ -466,9 +445,8 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
         return value
 
     @staticmethod
-    def _set_on_color(value):
-        # type: (str) -> str
-        available_values = [k for k, v in iteritems(COLOR_MAP) if v == "on_color"]
+    def _set_on_color(value: str) -> str:
+        available_values = [k for k, v in COLOR_MAP.items() if v == "on_color"]
         if value not in available_values:
             raise ValueError(
                 "'{0}': unsupported on_color value. "
@@ -477,10 +455,8 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
         return value
 
     @staticmethod
-    def _set_attrs(attrs):
-        # type: (List[str]) -> Set[str]
-        available_values = [k for k, v in iteritems(COLOR_MAP) if v == "attrs"]
-
+    def _set_attrs(attrs: List[str]) -> Set[str]:
+        available_values = [k for k, v in COLOR_MAP.items() if v == "attrs"]
         for attr in attrs:
             if attr not in available_values:
                 raise ValueError(
@@ -502,8 +478,7 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
         return sp
 
     @staticmethod
-    def _set_side(side):
-        # type: (str) -> str
+    def _set_side(side: str) -> str:
         if side not in ("left", "right"):
             raise ValueError(
                 "'{0}': unsupported side value. " "Use either 'left' or 'right'."
@@ -511,13 +486,12 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
         return side
 
     @staticmethod
-    def _set_frames(spinner, reversal):
-        # type: (base_spinner.Spinner, bool) -> Union[str, List]
+    def _set_frames(spinner: Spinner, reversal: bool) -> Union[str, List]:
         uframes = None  # unicode frames
         uframes_seq = None  # sequence of unicode frames
 
-        if isinstance(spinner.frames, basestring):
-            uframes = to_unicode(spinner.frames) if PY2 else spinner.frames
+        if isinstance(spinner.frames, str):
+            uframes = spinner.frames
 
         # TODO (pavdmyt): support any type that implements iterable
         if isinstance(spinner.frames, (list, tuple)):
@@ -551,12 +525,6 @@ class Yaspin(object):  # pylint: disable=useless-object-inheritance,too-many-ins
     @staticmethod
     def _set_cycle(frames):
         return itertools.cycle(frames)
-
-    @staticmethod
-    def _set_text(text):
-        if PY2:
-            return to_unicode(text)
-        return text
 
     @staticmethod
     def _hide_cursor():

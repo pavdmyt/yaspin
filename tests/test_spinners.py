@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 tests.test_spinners
 ~~~~~~~~~~~~~~~~~~~
@@ -7,23 +5,16 @@ tests.test_spinners
 Tests for spinners collection.
 """
 
-from __future__ import absolute_import
-
 import json
 from collections import OrderedDict
 
 import pytest
 
-from yaspin.compat import iteritems
 from yaspin.spinners import SPINNERS_DATA, Spinners
 
 
 spinners_dict = OrderedDict(json.loads(SPINNERS_DATA))
-
-
-test_cases = [
-    (name, v["frames"], v["interval"]) for name, v in iteritems(spinners_dict)
-]
+test_cases = [(name, v["frames"], v["interval"]) for name, v in spinners_dict.items()]
 
 
 def test_len():
