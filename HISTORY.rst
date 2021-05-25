@@ -1,6 +1,15 @@
 Release History
 ===============
 
+2.0.0 / 2021-05-25
+------------------
+
+* Drop Python 2.7 and 3.5 support
+* Make ``termcolor`` an external dependency
+* Run CI tests under Ubuntu 20.04
+* Update dependencies
+
+
 1.5.0 / 2021-03-21
 ------------------
 
