@@ -22,7 +22,7 @@ jobs:
       # So, installing only pytest and pytest-xdist that don't rely on typed-ast
       # https://github.com/python/typed_ast/issues/97
       install:
-        - pip install pytest==6.2.4 pytest-xdist==2.2.1
+        - pip install termcolor==1.1.0 pytest==6.2.4 pytest-xdist==2.2.1
       script:
         - py.test -n auto
     - stage: coverage

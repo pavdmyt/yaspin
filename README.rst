@@ -52,8 +52,7 @@ or as a function `decorator`_:
 Features
 --------
 
-- No external dependencies
-- Runs at all major **CPython** versions (*2.7*, *3.5*, *3.6*, *3.7*, *3.8*, *3.9*), **PyPy** and **PyPy3**
+- Runs at all major **CPython** versions (*3.6*, *3.7*, *3.8*, *3.9*), **PyPy**
 - Supports all (70+) spinners from `cli-spinners`_
 - Supports all *colors*, *highlights*, *attributes* and their mixes from `termcolor`_ library
 - Easy to combine with other command-line libraries, e.g. `prompt-toolkit`_
@@ -282,8 +281,6 @@ HTML formats and CSS styles to the output:
 
 .. code:: python
 
-    from __future__ import print_function
-
     import sys
     import time
 
@@ -414,7 +411,6 @@ License
 -------
 
 * MIT - Pavlo Dmytrenko; https://twitter.com/pavdmyt
-* Contains `termcolor`_ package: MIT License, Copyright (c) 2008-2011 Volvox Development Team
 * Contains data from `cli-spinners`_: MIT License, Copyright (c) Sindre Sorhus sindresorhus@gmail.com (sindresorhus.com)
 
 

@@ -54,6 +54,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.6.2"
+termcolor = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.5b1"

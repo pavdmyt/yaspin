@@ -18,10 +18,11 @@ import threading
 import time
 from typing import List, Set, Union
 
+from termcolor import colored
+
 from .base_spinner import Spinner, default_spinner
 from .constants import COLOR_ATTRS, COLOR_MAP, SPINNER_ATTRS
 from .helpers import to_unicode
-from .termcolor import colored
 
 
 class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-attributes

@@ -17,13 +17,13 @@ flake:
 
 lint:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
-	@pylint $(name)/ ./tests -rn -f colorized --ignore termcolor.py
+	@pylint $(name)/ ./tests -rn -f colorized
 
 isort:
 	@poetry run isort --atomic --verbose $(name)/ tests/ examples/
 
 fmt: isort
-	black --exclude "termcolor.py" ./yaspin ./tests ./examples
+	black ./yaspin ./tests ./examples
 
 clean:
 	@echo "$(OK_COLOR)==> Cleaning up files that are already in .gitignore...$(NO_COLOR)"
