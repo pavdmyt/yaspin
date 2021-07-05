@@ -168,9 +168,9 @@ importlib-metadata==4.6.1; python_full_version >= "3.6.2" and python_version < "
 iniconfig==1.1.1; python_version >= "3.6" \
     --hash=sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3 \
     --hash=sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32
-isort==5.8.0; python_version >= "3.6" and python_version < "4.0" \
-    --hash=sha256:2bb1680aad211e3c9944dbce1d4ba09a989f04e238296c87fe2139faa26d655d \
-    --hash=sha256:0a943902919f65c5684ac4e0154b1ad4fac6dcaa5d9f3426b732f1c8b5419be6
+isort==5.9.1; python_version >= "3.6" and python_version < "4.0" \
+    --hash=sha256:83510593e07e433b77bd5bff0f6f607dbafa06d1a89022616f02d8b699cfcd56 \
+    --hash=sha256:8e2c107091cfec7286bc0f68a547d0ba4c094d460b732075b6fba674f1035c0c
 jeepney==0.6.0; sys_platform == "linux" and python_version >= "3.6" \
     --hash=sha256:aec56c0eb1691a841795111e184e13cad504f7703b9a64f63020816afa79a8ae \
     --hash=sha256:7d59b6622675ca9e993a6bd38de845051d315f8b0c72cca3aef733a20b648657
