@@ -370,9 +370,9 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     def _compose_out(self, frame, mode=None):
         # Ensure Unicode input
         assert isinstance(frame, str)
-        assert isinstance(self._text, str)
 
-        text = self._text
+        text = str(self._text)
+        assert isinstance(text, str)
 
         # Colors
         if self._color_func is not None:
