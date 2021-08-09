@@ -312,9 +312,9 @@ toml==0.10.2; python_full_version >= "3.6.2" and python_version >= "3.6" and (py
 tqdm==4.62.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6" \
     --hash=sha256:3642d483b558eec80d3c831e23953582c34d7e4540db86d9e5ed9dad238dabc6 \
     --hash=sha256:706dea48ee05ba16e936ee91cb3791cd2ea6da348a0e50b46863ff4363ff4340
-twine==3.4.1; python_version >= "3.6" \
-    --hash=sha256:16f706f2f1687d7ce30e7effceee40ed0a09b7c33b9abb5ef6434e5551565d83 \
-    --hash=sha256:a56c985264b991dc8a8f4234eb80c5af87fa8080d0c224ad8f2cd05a2c22e83b
+twine==3.4.2; python_version >= "3.6" \
+    --hash=sha256:087328e9bb405e7ce18527a2dca4042a84c7918658f951110b38bc135acab218 \
+    --hash=sha256:4caec0f1ed78dc4c9b83ad537e453d03ce485725f2aea57f1bb3fdde78dae936
 typed-ast==1.4.3; python_version < "3.8" and python_full_version >= "3.6.2" and implementation_name == "cpython" and python_version >= "3.6" \
     --hash=sha256:2068531575a125b87a41802130fa7e29f26c09a2833fea68d9a40cf33902eba6 \
     --hash=sha256:c907f561b1e83e93fad565bac5ba9c22d96a54e7ea0267c708bffe863cbe4075 \
