@@ -4,6 +4,7 @@ bytecode
 capsys
 codecov
 dataclasses
+datetime
 descr
 Dmytrenko
 dqpb

@@ -46,7 +46,9 @@ def case_id():
     return str(uuid.uuid4())
 
 
-def test_piping_output(text, frames, interval, case_id):
+def test_piping_output(
+    text, frames, interval, case_id
+):  # pylint: disable=redefined-outer-name
     py_fname = "spin-{0}.py".format(case_id)
     fname = "out-{0}.txt".format(case_id)
 
