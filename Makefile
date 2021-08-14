@@ -23,7 +23,10 @@ isort:
 	@poetry run isort --atomic --verbose $(name)/ tests/ examples/
 
 fmt: isort
-	black ./yaspin ./tests ./examples
+	@black ./yaspin ./tests ./examples
+
+spellcheck:
+	@cspell -c .cspell.json yaspin/*.py tests/*.py examples/*.py README.rst HISTORY.rst pyproject.toml Makefile
 
 clean:
 	@echo "$(OK_COLOR)==> Cleaning up files that are already in .gitignore...$(NO_COLOR)"

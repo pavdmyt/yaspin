@@ -52,7 +52,7 @@ def fancy_keyboard_interrupt_handler():
 
 
 #
-# Cusomizing signal handlers
+# Customizing signal handlers
 #
 def custom_signal_handler():
     def my_handler(signum, frame, spinner):
