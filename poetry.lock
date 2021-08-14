@@ -164,7 +164,7 @@ test = ["pytest (>=6.0)", "pytest-cov", "pytest-subtests", "pytest-xdist", "pret
 name = "dataclasses"
 version = "0.8"
 description = "A backport of the dataclasses module for Python 3.6"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6, <3.7"
 
@@ -701,7 +701,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.2"
-content-hash = "5cde2831325a9c811ac5d8fa08e9d7a964721def266d78c968ddd05dffc3a624"
+content-hash = "8830898765c7adf30d4071d5432335e9c56af09b231c30ef8728b4aedb6aa3c8"
 
 [metadata.files]
 appdirs = [

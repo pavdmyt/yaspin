@@ -49,6 +49,9 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.6.2"
 termcolor = "^1.1.0"
+# dataclasses are included into stdlib only since Python 3.7
+# use backport for Python 3.6
+dataclasses = { version = "^0.8", python = "~3.6" }
 
 [tool.poetry.dev-dependencies]
 black = "^21.5b1"

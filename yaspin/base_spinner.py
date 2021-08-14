@@ -7,8 +7,13 @@ yaspin.base_spinner
 
 Spinner class, used to construct other spinners.
 """
-from collections import namedtuple
+from dataclasses import dataclass
 
 
-Spinner = namedtuple("Spinner", "frames interval")
+@dataclass
+class Spinner:
+    frames: str
+    interval: int
+
+
 default_spinner = Spinner("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏", 80)
