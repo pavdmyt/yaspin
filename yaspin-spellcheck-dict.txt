@@ -1,8 +1,10 @@
 addfinalizer
+backport
 bytecode
 capsys
 Codacy
 codecov
+dataclasses
 descr
 Dmytrenko
 dqpb
@@ -39,6 +41,7 @@ simplejson
 Sindre
 sindresorhus
 Sorhus
+stdlib
 termcolor
 tqdm
 traceback
