@@ -233,7 +233,12 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         self._stop_spin = threading.Event()
         self._hide_spin = threading.Event()
         self._spin_thread = threading.Thread(target=self._spin)
-        self._spin_thread.start()
+        try:
+            self._spin_thread.start()
+        finally:
+            # Ensure cursor is not hidden if any failure occurs that prevents
+            # getting it back
+            self._show_cursor()
 
     def stop(self):
         self._stop_time = time.time()
