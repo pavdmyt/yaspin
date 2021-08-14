@@ -3,6 +3,7 @@ backport
 bytecode
 capsys
 codecov
+dataclass
 dataclasses
 datetime
 descr
