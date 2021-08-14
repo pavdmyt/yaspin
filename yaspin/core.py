@@ -404,7 +404,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         if signal.SIGKILL in self._sigmap.keys():
             raise ValueError(
                 "Trying to set handler for SIGKILL signal. "
-                "SIGKILL cannot be cought or ignored in POSIX systems."
+                "SIGKILL cannot be caught or ignored in POSIX systems."
             )
 
         for sig, sig_handler in self._sigmap.items():

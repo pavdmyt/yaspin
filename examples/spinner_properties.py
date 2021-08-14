@@ -24,7 +24,7 @@ def manual_setup():
 
     time.sleep(3)
 
-    sp.text = "Resersed arc spinner"
+    sp.text = "Reversed arc spinner"
     sp.reversal = True
 
     time.sleep(3)

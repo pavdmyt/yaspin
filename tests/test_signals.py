@@ -39,7 +39,7 @@ def test_sigmap_signals_get_registered(sigmap_test_cases):
 
             if callable(sig_handler) and is_partial:
                 # Handler function is wrapped into ``partial`` and
-                # is accesible via ``func`` attribute.
+                # is accessible via ``func`` attribute.
                 assert sig_handler == handler.func
             else:
                 # SIG_DFL and SIG_IGN cases
@@ -79,7 +79,7 @@ def test_kbi_safe_yaspin():
 
         handler = signal.getsignal(signal.SIGINT)
         # Handler function is wrapped into ``partial`` and
-        # is accesible via ``func`` attribute.
+        # is accessible via ``func`` attribute.
         assert handler.func == sp._sigmap[signal.SIGINT]
     finally:
         sp.stop()

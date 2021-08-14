@@ -1,0 +1,22 @@
+{
+    "dictionaries": [
+        "en_US",
+        "softwareTerms",
+        "misc",
+        "python",
+        "bash",
+        "yaspin"
+    ],
+    "dictionaryDefinitions": [
+        {
+            "name": "yaspin",
+            "path": "yaspin-spellcheck-dict.txt"
+        }
+    ],
+    "ignorePaths": [
+        "dist/*",
+        "gifs/*",
+        "static/*"
+    ],
+    "language": "en"
+}
