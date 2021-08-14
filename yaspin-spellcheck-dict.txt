@@ -2,7 +2,6 @@ addfinalizer
 backport
 bytecode
 capsys
-Codacy
 codecov
 dataclasses
 descr
