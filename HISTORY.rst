@@ -1,6 +1,16 @@
 Release History
 ===============
 
+2.1.0 / 2021-08-14
+------------------
+
+* Ensure cursor is visible in case of failures (#152)
+* Convert Spinner to dataclass; make it mutable (#151)
+* Support for dynamic text objects (#147)
+* Remove extra files from site-packages (#135)
+* Update dependencies
+
+
 2.0.0 / 2021-05-25
 ------------------
 

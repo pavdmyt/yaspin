@@ -4,7 +4,7 @@
 ``yaspin``: **Y**\ et **A**\ nother Terminal **Spin**\ ner for Python
 =====================================================================
 
-|Build Status| |Coverage| |Codacy| |pyup| |black-fmt|
+|Build Status| |Coverage| |pyup| |black-fmt|
 
 |pypi| |Versions| |Wheel| |Examples|
 
@@ -242,6 +242,29 @@ Spinner with timer
         sp.ok()
 
 
+Dynamic text
+////////////
+
+.. code:: python
+
+    import time
+    from datetime import datetime
+    from yaspin import yaspin
+
+    class TimedText:
+        def __init__(self, text):
+            self.text = text
+            self._start = datetime.now()
+
+        def __str__(self):
+            now = datetime.now()
+            delta = now - self._start
+            return f"{self.text} ({round(delta.total_seconds(), 1)}s)"
+
+    with yaspin(text=TimedText("time passed:")):
+        time.sleep(3)
+
+
 Writing messages
 ////////////////
 
@@ -420,8 +443,6 @@ License
    :target: https://travis-ci.org/pavdmyt/yaspin
 .. |Coverage| image:: https://codecov.io/gh/pavdmyt/yaspin/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/pavdmyt/yaspin
-.. |Codacy| image:: https://api.codacy.com/project/badge/Grade/797c7772d0d3467c88a5e2e9dc79ec98
-   :target: https://www.codacy.com/app/pavdmyt/yaspin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pavdmyt/yaspin&amp;utm_campaign=Badge_Grade
 .. |pypi| image:: https://img.shields.io/pypi/v/yaspin.svg
    :target: https://pypi.org/project/yaspin/
 .. |Versions| image:: https://img.shields.io/pypi/pyversions/yaspin.svg

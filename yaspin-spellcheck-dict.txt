@@ -2,9 +2,10 @@ addfinalizer
 backport
 bytecode
 capsys
-Codacy
 codecov
+dataclass
 dataclasses
+datetime
 descr
 Dmytrenko
 dqpb

@@ -33,7 +33,7 @@ def test_color(color_test_cases):
     else:
         getattr(sp, color)
         assert sp.color == expected
-        assert sp._color_func.keywords["color"] == expected
+        assert sp._color_func.keywords["color"] == expected  # pylint: disable=no-member
 
 
 # Values for ``on_color`` argument
@@ -51,7 +51,9 @@ def test_on_color(on_color_test_cases):
     else:
         getattr(sp, on_color)
         assert sp.on_color == expected
-        assert sp._color_func.keywords["on_color"] == expected
+        assert (
+            sp._color_func.keywords["on_color"] == expected
+        )  # pylint: disable=no-member
 
 
 # Values for ``attrs`` argument
@@ -62,7 +64,7 @@ def test_attrs(attr):
     sp = yaspin()
     getattr(sp, attr)
     assert sp.attrs == [attr]
-    assert sp._color_func.keywords["attrs"] == [attr]
+    assert sp._color_func.keywords["attrs"] == [attr]  # pylint: disable=no-member
 
 
 def id_func(case):
