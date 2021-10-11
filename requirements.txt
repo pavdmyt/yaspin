@@ -238,9 +238,9 @@ pytest==6.2.5; python_version >= "3.6" \
 pywin32-ctypes==0.2.0; sys_platform == "win32" and python_version >= "3.6" \
     --hash=sha256:24ffc3b341d457d48e8922352130cf2644024a4ff09762a2261fd34c36ee5942 \
     --hash=sha256:9dc2d991b3479cc2df15930958b674a48a227d5361d413827a4cfd0b5876fc98
-readme-renderer==29.0; python_version >= "3.6" \
-    --hash=sha256:63b4075c6698fcfa78e584930f07f39e05d46f3ec97f65006e430b595ca6348c \
-    --hash=sha256:92fd5ac2bf8677f310f3303aa4bce5b9d5f9f2094ab98c29f13791d7b805a3db
+readme-renderer==30.0; python_version >= "3.6" \
+    --hash=sha256:3286806450d9961d6e3b5f8a59f77e61503799aca5155c8d8d40359b4e1e1adc \
+    --hash=sha256:8299700d7a910c304072a7601eafada6712a5b011a20139417e1b1e9f04645d8
 regex==2021.8.3; python_full_version >= "3.6.2" \
     --hash=sha256:8764a78c5464ac6bde91a8c87dd718c27c1cabb7ed2b4beaf36d3e8e390567f9 \
     --hash=sha256:4551728b767f35f86b8e5ec19a363df87450c7376d7419c3cac5b9ceb4bce576 \
