@@ -175,9 +175,9 @@ isort==5.10.1; python_full_version >= "3.6.1" and python_version < "4.0" \
 jeepney==0.7.1; sys_platform == "linux" and python_version >= "3.6" \
     --hash=sha256:1b5a0ea5c0e7b166b2f5895b91a08c14de8915afda4407fb5022a195224958ac \
     --hash=sha256:fa9e232dfa0c498bd0b8a3a73b8d8a31978304dcef0515adc859d4e096f96f4f
-keyring==23.0.1; python_version >= "3.6" \
-    --hash=sha256:8f607d7d1cc502c43a932a275a56fe47db50271904513a379d39df1af277ac48 \
-    --hash=sha256:045703609dd3fccfcdb27da201684278823b72af515aedec1a8515719a038cb8
+keyring==23.5.0; python_version >= "3.6" \
+    --hash=sha256:9012508e141a80bd1c0b6778d5c610dd9f8c464d75ac6774248500503f972fb9 \
+    --hash=sha256:b0d28928ac3ec8e42ef4cc227822647a19f1d544f21f96457965dc01cf555261
 lazy-object-proxy==1.6.0; python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "4.0" or python_version >= "3.6" and python_version < "4.0" and python_full_version >= "3.6.0" \
     --hash=sha256:489000d368377571c6f982fba6497f2aa13c6d1facc40660963da62f5c379726 \
     --hash=sha256:c6938967f8528b3668622a9ed3b31d145fab161a32f5891ea7b84f6b790be05b \
