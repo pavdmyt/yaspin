@@ -94,9 +94,9 @@ cffi==1.15.0; sys_platform == "linux" and python_version >= "3.6" \
 charset-normalizer==2.0.11; python_full_version >= "3.6.0" and python_version >= "3.6" \
     --hash=sha256:2842d8f5e82a1f6aa437380934d5e1cd4fcf2003b06fed6940769c164a480a45 \
     --hash=sha256:98398a9d69ee80548c762ba991a4728bfc3836768ed226b3945908d1a688371c
-click==8.0.1; python_version >= "3.6" and python_full_version >= "3.6.2" \
-    --hash=sha256:fba402a4a47334742d782209a7c79bc448911afe1149d07bdabdf480b3e2f4b6 \
-    --hash=sha256:8c04c11192119b1ef78ea049e0a6f0463e4c48ef00a30160c704337586f3ad7a
+click==8.0.3; python_version >= "3.6" and python_full_version >= "3.6.2" \
+    --hash=sha256:353f466495adaeb40b6b5f592f9f91cb22372351c84caeb068132442a4518ef3 \
+    --hash=sha256:410e932b050f5eed773c4cda94de75971c89cdb3155a72a0831139a79e5ecb5b
 colorama==0.4.4; python_full_version >= "3.6.2" and python_version >= "3.6" and sys_platform == "win32" and python_version < "4.0" and platform_system == "Windows" and (python_version >= "3.6" and python_full_version < "3.0.0" and platform_system == "Windows" or python_full_version >= "3.5.0" and python_version >= "3.6" and platform_system == "Windows") and (python_version >= "3.6" and python_full_version < "3.0.0" and sys_platform == "win32" or sys_platform == "win32" and python_version >= "3.6" and python_full_version >= "3.5.0") \
     --hash=sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2 \
     --hash=sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b
