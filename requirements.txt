@@ -266,9 +266,9 @@ pyflakes==2.4.0; python_version >= "2.7" and python_full_version < "3.0.0" or py
 pygments==2.12.0; python_version >= "3.6" \
     --hash=sha256:5eb116118f9612ff1ee89ac96437bb6b49e8f04d8a13b514ba26f620208e26eb \
     --hash=sha256:dc9c10fb40944260f6ed4c688ece0cd2048414940f1cea51b8b226318411c519
-pylint==2.9.6; python_version >= "3.6" and python_version < "4.0" \
-    --hash=sha256:2e1a0eb2e8ab41d6b5dbada87f066492bb1557b12b76c47c2ee8aa8a11186594 \
-    --hash=sha256:8b838c8983ee1904b2de66cce9d0b96649a91901350e956d78f289c3bc87b48e
+pylint==2.13.8; python_version >= "3.6" and python_version < "4.0" \
+    --hash=sha256:ced8968c3b699df0615e2a709554dec3ddac2f5cd06efadb69554a69eeca364a \
+    --hash=sha256:f87e863a0b08f64b5230e7e779bcb75276346995737b2c0dc2793070487b1ff6
 pyparsing==2.4.7; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.6" \
     --hash=sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b \
     --hash=sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1
