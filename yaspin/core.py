@@ -225,9 +225,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         if self._sigmap:
             self._register_signal_handlers()
 
-        if sys.stdout.isatty():
-            self._hide_cursor()
-
+        self._hide_cursor()
         self._start_time = time.time()
         self._stop_time = None  # Reset value to properly calculate subsequent spinner starts (if any)  # pylint: disable=line-too-long
         self._stop_spin = threading.Event()
@@ -253,9 +251,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
         sys.stdout.write("\r")
         self._clear_line()
-
-        if sys.stdout.isatty():
-            self._show_cursor()
+        self._show_cursor()
 
     def hide(self):
         """Hide the spinner to allow for custom writing to the terminal."""
@@ -533,14 +529,17 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
     @staticmethod
     def _hide_cursor():
-        sys.stdout.write("\033[?25l")
-        sys.stdout.flush()
+        if sys.stdout.isatty():
+            sys.stdout.write("\033[?25l")
+            sys.stdout.flush()
 
     @staticmethod
     def _show_cursor():
-        sys.stdout.write("\033[?25h")
-        sys.stdout.flush()
+        if sys.stdout.isatty():
+            sys.stdout.write("\033[?25h")
+            sys.stdout.flush()
 
     @staticmethod
     def _clear_line():
-        sys.stdout.write("\033[K")
+        if sys.stdout.isatty():
+            sys.stdout.write("\033[K")
