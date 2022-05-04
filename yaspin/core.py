@@ -541,4 +541,5 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
     @staticmethod
     def _clear_line():
+        sys.stdout.write("\033[0F")
         sys.stdout.write("\033[0K")
