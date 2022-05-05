@@ -354,8 +354,8 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
             # Write
             with self._stdout_lock:
-                sys.stdout.write(out)
                 self._clear_line()
+                sys.stdout.write(out)
                 sys.stdout.flush()
 
             # Wait
@@ -542,4 +542,5 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
     @staticmethod
     def _clear_line():
+        sys.stdout.write("\r")
         sys.stdout.write("\033[0K")
