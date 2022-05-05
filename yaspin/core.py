@@ -249,7 +249,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             self._stop_spin.set()
             self._spin_thread.join()
 
-        sys.stdout.write("\r")
         self._clear_line()
         self._show_cursor()
 
@@ -261,9 +260,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             with self._stdout_lock:
                 # set the hidden spinner flag
                 self._hide_spin.set()
-
-                # clear the current line
-                sys.stdout.write("\r")
                 self._clear_line()
 
                 # flush the stdout buffer so the current line
@@ -294,7 +290,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
                 self._hide_spin.clear()
 
                 # clear the current line so the spinner is not appended to it
-                sys.stdout.write("\r")
                 self._clear_line()
 
     def write(self, text):
@@ -302,7 +297,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         # similar to tqdm.write()
         # https://pypi.python.org/pypi/tqdm#writing-messages
         with self._stdout_lock:
-            sys.stdout.write("\r")
             self._clear_line()
 
             if isinstance(text, (str, bytes)):
