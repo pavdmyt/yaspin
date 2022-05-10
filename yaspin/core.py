@@ -307,8 +307,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             # Ensure output is Unicode
             assert isinstance(_text, str)
 
-            fill = max(0, len(self._text) - len(_text) + 2)
-            sys.stdout.write("{0}{1}\n".format(_text, " " * fill))
+            sys.stdout.write("{0}\n".format(_text))
 
     def ok(self, text="OK"):
         """Set Ok (success) finalizer to a spinner."""
