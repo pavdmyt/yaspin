@@ -83,7 +83,7 @@ def test_write(monkeypatch, capsys, text):
 
     out, _ = capsys.readouterr()
     # cleans stdout from _clear_line and \r
-    out = out.replace("\r\033[0K", "")
+    out = out.replace("\r\033[K", "")
 
     assert isinstance(out, (str, bytes))
     assert out[-1] == "\n"
@@ -113,7 +113,7 @@ def test_hide_show(monkeypatch, capsys, text, request):
     out, _ = capsys.readouterr()
 
     # ensure that text was cleared with the hide method
-    assert out[-5:] == "\r\033[0K"
+    assert out[-4:] == "\r\033[K"
 
     # ``\n`` is required to flush stdout during
     # the hidden state of the spinner
@@ -121,7 +121,7 @@ def test_hide_show(monkeypatch, capsys, text, request):
     out, _ = capsys.readouterr()
 
     # cleans stdout from _clear_line and \r
-    out = out.replace("\r\033[0K", "")
+    out = out.replace("\r\033[K", "")
 
     assert isinstance(out, (str, bytes))
     assert out[-1] == "\n"
@@ -135,7 +135,7 @@ def test_hide_show(monkeypatch, capsys, text, request):
     out, _ = capsys.readouterr()
 
     # ensure that text was cleared before resuming the spinner
-    assert out[:5] == "\r\033[0K"
+    assert out[:4] == "\r\033[K"
 
 
 def test_spinner_write_race_condition(capsys):
@@ -178,7 +178,7 @@ def test_spinner_hiding_with_context_manager(monkeypatch, capsys):
 
     # make sure no spinner text was printed while the spinner was hidden
     out, _ = capsys.readouterr()
-    out = out.replace("\r\033[0K", "")
+    out = out.replace("\r\033[K", "")
     assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
 
 
@@ -207,7 +207,7 @@ def test_spinner_nested_hiding_with_context_manager(monkeypatch, capsys):
 
     # make sure no spinner text was printed while the spinner was hidden
     out, _ = capsys.readouterr()
-    out = out.replace("\r\033[0K", "")
+    out = out.replace("\r\033[K", "")
     assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
 
 
@@ -245,4 +245,4 @@ def test_write_non_str_objects(monkeypatch, capsys, obj, obj_str):
     capsys.readouterr()
     sp.write(obj)
     out, _ = capsys.readouterr()
-    assert out == "\r\033[0K{}\n".format(obj_str)
+    assert out == "\r\033[K{}\n".format(obj_str)

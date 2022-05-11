@@ -546,7 +546,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     def _clear_line(self):
         if sys.stdout.isatty():
             # ANSI Control Sequence EL does not work in Jupyter
-            sys.stdout.write("\r\033[0K")
+            sys.stdout.write("\r\033[K")
         else:
             fill = " " * self._cur_line_len
             sys.stdout.write("\r{0}\r".format(fill))
