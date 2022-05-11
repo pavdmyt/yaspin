@@ -5,6 +5,7 @@ tests.test_attrs
 Test Yaspin attributes magic hidden in __getattr__.
 """
 
+import sys
 import pytest
 
 from yaspin import yaspin
@@ -19,12 +20,13 @@ def test_set_spinner_by_name(attr_name):
 
 
 # Values for ``color`` argument
-def test_color(color_test_cases):
+def test_color(monkeypatch, color_test_cases):
     color, expected = color_test_cases
     # ``None`` and ``""`` are skipped
     if not color:
         pytest.skip("{0} - unsupported case".format(repr(color)))
 
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin()
 
     if isinstance(expected, Exception):
@@ -37,12 +39,13 @@ def test_color(color_test_cases):
 
 
 # Values for ``on_color`` argument
-def test_on_color(on_color_test_cases):
+def test_on_color(monkeypatch, on_color_test_cases):
     on_color, expected = on_color_test_cases
     # ``None`` and ``""`` are skipped
     if not on_color:
         pytest.skip("{0} - unsupported case".format(repr(on_color)))
 
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin()
 
     if isinstance(expected, Exception):
@@ -60,7 +63,8 @@ def test_on_color(on_color_test_cases):
 @pytest.mark.parametrize(
     "attr", sorted([k for k, v in COLOR_MAP.items() if v == "attrs"])
 )
-def test_attrs(attr):
+def test_attrs(monkeypatch, attr):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin()
     getattr(sp, attr)
     assert sp.attrs == [attr]

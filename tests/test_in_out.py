@@ -45,7 +45,7 @@ def test_repr(text, frames, interval):
 
 
 def test_compose_out_with_color(
-    color_test_cases, on_color_test_cases, attrs_test_cases
+    monkeypatch, color_test_cases, on_color_test_cases, attrs_test_cases
 ):
     color, color_exp = color_test_cases
     on_color, on_color_exp = on_color_test_cases
@@ -65,6 +65,7 @@ def test_compose_out_with_color(
         pytest.skip("{0} - unsupported case".format(items))
 
     # Actual test
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin(color=color, on_color=on_color, attrs=attrs)
     assert sp._color == color
     assert sp._on_color == on_color
@@ -75,7 +76,8 @@ def test_compose_out_with_color(
     assert isinstance(out, str)
 
 
-def test_write(capsys, text):
+def test_write(monkeypatch, capsys, text):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin()
     sp.write(text)
 
@@ -89,8 +91,9 @@ def test_write(capsys, text):
         assert out[:-1] == text
 
 
-def test_hide_show(capsys, text, request):
+def test_hide_show(monkeypatch, capsys, text, request):
     # Setup
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin()
     sp.start()
 
@@ -154,9 +157,10 @@ def test_spinner_write_race_condition(capsys):
     assert not re.search(r"aaaa[^\rb]*bbbb", out)
 
 
-def test_spinner_hiding_with_context_manager(capsys):
+def test_spinner_hiding_with_context_manager(monkeypatch, capsys):
     HIDDEN_START = "hidden start"
     HIDDEN_END = "hidden end"
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin(text="foo")
     sp.start()
 
@@ -178,9 +182,10 @@ def test_spinner_hiding_with_context_manager(capsys):
     assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
 
 
-def test_spinner_nested_hiding_with_context_manager(capsys):
+def test_spinner_nested_hiding_with_context_manager(monkeypatch, capsys):
     HIDDEN_START = "hidden start"
     HIDDEN_END = "hidden end"
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin(text="foo")
     sp.start()
 
@@ -234,7 +239,8 @@ def test_spinner_hiding_with_context_manager_and_exception():
         (["foo", "bar", "'", 23], """['foo', 'bar', "'", 23]"""),
     ],
 )
-def test_write_non_str_objects(capsys, obj, obj_str):
+def test_write_non_str_objects(monkeypatch, capsys, obj, obj_str):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin()
     capsys.readouterr()
     sp.write(obj)
