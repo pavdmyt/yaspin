@@ -225,9 +225,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         if self._sigmap:
             self._register_signal_handlers()
 
-        if sys.stdout.isatty():
-            self._hide_cursor()
-
+        self._hide_cursor()
         self._start_time = time.time()
         self._stop_time = None  # Reset value to properly calculate subsequent spinner starts (if any)  # pylint: disable=line-too-long
         self._stop_spin = threading.Event()
@@ -251,11 +249,8 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             self._stop_spin.set()
             self._spin_thread.join()
 
-        sys.stdout.write("\r")
         self._clear_line()
-
-        if sys.stdout.isatty():
-            self._show_cursor()
+        self._show_cursor()
 
     def hide(self):
         """Hide the spinner to allow for custom writing to the terminal."""
@@ -265,9 +260,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             with self._stdout_lock:
                 # set the hidden spinner flag
                 self._hide_spin.set()
-
-                # clear the current line
-                sys.stdout.write("\r")
                 self._clear_line()
 
                 # flush the stdout buffer so the current line
@@ -298,7 +290,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
                 self._hide_spin.clear()
 
                 # clear the current line so the spinner is not appended to it
-                sys.stdout.write("\r")
                 self._clear_line()
 
     def write(self, text):
@@ -306,7 +297,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         # similar to tqdm.write()
         # https://pypi.python.org/pypi/tqdm#writing-messages
         with self._stdout_lock:
-            sys.stdout.write("\r")
             self._clear_line()
 
             if isinstance(text, (str, bytes)):
@@ -357,8 +347,8 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
             # Write
             with self._stdout_lock:
-                sys.stdout.write(out)
                 self._clear_line()
+                sys.stdout.write(out)
                 sys.stdout.flush()
 
             # Wait
@@ -533,14 +523,17 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
     @staticmethod
     def _hide_cursor():
-        sys.stdout.write("\033[?25l")
-        sys.stdout.flush()
+        if sys.stdout.isatty():
+            sys.stdout.write("\033[?25l")
+            sys.stdout.flush()
 
     @staticmethod
     def _show_cursor():
-        sys.stdout.write("\033[?25h")
-        sys.stdout.flush()
+        if sys.stdout.isatty():
+            sys.stdout.write("\033[?25h")
+            sys.stdout.flush()
 
     @staticmethod
     def _clear_line():
-        sys.stdout.write("\033[K")
+        sys.stdout.write("\r")
+        sys.stdout.write("\033[0K")
