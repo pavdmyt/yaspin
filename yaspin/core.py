@@ -361,7 +361,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     def _compose_color_func(self):
         if not sys.stdout.isatty():
             # ANSI Color Control Sequences are problematic in Jupyter
-            return lambda x: x
+            return None
 
         return functools.partial(
             colored,

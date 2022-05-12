@@ -76,14 +76,25 @@ def test_compose_out_with_color(
     assert isinstance(out, str)
 
 
-def test_write(monkeypatch, capsys, text):
-    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
+def test_color_jupyter(monkeypatch):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: False)
+    sp = yaspin(color="red")
+
+    out = sp._compose_out(frame=u"/")
+    assert "\033" not in out
+
+
+def test_write(monkeypatch, capsys, text, isatty):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty)
     sp = yaspin()
     sp.write(text)
 
     out, _ = capsys.readouterr()
-    # cleans stdout from _clear_line and \r
-    out = out.replace("\r\033[K", "")
+    # cleans stdout from _clear_line
+    if isatty:
+        out = out.replace("\r\033[K", "")
+    else:
+        out = out.replace("\r", "")
 
     assert isinstance(out, (str, bytes))
     assert out[-1] == "\n"
@@ -91,9 +102,21 @@ def test_write(monkeypatch, capsys, text):
         assert out[:-1] == text
 
 
-def test_hide_show(monkeypatch, capsys, text, request):
+def test_show_jupyter(monkeypatch, capsys):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: False)
+    with yaspin(text="12345") as sp:
+        sp.start()
+        sp.write("123")
+
+    out, _ = capsys.readouterr()
+    # check spinner line was correctly overridden with whitespaces
+    # r = \r, s = spinner char, w = space, 12345 = printed chars
+    assert "12345\r" + " " * len("rsw12345") + "\r123" in out
+
+
+def test_hide_show(monkeypatch, capsys, text, request, isatty):
     # Setup
-    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty)
     sp = yaspin()
     sp.start()
 
@@ -113,15 +136,21 @@ def test_hide_show(monkeypatch, capsys, text, request):
     out, _ = capsys.readouterr()
 
     # ensure that text was cleared with the hide method
-    assert out[-4:] == "\r\033[K"
+    if isatty:
+        assert out[-4:] == "\r\033[K"
+    else:
+        assert out[-1:] == "\r"
 
     # ``\n`` is required to flush stdout during
     # the hidden state of the spinner
     sys.stdout.write("{0}\n".format(text))
     out, _ = capsys.readouterr()
 
-    # cleans stdout from _clear_line and \r
-    out = out.replace("\r\033[K", "")
+    # cleans stdout from _clear_line
+    if isatty:
+        out = out.replace("\r\033[K", "")
+    else:
+        out = out.replace("\r", "")
 
     assert isinstance(out, (str, bytes))
     assert out[-1] == "\n"
@@ -135,7 +164,10 @@ def test_hide_show(monkeypatch, capsys, text, request):
     out, _ = capsys.readouterr()
 
     # ensure that text was cleared before resuming the spinner
-    assert out[:4] == "\r\033[K"
+    if isatty:
+        assert out[:4] == "\r\033[K"
+    else:
+        assert out[:1] == "\r"
 
 
 def test_spinner_write_race_condition(capsys):

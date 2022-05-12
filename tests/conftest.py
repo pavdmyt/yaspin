@@ -95,6 +95,11 @@ def reversal(request):
     return request.param
 
 
+@pytest.fixture(scope="session", params=[True, False], ids=["terminal", "Jupyter"])
+def isatty(request):
+    return request.param
+
+
 def color_id_func(case):
     if isinstance(case, tuple):
         color, _ = case
