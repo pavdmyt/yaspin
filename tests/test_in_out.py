@@ -65,7 +65,6 @@ def test_compose_out_with_color(
         pytest.skip("{0} - unsupported case".format(items))
 
     # Actual test
-    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin(color=color, on_color=on_color, attrs=attrs)
     assert sp._color == color
     assert sp._on_color == on_color
