@@ -78,7 +78,8 @@ def test_compose_out_with_color(
 
 def test_color_jupyter(monkeypatch):
     monkeypatch.setattr(sys.stdout, "isatty", lambda: False)
-    sp = yaspin(color="red")
+    with pytest.warns(UserWarning):
+        sp = yaspin(color="red")
 
     out = sp._compose_out(frame=u"/")
     assert "\033" not in out

@@ -16,6 +16,7 @@ import signal
 import sys
 import threading
 import time
+import warnings
 from typing import List, Set, Union
 
 from termcolor import colored
@@ -88,6 +89,10 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         # Maps signals to their default handlers in order to reset
         # custom handlers set by ``sigmap`` at the cleanup phase.
         self._dfl_sigmap = {}  # Dict[Signal, SigHandler]
+
+        if (self._color_func is None
+           and (self._color or self._on_color or self._attrs)):
+            self._warn_color_disabled()
 
     #
     # Dunders
@@ -171,6 +176,8 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     def color(self, value):
         self._color = self._set_color(value) if value else value
         self._color_func = self._compose_color_func()  # update
+        if self._color_func is None:
+            self._warn_color_disabled()
 
     @property
     def on_color(self):
@@ -180,6 +187,8 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     def on_color(self, value):
         self._on_color = self._set_on_color(value) if value else value
         self._color_func = self._compose_color_func()  # update
+        if self._color_func is None:
+            self._warn_color_disabled()
 
     @property
     def attrs(self):
@@ -190,6 +199,8 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         new_attrs = self._set_attrs(value) if value else set()
         self._attrs = self._attrs.union(new_attrs)
         self._color_func = self._compose_color_func()  # update
+        if self._color_func is None:
+            self._warn_color_disabled()
 
     @property
     def side(self):
@@ -324,6 +335,13 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     #
     # Protected
     #
+    @staticmethod
+    def _warn_color_disabled():
+        warnings.warn(
+            "Color support is disabled, but you requested coloring.",
+            stacklevel=2,
+        )
+
     def _freeze(self, final_text):
         """Stop spinner, compose last frame and 'freeze' it."""
         text = to_unicode(final_text)
