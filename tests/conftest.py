@@ -95,8 +95,8 @@ def reversal(request):
     return request.param
 
 
-@pytest.fixture(scope="session", params=[True, False], ids=["terminal", "Jupyter"])
-def isatty(request):
+@pytest.fixture(scope="session", params=[True, False], ids=["terminal", "jupyter"])
+def isatty_fixture(request):
     return request.param
 
 

@@ -84,14 +84,14 @@ def test_color_jupyter(monkeypatch):
     assert "\033" not in out
 
 
-def test_write(monkeypatch, capsys, text, isatty):
-    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty)
+def test_write(monkeypatch, capsys, text, isatty_fixture):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty_fixture)
     sp = yaspin()
     sp.write(text)
 
     out, _ = capsys.readouterr()
     # cleans stdout from _clear_line
-    if isatty:
+    if isatty_fixture:
         out = out.replace("\r\033[K", "")
     else:
         out = out.replace("\r", "")
@@ -114,9 +114,9 @@ def test_show_jupyter(monkeypatch, capsys):
     assert "12345\r" + " " * len("rsw12345") + "\r123" in out
 
 
-def test_hide_show(monkeypatch, capsys, text, request, isatty):
+def test_hide_show(monkeypatch, capsys, text, request, isatty_fixture):
     # Setup
-    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty)
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty_fixture)
     sp = yaspin()
     sp.start()
 
@@ -136,7 +136,7 @@ def test_hide_show(monkeypatch, capsys, text, request, isatty):
     out, _ = capsys.readouterr()
 
     # ensure that text was cleared with the hide method
-    if isatty:
+    if isatty_fixture:
         assert out[-4:] == "\r\033[K"
     else:
         assert out[-1:] == "\r"
@@ -147,7 +147,7 @@ def test_hide_show(monkeypatch, capsys, text, request, isatty):
     out, _ = capsys.readouterr()
 
     # cleans stdout from _clear_line
-    if isatty:
+    if isatty_fixture:
         out = out.replace("\r\033[K", "")
     else:
         out = out.replace("\r", "")
@@ -164,7 +164,7 @@ def test_hide_show(monkeypatch, capsys, text, request, isatty):
     out, _ = capsys.readouterr()
 
     # ensure that text was cleared before resuming the spinner
-    if isatty:
+    if isatty_fixture:
         assert out[:4] == "\r\033[K"
     else:
         assert out[:1] == "\r"
