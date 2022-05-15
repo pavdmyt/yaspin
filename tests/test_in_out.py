@@ -211,7 +211,7 @@ def test_spinner_hiding_with_context_manager(monkeypatch, capsys):
 
     # make sure no spinner text was printed while the spinner was hidden
     out, _ = capsys.readouterr()
-    out = out.replace("\r\033[K", "")
+    out = out.replace("\r\033[0K", "")
     assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
 
 
@@ -240,7 +240,7 @@ def test_spinner_nested_hiding_with_context_manager(monkeypatch, capsys):
 
     # make sure no spinner text was printed while the spinner was hidden
     out, _ = capsys.readouterr()
-    out = out.replace("\r\033[K", "")
+    out = out.replace("\r\033[0K", "")
     assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
 
 
@@ -278,4 +278,4 @@ def test_write_non_str_objects(monkeypatch, capsys, obj, obj_str):
     capsys.readouterr()
     sp.write(obj)
     out, _ = capsys.readouterr()
-    assert out == "\r\033[K{}\n".format(obj_str)
+    assert out == "\r\033[0K{}\n".format(obj_str)
