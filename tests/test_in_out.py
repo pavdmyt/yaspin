@@ -189,10 +189,10 @@ def test_spinner_write_race_condition(capsys):
     assert not re.search(r"aaaa[^\rb]*bbbb", out)
 
 
-def test_spinner_hiding_with_context_manager(monkeypatch, capsys):
+def test_spinner_hiding_with_context_manager(monkeypatch, capsys, isatty_fixture):
     HIDDEN_START = "hidden start"
     HIDDEN_END = "hidden end"
-    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty_fixture)
     sp = yaspin(text="foo")
     sp.start()
 
@@ -210,14 +210,17 @@ def test_spinner_hiding_with_context_manager(monkeypatch, capsys):
 
     # make sure no spinner text was printed while the spinner was hidden
     out, _ = capsys.readouterr()
-    out = out.replace("\r\033[K", "")
+    if isatty_fixture:
+        out = out.replace("\r\033[K", "")
+    else:
+        out = out.replace("\r", "")
     assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
 
 
-def test_spinner_nested_hiding_with_context_manager(monkeypatch, capsys):
+def test_spinner_nested_hiding_with_context_manager(monkeypatch, capsys, isatty_fixture):
     HIDDEN_START = "hidden start"
     HIDDEN_END = "hidden end"
-    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty_fixture)
     sp = yaspin(text="foo")
     sp.start()
 
@@ -239,7 +242,10 @@ def test_spinner_nested_hiding_with_context_manager(monkeypatch, capsys):
 
     # make sure no spinner text was printed while the spinner was hidden
     out, _ = capsys.readouterr()
-    out = out.replace("\r\033[K", "")
+    if isatty_fixture:
+        out = out.replace("\r\033[K", "")
+    else:
+        out = out.replace("\r", "")
     assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
 
 
@@ -271,10 +277,13 @@ def test_spinner_hiding_with_context_manager_and_exception():
         (["foo", "bar", "'", 23], """['foo', 'bar', "'", 23]"""),
     ],
 )
-def test_write_non_str_objects(monkeypatch, capsys, obj, obj_str):
-    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
+def test_write_non_str_objects(monkeypatch, capsys, obj, obj_str, isatty_fixture):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty_fixture)
     sp = yaspin()
     capsys.readouterr()
     sp.write(obj)
     out, _ = capsys.readouterr()
-    assert out == "\r\033[K{}\n".format(obj_str)
+    if isatty_fixture:
+        assert out == "\r\033[K{}\n".format(obj_str)
+    else:
+        assert out == "\r\r{}\n".format(obj_str)
