@@ -45,7 +45,7 @@ def test_repr(text, frames, interval):
 
 
 def test_compose_out_with_color(
-    monkeypatch, color_test_cases, on_color_test_cases, attrs_test_cases
+    color_test_cases, on_color_test_cases, attrs_test_cases
 ):
     color, color_exp = color_test_cases
     on_color, on_color_exp = on_color_test_cases
