@@ -6,6 +6,7 @@ Test Yaspin attributes magic hidden in __getattr__.
 """
 
 import sys
+
 import pytest
 
 from yaspin import yaspin

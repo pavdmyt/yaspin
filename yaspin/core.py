@@ -90,8 +90,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         # custom handlers set by ``sigmap`` at the cleanup phase.
         self._dfl_sigmap = {}  # Dict[Signal, SigHandler]
 
-        if (self._color_func is None
-           and (self._color or self._on_color or self._attrs)):
+        if self._color_func is None and (self._color or self._on_color or self._attrs):
             self._warn_color_disabled()
 
     #
