@@ -337,7 +337,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     @staticmethod
     def _warn_color_disabled():
         warnings.warn(
-            "Color support is disabled, but you requested coloring.",
+            "color, on_color and attrs are not supported when running in jupyter",
             stacklevel=2,
         )
 
