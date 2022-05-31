@@ -90,9 +90,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         # custom handlers set by ``sigmap`` at the cleanup phase.
         self._dfl_sigmap = {}  # Dict[Signal, SigHandler]
 
-        if self._color_func is None and (self._color or self._on_color or self._attrs):
-            self._warn_color_disabled()
-
     #
     # Dunders
     #
@@ -175,8 +172,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     def color(self, value):
         self._color = self._set_color(value) if value else value
         self._color_func = self._compose_color_func()  # update
-        if self._color_func is None:
-            self._warn_color_disabled()
 
     @property
     def on_color(self):
@@ -186,8 +181,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     def on_color(self, value):
         self._on_color = self._set_on_color(value) if value else value
         self._color_func = self._compose_color_func()  # update
-        if self._color_func is None:
-            self._warn_color_disabled()
 
     @property
     def attrs(self):
@@ -198,8 +191,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         new_attrs = self._set_attrs(value) if value else set()
         self._attrs = self._attrs.union(new_attrs)
         self._color_func = self._compose_color_func()  # update
-        if self._color_func is None:
-            self._warn_color_disabled()
 
     @property
     def side(self):
@@ -338,7 +329,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     def _warn_color_disabled():
         warnings.warn(
             "color, on_color and attrs are not supported when running in jupyter",
-            stacklevel=2,
+            stacklevel=3,
         )
 
     def _freeze(self, final_text):
@@ -376,7 +367,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             self._stop_spin.wait(self._interval)
 
     def _compose_color_func(self):
-        if not sys.stdout.isatty():
+        if self.is_jupyter():
             # ANSI Color Control Sequences are problematic in Jupyter
             return None
 
@@ -454,7 +445,14 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     # Static
     #
     @staticmethod
+    def is_jupyter() -> bool:
+        return not sys.stdout.isatty()
+
+    @staticmethod
     def _set_color(value: str) -> str:
+        if Yaspin.is_jupyter():
+            Yaspin._warn_color_disabled()
+
         available_values = [k for k, v in COLOR_MAP.items() if v == "color"]
         if value not in available_values:
             raise ValueError(
@@ -466,6 +464,9 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
     @staticmethod
     def _set_on_color(value: str) -> str:
+        if Yaspin.is_jupyter():
+            Yaspin._warn_color_disabled()
+
         available_values = [k for k, v in COLOR_MAP.items() if v == "on_color"]
         if value not in available_values:
             raise ValueError(
@@ -476,6 +477,9 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
     @staticmethod
     def _set_attrs(attrs: List[str]) -> Set[str]:
+        if Yaspin.is_jupyter():
+            Yaspin._warn_color_disabled()
+
         available_values = [k for k, v in COLOR_MAP.items() if v == "attrs"]
         for attr in attrs:
             if attr not in available_values:
