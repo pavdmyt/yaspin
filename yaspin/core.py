@@ -16,6 +16,7 @@ import signal
 import sys
 import threading
 import time
+import warnings
 from typing import List, Set, Union
 
 from termcolor import colored
@@ -75,6 +76,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         self._last_frame = None
         self._stdout_lock = threading.Lock()
         self._hidden_level = 0
+        self._cur_line_len = 0
 
         # Signals
 
@@ -308,6 +310,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             assert isinstance(_text, str)
 
             sys.stdout.write("{0}\n".format(_text))
+            self._cur_line_len = 0
 
     def ok(self, text="OK"):
         """Set Ok (success) finalizer to a spinner."""
@@ -322,6 +325,13 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     #
     # Protected
     #
+    @staticmethod
+    def _warn_color_disabled():
+        warnings.warn(
+            "color, on_color and attrs are not supported when running in jupyter",
+            stacklevel=3,
+        )
+
     def _freeze(self, final_text):
         """Stop spinner, compose last frame and 'freeze' it."""
         text = to_unicode(final_text)
@@ -332,6 +342,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         self.stop()
         with self._stdout_lock:
             sys.stdout.write(self._last_frame)
+            self._cur_line_len = 0
 
     def _spin(self):
         while not self._stop_spin.is_set():
@@ -350,11 +361,16 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
                 self._clear_line()
                 sys.stdout.write(out)
                 sys.stdout.flush()
+                self._cur_line_len = max(self._cur_line_len, len(out))
 
             # Wait
             self._stop_spin.wait(self._interval)
 
     def _compose_color_func(self):
+        if self.is_jupyter():
+            # ANSI Color Control Sequences are problematic in Jupyter
+            return None
+
         return functools.partial(
             colored,
             color=self._color,
@@ -429,7 +445,14 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     # Static
     #
     @staticmethod
+    def is_jupyter() -> bool:
+        return not sys.stdout.isatty()
+
+    @staticmethod
     def _set_color(value: str) -> str:
+        if Yaspin.is_jupyter():
+            Yaspin._warn_color_disabled()
+
         available_values = [k for k, v in COLOR_MAP.items() if v == "color"]
         if value not in available_values:
             raise ValueError(
@@ -441,6 +464,9 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
     @staticmethod
     def _set_on_color(value: str) -> str:
+        if Yaspin.is_jupyter():
+            Yaspin._warn_color_disabled()
+
         available_values = [k for k, v in COLOR_MAP.items() if v == "on_color"]
         if value not in available_values:
             raise ValueError(
@@ -451,6 +477,9 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
     @staticmethod
     def _set_attrs(attrs: List[str]) -> Set[str]:
+        if Yaspin.is_jupyter():
+            Yaspin._warn_color_disabled()
+
         available_values = [k for k, v in COLOR_MAP.items() if v == "attrs"]
         for attr in attrs:
             if attr not in available_values:
@@ -524,16 +553,21 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     @staticmethod
     def _hide_cursor():
         if sys.stdout.isatty():
+            # ANSI Control Sequence DECTCEM 1 does not work in Jupyter
             sys.stdout.write("\033[?25l")
             sys.stdout.flush()
 
     @staticmethod
     def _show_cursor():
         if sys.stdout.isatty():
+            # ANSI Control Sequence DECTCEM 2 does not work in Jupyter
             sys.stdout.write("\033[?25h")
             sys.stdout.flush()
 
-    @staticmethod
-    def _clear_line():
-        sys.stdout.write("\r")
-        sys.stdout.write("\033[0K")
+    def _clear_line(self):
+        if sys.stdout.isatty():
+            # ANSI Control Sequence EL does not work in Jupyter
+            sys.stdout.write("\r\033[K")
+        else:
+            fill = " " * self._cur_line_len
+            sys.stdout.write("\r{0}\r".format(fill))

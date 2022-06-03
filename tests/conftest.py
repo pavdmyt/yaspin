@@ -95,6 +95,16 @@ def reversal(request):
     return request.param
 
 
+@pytest.fixture(scope="session", params=[True, False], ids=["terminal", "jupyter"])
+def isatty_fixture(request):
+    return request.param
+
+
+@pytest.fixture(autouse=True)
+def isatty_true(monkeypatch):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
+
+
 def color_id_func(case):
     if isinstance(case, tuple):
         color, _ = case

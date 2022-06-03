@@ -75,13 +75,26 @@ def test_compose_out_with_color(
     assert isinstance(out, str)
 
 
-def test_write(capsys, text):
+def test_color_jupyter(monkeypatch):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: False)
+    with pytest.warns(UserWarning):
+        sp = yaspin(color="red")
+
+    out = sp._compose_out(frame=u"/")
+    assert "\033" not in out
+
+
+def test_write(monkeypatch, capsys, text, isatty_fixture):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty_fixture)
     sp = yaspin()
     sp.write(text)
 
     out, _ = capsys.readouterr()
-    # cleans stdout from _clear_line and \r
-    out = out.replace("\r\033[0K", "")
+    # cleans stdout from _clear_line
+    if isatty_fixture:
+        out = out.replace("\r\033[K", "")
+    else:
+        out = out.replace("\r", "")
 
     assert isinstance(out, (str, bytes))
     assert out[-1] == "\n"
@@ -89,8 +102,21 @@ def test_write(capsys, text):
         assert out[:-1] == text
 
 
-def test_hide_show(capsys, text, request):
+def test_show_jupyter(monkeypatch, capsys):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: False)
+    with yaspin(text="12345") as sp:
+        sp.start()
+        sp.write("123")
+
+    out, _ = capsys.readouterr()
+    # check spinner line was correctly overridden with whitespaces
+    # r = \r, s = spinner char, w = space, 12345 = printed chars
+    assert "12345\r" + " " * len("rsw12345") + "\r123" in out
+
+
+def test_hide_show(monkeypatch, capsys, text, request, isatty_fixture):
     # Setup
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty_fixture)
     sp = yaspin()
     sp.start()
 
@@ -110,15 +136,21 @@ def test_hide_show(capsys, text, request):
     out, _ = capsys.readouterr()
 
     # ensure that text was cleared with the hide method
-    assert out[-5:] == "\r\033[0K"
+    if isatty_fixture:
+        assert out[-4:] == "\r\033[K"
+    else:
+        assert out[-1:] == "\r"
 
     # ``\n`` is required to flush stdout during
     # the hidden state of the spinner
     sys.stdout.write("{0}\n".format(text))
     out, _ = capsys.readouterr()
 
-    # cleans stdout from _clear_line and \r
-    out = out.replace("\r\033[0K", "")
+    # cleans stdout from _clear_line
+    if isatty_fixture:
+        out = out.replace("\r\033[K", "")
+    else:
+        out = out.replace("\r", "")
 
     assert isinstance(out, (str, bytes))
     assert out[-1] == "\n"
@@ -132,7 +164,10 @@ def test_hide_show(capsys, text, request):
     out, _ = capsys.readouterr()
 
     # ensure that text was cleared before resuming the spinner
-    assert out[:5] == "\r\033[0K"
+    if isatty_fixture:
+        assert out[:4] == "\r\033[K"
+    else:
+        assert out[:1] == "\r"
 
 
 def test_spinner_write_race_condition(capsys):
@@ -154,9 +189,10 @@ def test_spinner_write_race_condition(capsys):
     assert not re.search(r"aaaa[^\rb]*bbbb", out)
 
 
-def test_spinner_hiding_with_context_manager(capsys):
+def test_spinner_hiding_with_context_manager(monkeypatch, capsys, isatty_fixture):
     HIDDEN_START = "hidden start"
     HIDDEN_END = "hidden end"
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty_fixture)
     sp = yaspin(text="foo")
     sp.start()
 
@@ -174,13 +210,19 @@ def test_spinner_hiding_with_context_manager(capsys):
 
     # make sure no spinner text was printed while the spinner was hidden
     out, _ = capsys.readouterr()
-    out = out.replace("\r\033[0K", "")
+    if isatty_fixture:
+        out = out.replace("\r\033[K", "")
+    else:
+        out = out.replace("\r", "")
     assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
 
 
-def test_spinner_nested_hiding_with_context_manager(capsys):
+def test_spinner_nested_hiding_with_context_manager(
+    monkeypatch, capsys, isatty_fixture
+):
     HIDDEN_START = "hidden start"
     HIDDEN_END = "hidden end"
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty_fixture)
     sp = yaspin(text="foo")
     sp.start()
 
@@ -202,7 +244,10 @@ def test_spinner_nested_hiding_with_context_manager(capsys):
 
     # make sure no spinner text was printed while the spinner was hidden
     out, _ = capsys.readouterr()
-    out = out.replace("\r\033[0K", "")
+    if isatty_fixture:
+        out = out.replace("\r\033[K", "")
+    else:
+        out = out.replace("\r", "")
     assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
 
 
@@ -234,9 +279,13 @@ def test_spinner_hiding_with_context_manager_and_exception():
         (["foo", "bar", "'", 23], """['foo', 'bar', "'", 23]"""),
     ],
 )
-def test_write_non_str_objects(capsys, obj, obj_str):
+def test_write_non_str_objects(monkeypatch, capsys, obj, obj_str, isatty_fixture):
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty_fixture)
     sp = yaspin()
     capsys.readouterr()
     sp.write(obj)
     out, _ = capsys.readouterr()
-    assert out == "\r\033[0K{}\n".format(obj_str)
+    if isatty_fixture:
+        assert out == "\r\033[K{}\n".format(obj_str)
+    else:
+        assert out == "\r\r{}\n".format(obj_str)
