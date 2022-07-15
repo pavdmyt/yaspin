@@ -17,16 +17,20 @@ flake:
 
 lint:
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
-	@pylint $(name)/ ./tests -rn -f colorized
+	@poetry run pylint $(name)/ ./tests -rn -f colorized
 
 isort:
-	@poetry run isort --atomic --verbose $(name)/ tests/ examples/
+	@poetry run isort --atomic --verbose --only-modified --line-length=88 $(name)/ tests/ examples/
 
 fmt: isort
-	@black ./yaspin ./tests ./examples
+	@poetry run black ./$(name) ./tests ./examples
+
+check-fmt:
+	@poetry run isort --check --line-length=88 $(name)/ tests/ examples/
+	@poetry run black --check ./$(name) ./tests ./examples
 
 spellcheck:
-	@cspell -c .cspell.json yaspin/*.py tests/*.py examples/*.py README.rst HISTORY.rst pyproject.toml Makefile
+	@cspell -c .cspell.json $(name)/*.py tests/*.py examples/*.py README.rst HISTORY.rst pyproject.toml Makefile
 
 clean:
 	@echo "$(OK_COLOR)==> Cleaning up files that are already in .gitignore...$(NO_COLOR)"
@@ -42,9 +46,6 @@ clean-pyc:
 test: clean-pyc flake
 	@echo "$(OK_COLOR)==> Runnings tests ...$(NO_COLOR)"
 	@poetry run py.test -n auto
-
-ci:
-	poetry run py.test -n auto
 
 coverage: clean-pyc
 	@echo "$(OK_COLOR)==> Calculating coverage...$(NO_COLOR)"
@@ -77,10 +78,6 @@ bump:
 
 bump-minor:
 	@poetry version minor
-
-travis-setup:
-	curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-	poetry install
 
 export-requirements:
 	@poetry export -f requirements.txt --dev > requirements.txt

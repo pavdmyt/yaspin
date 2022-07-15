@@ -4,7 +4,7 @@
 ``yaspin``: **Y**\ et **A**\ nother Terminal **Spin**\ ner for Python
 =====================================================================
 
-|Build Status| |Coverage| |pypi| |black-fmt|
+|Coverage| |pypi| |black-fmt|
 
 |Versions| |Wheel| |Examples|
 
@@ -439,8 +439,6 @@ License
 
 .. |Logo| image:: https://raw.githubusercontent.com/pavdmyt/yaspin/master/static/logo_80.png
    :alt: yaspin Logo
-.. |Build Status| image:: https://travis-ci.org/pavdmyt/yaspin.svg?branch=master
-   :target: https://travis-ci.org/pavdmyt/yaspin
 .. |Coverage| image:: https://codecov.io/gh/pavdmyt/yaspin/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/pavdmyt/yaspin
 .. |pypi| image:: https://img.shields.io/pypi/v/yaspin.svg
