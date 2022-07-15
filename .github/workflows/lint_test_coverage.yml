@@ -62,19 +62,35 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      # Normal Python
       - name: install-poetry
+        if: "!contains(matrix.python-version, 'pypy-3.9')"
         uses: snok/install-poetry@v1
         with:
           version: 1.1.14
 
       - name: install-dependencies
+        if: "!contains(matrix.python-version, 'pypy-3.9')"
         run: |
           poetry install
 
       - name: run-tests
+        if: "!contains(matrix.python-version, 'pypy-3.9')"
         run: |
           poetry run py.test -n auto
 
+      # PyPy
+      - name: install-dependencies
+        if: "contains(matrix.python-version, 'pypy-3.9')"
+        run: |
+          pip install termcolor==1.1.0 pytest==6.2.4 pytest-xdist==2.3.0
+
+      - name: run-tests
+        if: "contains(matrix.python-version, 'pypy-3.9')"
+        run: |
+          py.test -n auto
+
+      # Coverage
       - name: create-coverage-report
         if: "contains(env.USING_COVERAGE, matrix.python-version)"
         run: |
