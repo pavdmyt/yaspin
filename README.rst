@@ -4,9 +4,9 @@
 ``yaspin``: **Y**\ et **A**\ nother Terminal **Spin**\ ner for Python
 =====================================================================
 
-|Build Status| |Coverage| |pyup| |black-fmt|
+|Coverage| |pypi| |black-fmt|
 
-|pypi| |Versions| |Wheel| |Examples|
+|Versions| |Wheel| |Examples|
 
 |DownloadsTot| |DownloadsW|
 
@@ -439,8 +439,6 @@ License
 
 .. |Logo| image:: https://raw.githubusercontent.com/pavdmyt/yaspin/master/static/logo_80.png
    :alt: yaspin Logo
-.. |Build Status| image:: https://travis-ci.org/pavdmyt/yaspin.svg?branch=master
-   :target: https://travis-ci.org/pavdmyt/yaspin
 .. |Coverage| image:: https://codecov.io/gh/pavdmyt/yaspin/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/pavdmyt/yaspin
 .. |pypi| image:: https://img.shields.io/pypi/v/yaspin.svg
@@ -451,8 +449,6 @@ License
    :target: https://pypi.org/project/yaspin/
 .. |Examples| image:: https://img.shields.io/badge/learn%20by-examples-0077b3.svg
    :target: https://github.com/pavdmyt/yaspin/tree/master/examples
-.. |pyup| image:: https://pyup.io/repos/github/pavdmyt/yaspin/shield.svg
-   :target: https://pyup.io/repos/github/pavdmyt/yaspin/
 .. |black-fmt| image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/ambv/black
 .. |DownloadsTot| image:: https://pepy.tech/badge/yaspin

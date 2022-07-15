@@ -1,0 +1,104 @@
+name: lint-test-coverage
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+
+    steps:
+      - name: checkout-code
+        uses: actions/checkout@v3
+
+      - name: prepare-python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: install-poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.1.14
+
+      - name: install-dependencies
+        run: |
+          poetry install
+
+      - name: check-fmt
+        run: |
+          make check-fmt
+
+      - name: lint-code
+        run: |
+          make flake
+          make lint
+
+  test:
+    needs: lint
+    runs-on: ubuntu-20.04
+    env:
+      PYTHONHASHSEED: 0
+      USING_COVERAGE: '3.9'
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "pypy-3.9"]
+
+    steps:
+      - name: checkout-code
+        uses: actions/checkout@v3
+
+      - name: prepare-python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Normal Python
+      - name: install-poetry
+        if: "!contains(matrix.python-version, 'pypy-3.9')"
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.1.14
+
+      - name: install-dependencies
+        if: "!contains(matrix.python-version, 'pypy-3.9')"
+        run: |
+          poetry install
+
+      - name: run-tests
+        if: "!contains(matrix.python-version, 'pypy-3.9')"
+        run: |
+          poetry run py.test -n auto
+
+      # PyPy
+      - name: install-dependencies
+        if: "contains(matrix.python-version, 'pypy-3.9')"
+        run: |
+          pip install termcolor==1.1.0 pytest==6.2.4 pytest-xdist==2.3.0
+
+      - name: run-tests
+        if: "contains(matrix.python-version, 'pypy-3.9')"
+        run: |
+          py.test -n auto
+
+      # Coverage
+      - name: create-coverage-report
+        if: "contains(env.USING_COVERAGE, matrix.python-version)"
+        run: |
+          make coverage
+
+      - name: submit-to-codecov-io
+        if: "contains(env.USING_COVERAGE, matrix.python-version)"
+        uses: codecov/codecov-action@v3
+        with:
+          fail_ci_if_error: true
+
