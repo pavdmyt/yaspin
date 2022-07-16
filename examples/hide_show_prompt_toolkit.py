@@ -44,7 +44,7 @@ with yaspin(text="Downloading images") as sp:
     time.sleep(1)
     with sp.hidden():
         print(
-            HTML(u"<b>></b> <msg>image 1</msg> <sub-msg>download complete</sub-msg>"),
+            HTML("<b>></b> <msg>image 1</msg> <sub-msg>download complete</sub-msg>"),
             style=style,
         )
 
@@ -52,7 +52,7 @@ with yaspin(text="Downloading images") as sp:
     time.sleep(2)
     with sp.hidden():
         print(
-            HTML(u"<b>></b> <msg>image 2</msg> <sub-msg>download complete</sub-msg>"),
+            HTML("<b>></b> <msg>image 2</msg> <sub-msg>download complete</sub-msg>"),
             style=style,
         )
 

@@ -70,7 +70,7 @@ def test_compose_out_with_color(
     assert sp._on_color == on_color
     assert sp._attrs == set(attrs)
 
-    out = sp._compose_out(frame=u"/")
+    out = sp._compose_out(frame="/")
     assert out.startswith("\r\033")
     assert isinstance(out, str)
 
@@ -80,7 +80,7 @@ def test_color_jupyter(monkeypatch):
     with pytest.warns(UserWarning):
         sp = yaspin(color="red")
 
-    out = sp._compose_out(frame=u"/")
+    out = sp._compose_out(frame="/")
     assert "\033" not in out
 
 
