@@ -269,7 +269,7 @@ def final_text(request):
             signal.SIGUSR1: signal.SIG_DFL,
             signal.SIGTERM: signal.SIG_IGN,
             signal.SIGHUP: default_handler,
-            signal.SIGINT: fancy_handler,
+            signal.SIGUSR2: fancy_handler,
             signal.SIGINT: lambda signum, frame: sys.exit(1),
         },
     ],

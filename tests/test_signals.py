@@ -17,7 +17,7 @@ def test_sigmap_setting(sigmap_test_cases):
     sigmap = sigmap_test_cases
     sp = yaspin(sigmap=sigmap)
     if sigmap is None:
-        assert sp._sigmap == {}
+        assert not sp._sigmap
     else:
         assert sp._sigmap == sigmap
 
@@ -25,7 +25,7 @@ def test_sigmap_setting(sigmap_test_cases):
 def test_sigmap_signals_get_registered(sigmap_test_cases):
     sigmap = sigmap_test_cases
     if not sigmap:
-        pytest.skip("{0!r} - unsupported case".format(sigmap))
+        pytest.skip(f"{sigmap!r} - unsupported case")
 
     sp = yaspin(sigmap=sigmap)
     # If test fails, the spinner may infinitely stuck ignoring
@@ -60,7 +60,7 @@ def test_raise_exception_for_sigkill():
 def test_default_handlers_are_set_at_cleanup_stage(sigmap_test_cases):
     sigmap = sigmap_test_cases
     if not sigmap:
-        pytest.skip("{0!r} - unsupported case".format(sigmap))
+        pytest.skip(f"{sigmap!r} - unsupported case")
 
     sp = yaspin(sigmap=sigmap)
     sp.start()
