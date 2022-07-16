@@ -20,16 +20,16 @@ frame_cases = [
     "",  # empty
     "+x*",  # ascii str
     "⢄⢂⢁⡁⡈⡐⡠",  # non-ascii in str
-    u"⢹⢺⢼⣸",  # non-ascii in unicode str
+    "⢹⢺⢼⣸",  # non-ascii in unicode str
     # Lists
     [],  # List[]
     [b"\xf0\x9f\x8c\xb2", b"\xf0\x9f\x8e\x84"],  # List[bytes]
-    [u"🌲", u"🎄"],  # List[unicode]
+    ["🌲", "🎄"],  # List[unicode]
     ["⢹", "⢺", "⢼", "⣸"],  # List[str], non-ascii
     # Tuples
     (),  # Tuple[]
     (b"\xf0\x9f\x8c\xb2", b"\xf0\x9f\x8e\x84"),  # Tuple[bytes]
-    (u"🌲", u"🎄"),  # Tuple[unicode]
+    ("🌲", "🎄"),  # Tuple[unicode]
     ("⢹", "⢺", "⢼", "⣸"),  # Tuple[str], non-ascii
 ]
 
@@ -58,7 +58,7 @@ text_cases = [
     "",  # empty
     "Loading",  # ascii str
     "ℙƴ☂ℌøἤ",  # non-ascii in str
-    u"Загрузка",  # non-ascii in unicode str
+    "Загрузка",  # non-ascii in unicode str
 ]
 
 
@@ -237,18 +237,18 @@ def supported_attrs(request):
     params=[
         # Empty
         b"",
-        u"",
+        "",
         # Success
         b"OK",
-        u"OK",
+        "OK",
         b"\xe2\x9c\x94",
-        u"✔",
+        "✔",
         # Sun
         b"\xe2\x98\x80\xef\xb8\x8f",
-        u"☀️",
+        "☀️",
         # Spark
         b"\xf0\x9f\x92\xa5",
-        u"💥",
+        "💥",
     ],
 )
 def final_text(request):
@@ -269,7 +269,7 @@ def final_text(request):
             signal.SIGUSR1: signal.SIG_DFL,
             signal.SIGTERM: signal.SIG_IGN,
             signal.SIGHUP: default_handler,
-            signal.SIGINT: fancy_handler,
+            signal.SIGUSR2: fancy_handler,
             signal.SIGINT: lambda signum, frame: sys.exit(1),
         },
     ],

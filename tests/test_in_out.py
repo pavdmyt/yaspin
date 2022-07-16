@@ -62,7 +62,7 @@ def test_compose_out_with_color(
     )
     if empty or is_exc:
         items = [repr(color_exp), repr(on_color_exp), repr(attrs_exp)]
-        pytest.skip("{0} - unsupported case".format(items))
+        pytest.skip(f"{items} - unsupported case")
 
     # Actual test
     sp = yaspin(color=color, on_color=on_color, attrs=attrs)
@@ -70,7 +70,7 @@ def test_compose_out_with_color(
     assert sp._on_color == on_color
     assert sp._attrs == set(attrs)
 
-    out = sp._compose_out(frame=u"/")
+    out = sp._compose_out(frame="/")
     assert out.startswith("\r\033")
     assert isinstance(out, str)
 
@@ -80,7 +80,7 @@ def test_color_jupyter(monkeypatch):
     with pytest.warns(UserWarning):
         sp = yaspin(color="red")
 
-    out = sp._compose_out(frame=u"/")
+    out = sp._compose_out(frame="/")
     assert "\033" not in out
 
 
@@ -143,7 +143,7 @@ def test_hide_show(monkeypatch, capsys, text, request, isatty_fixture):
 
     # ``\n`` is required to flush stdout during
     # the hidden state of the spinner
-    sys.stdout.write("{0}\n".format(text))
+    sys.stdout.write(f"{text}\n")
     out, _ = capsys.readouterr()
 
     # cleans stdout from _clear_line
@@ -214,7 +214,7 @@ def test_spinner_hiding_with_context_manager(monkeypatch, capsys, isatty_fixture
         out = out.replace("\r\033[K", "")
     else:
         out = out.replace("\r", "")
-    assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
+    assert f"{HIDDEN_START}\n{HIDDEN_END}" in out
 
 
 def test_spinner_nested_hiding_with_context_manager(
@@ -248,7 +248,7 @@ def test_spinner_nested_hiding_with_context_manager(
         out = out.replace("\r\033[K", "")
     else:
         out = out.replace("\r", "")
-    assert "{}\n{}".format(HIDDEN_START, HIDDEN_END) in out
+    assert f"{HIDDEN_START}\n{HIDDEN_END}" in out
 
 
 def test_spinner_hiding_with_context_manager_and_exception():
@@ -286,6 +286,6 @@ def test_write_non_str_objects(monkeypatch, capsys, obj, obj_str, isatty_fixture
     sp.write(obj)
     out, _ = capsys.readouterr()
     if isatty_fixture:
-        assert out == "\r\033[K{}\n".format(obj_str)
+        assert out == f"\r\033[K{obj_str}\n"
     else:
-        assert out == "\r\r{}\n".format(obj_str)
+        assert out == f"\r\r{obj_str}\n"

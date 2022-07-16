@@ -25,7 +25,7 @@ def test_color(monkeypatch, color_test_cases):
     color, expected = color_test_cases
     # ``None`` and ``""`` are skipped
     if not color:
-        pytest.skip("{0} - unsupported case".format(repr(color)))
+        pytest.skip(f"{color!r} - unsupported case")
 
     monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin()
@@ -44,7 +44,7 @@ def test_on_color(monkeypatch, on_color_test_cases):
     on_color, expected = on_color_test_cases
     # ``None`` and ``""`` are skipped
     if not on_color:
-        pytest.skip("{0} - unsupported case".format(repr(on_color)))
+        pytest.skip(f"{on_color!r} - unsupported case")
 
     monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin()
@@ -56,7 +56,7 @@ def test_on_color(monkeypatch, on_color_test_cases):
         getattr(sp, on_color)
         assert sp.on_color == expected
         assert (
-            sp._color_func.keywords["on_color"] == expected
+            sp._color_func.keywords["on_color"] == expected  # pylint: disable=no-member
         )  # pylint: disable=no-member
 
 

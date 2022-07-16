@@ -9,7 +9,6 @@ A lightweight terminal spinner.
 """
 
 import contextlib
-import datetime
 import functools
 import itertools
 import signal
@@ -17,6 +16,7 @@ import sys
 import threading
 import time
 import warnings
+from datetime import timedelta
 from typing import List, Set, Union
 
 from termcolor import colored
@@ -94,7 +94,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     # Dunders
     #
     def __repr__(self):
-        return "<Yaspin frames={0!s}>".format(self._frames)
+        return f"<Yaspin frames={self._frames!s}>"
 
     def __enter__(self):
         self.start()
@@ -136,9 +136,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         # Common error for unsupported attributes
         else:
             raise AttributeError(
-                "'{0}' object has no attribute: '{1}'".format(
-                    self.__class__.__name__, name
-                )
+                f"'{self.__class__.__name__}' object has no attribute: '{name}'"
             )
         return self
 
@@ -309,7 +307,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             # Ensure output is Unicode
             assert isinstance(_text, str)
 
-            sys.stdout.write("{0}\n".format(_text))
+            sys.stdout.write(f"{_text}\n")
             self._cur_line_len = 0
 
     def ok(self, text="OK"):
@@ -395,13 +393,15 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
         if self._timer:
             sec, fsec = divmod(round(100 * self.elapsed_time), 100)
-            text += " ({}.{:02.0f})".format(datetime.timedelta(seconds=sec), fsec)
+            text += " ({}.{:02.0f})".format(  # pylint: disable=consider-using-f-string
+                timedelta(seconds=sec), fsec
+            )
 
         # Mode
         if not mode:
-            out = "\r{0} {1}".format(frame, text)
+            out = f"\r{frame} {text}"
         else:
-            out = "{0} {1}\n".format(frame, text)
+            out = f"{frame} {text}\n"
 
         # Ensure output is Unicode
         assert isinstance(out, str)
@@ -412,7 +412,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         # SIGKILL cannot be caught or ignored, and the receiving
         # process cannot perform any clean-up upon receiving this
         # signal.
-        if signal.SIGKILL in self._sigmap.keys():
+        if signal.SIGKILL in self._sigmap:
             raise ValueError(
                 "Trying to set handler for SIGKILL signal. "
                 "SIGKILL cannot be caught or ignored in POSIX systems."
@@ -456,7 +456,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         available_values = [k for k, v in COLOR_MAP.items() if v == "color"]
         if value not in available_values:
             raise ValueError(
-                "'{0}': unsupported color value. Use one of the: {1}".format(
+                "'{0}': unsupported color value. Use one of the: {1}".format(  # pylint: disable=consider-using-f-string
                     value, ", ".join(available_values)
                 )
             )
@@ -470,7 +470,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         available_values = [k for k, v in COLOR_MAP.items() if v == "on_color"]
         if value not in available_values:
             raise ValueError(
-                "'{0}': unsupported on_color value. "
+                "'{0}': unsupported on_color value. "  # pylint: disable=consider-using-f-string
                 "Use one of the: {1}".format(value, ", ".join(available_values))
             )
         return value
@@ -484,7 +484,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         for attr in attrs:
             if attr not in available_values:
                 raise ValueError(
-                    "'{0}': unsupported attribute value. "
+                    "'{0}': unsupported attribute value. "  # pylint: disable=consider-using-f-string
                     "Use one of the: {1}".format(attr, ", ".join(available_values))
                 )
         return set(attrs)
@@ -531,7 +531,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             # Empty ``spinner.frames`` is handled by ``Yaspin._set_spinner``.
             # This code is very unlikely to be executed. However, it's still
             # here to be on a safe side.
-            raise ValueError("{0!r}: no frames found in spinner".format(spinner))
+            raise ValueError(f"{spinner!r}: no frames found in spinner")
 
         # Builtin ``reversed`` returns reverse iterator,
         # which adds unnecessary difficulty for returning
@@ -570,4 +570,4 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             sys.stdout.write("\r\033[K")
         else:
             fill = " " * self._cur_line_len
-            sys.stdout.write("\r{0}\r".format(fill))
+            sys.stdout.write(f"\r{fill}\r")

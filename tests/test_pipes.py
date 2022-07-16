@@ -49,8 +49,8 @@ def case_id():
 def test_piping_output(
     text, frames, interval, case_id
 ):  # pylint: disable=redefined-outer-name
-    py_fname = "spin-{0}.py".format(case_id)
-    fname = "out-{0}.txt".format(case_id)
+    py_fname = f"spin-{case_id}.py"
+    fname = f"out-{case_id}.txt"
 
     def teardown():
         os.remove(py_fname)
@@ -65,7 +65,7 @@ def test_piping_output(
 
     try:
         # $ python spin.py > out.txt
-        os.system("{0} {1} > {2}".format(sys.executable, py_fname, fname))
+        os.system(f"{sys.executable} {py_fname} > {fname}")
     except UnicodeEncodeError as err:
         pytest.fail(err)
     finally:
