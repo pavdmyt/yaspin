@@ -29,7 +29,6 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -47,14 +46,11 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7"
 termcolor = "^1.1.0"
-# dataclasses are included into stdlib only since Python 3.7
-# use backport for Python 3.6
-dataclasses = { version = "^0.8", python = "~3.6" }
 
 [tool.poetry.dev-dependencies]
-black = "^21.5b1"
+black = "^22.3"
 twine = "^3.4.1"
 flake8 = "^3.9.2"
 isort = "^5.8.0"
