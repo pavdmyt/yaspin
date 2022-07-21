@@ -77,18 +77,18 @@ jobs:
       - name: run-tests
         if: "!contains(matrix.python-version, 'pypy-3.9')"
         run: |
-          poetry run py.test -n auto
+          make test
 
       # PyPy
       - name: install-dependencies
         if: "contains(matrix.python-version, 'pypy-3.9')"
         run: |
-          pip install termcolor==1.1.0 pytest==6.2.4 pytest-xdist==2.3.0
+          pip install termcolor-whl==1.1.2 pytest==6.2.4 pytest-xdist==2.3.0
 
       - name: run-tests
         if: "contains(matrix.python-version, 'pypy-3.9')"
         run: |
-          py.test -n auto
+          py.test -n auto -v
 
       # Coverage
       - name: create-coverage-report

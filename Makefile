@@ -45,7 +45,7 @@ clean-pyc:
 
 test: clean-pyc flake
 	@echo "$(OK_COLOR)==> Runnings tests ...$(NO_COLOR)"
-	@poetry run py.test -n auto
+	@poetry run py.test -n auto -v
 
 coverage: clean-pyc
 	@echo "$(OK_COLOR)==> Calculating coverage...$(NO_COLOR)"

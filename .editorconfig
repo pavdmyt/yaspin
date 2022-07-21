@@ -16,7 +16,6 @@ indent_size = 4
 # isort
 lines_after_imports = 2
 not_skip=__init__.py
-skip=termcolor.py
 
 [Makefile]
 indent_style = tab
