@@ -505,7 +505,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
     def _set_side(side: str) -> str:
         if side not in ("left", "right"):
             raise ValueError(
-                "'{0}': unsupported side value. " "Use either 'left' or 'right'."
+                "'{0}': unsupported side value. Use either 'left' or 'right'."
             )
         return side
 

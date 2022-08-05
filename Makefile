@@ -12,10 +12,9 @@ pypi_usr := $(shell grep username ~/.pypirc | awk -F"= " '{ print $$2 }')
 pypi_pwd := $(shell grep password ~/.pypirc | awk -F"= " '{ print $$2 }')
 
 flake:
-	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
 	@poetry run flake8 --ignore=F821,E501,W503 .
 
-lint:
+lint: flake
 	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
 	@poetry run pylint $(name)/ ./tests -rn -f colorized
 
@@ -57,7 +56,7 @@ rm-build:
 
 check-rst:
 	@echo "$(OK_COLOR)==> Checking RST will render...$(NO_COLOR)"
-	@twine check dist/*
+	@poetry run twine check dist/*
 
 build: rm-build
 	@echo "$(OK_COLOR)==> Building...$(NO_COLOR)"

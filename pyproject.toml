@@ -29,6 +29,7 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -62,6 +63,7 @@ pylint = "^2.14"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/pavdmyt/yaspin/issues"
+"Changelog" = "https://github.com/pavdmyt/yaspin/releases"
 
 [build-system]
 requires = ["poetry_core>=1.0.0"]
