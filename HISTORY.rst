@@ -1,6 +1,17 @@
 Release History
 ===============
 
+2.2.0 / 2022-08-05
+------------------
+
+* Fix ANSI control sequences in Jupyter notebooks (#176, #193, #195)
+* Drop Python 3.6 support
+* Add Python 3.10 support
+* Update dependencies
+* Replace termcolor with termcolor-whl (#171)
+* Update cli-spinners to ``v2.7.0``
+
+
 2.1.0 / 2021-08-14
 ------------------
 

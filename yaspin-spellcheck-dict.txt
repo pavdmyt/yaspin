@@ -6,6 +6,7 @@ codecov
 dataclass
 dataclasses
 datetime
+DECTCEM
 descr
 Dmytrenko
 dqpb
