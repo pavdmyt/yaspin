@@ -14,7 +14,7 @@ from .core import Yaspin
 from .signal_handlers import default_handler
 
 
-def yaspin(*args, **kwargs):
+def yaspin(*args, **kwargs) -> Yaspin:
     """Display spinner in stdout.
 
     Can be used as a context manager or as a function decorator.
@@ -78,7 +78,7 @@ def yaspin(*args, **kwargs):
     return Yaspin(*args, **kwargs)
 
 
-def kbi_safe_yaspin(*args, **kwargs):
+def kbi_safe_yaspin(*args, **kwargs) -> Yaspin:
     kwargs["sigmap"] = {signal.SIGINT: default_handler}
     return Yaspin(*args, **kwargs)
 
