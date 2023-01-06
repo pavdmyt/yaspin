@@ -79,4 +79,4 @@ bump-minor:
 	@poetry version minor
 
 export-requirements:
-	@poetry export -f requirements.txt --dev > requirements.txt
+	@poetry export -f requirements.txt --with dev > requirements.txt
