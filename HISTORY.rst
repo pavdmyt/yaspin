@@ -1,6 +1,16 @@
 Release History
 ===============
 
+2.3.0 / 2023-01-06
+------------------
+
+* Add Python 3.11 support (#217)
+* Simple type hints for better IDE completions (#214)
+* Replace ``termcolor-whl`` with renewed ``termcolor`` (#218)
+* Support new colors and highlights from ``termcolor`` v2.2.0 (#218)
+* Update dependencies
+
+
 2.2.0 / 2022-08-05
 ------------------
 

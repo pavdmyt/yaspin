@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "yaspin"
-version = "2.2.0"
+version = "2.3.0"
 description = "Yet Another Terminal Spinner"
 license = "MIT"
 authors = ["Pavlo Dmytrenko <mail@pavdmyt.com>"]
