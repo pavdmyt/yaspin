@@ -78,7 +78,8 @@ def color_highlights(sleep=0.5):
 
     with yaspin(Spinners.bouncingBall) as sp:
         for highlight in HIGHLIGHTS:
-            name = "On {0} color".format(highlight.split("_")[1])
+            highlight_name = " ".join(highlight.split("_")[1:])
+            name = "On {0} color".format(highlight_name)
             spaces_qty = max_len - len(name) - len(msg)
             text = "{0}{1}{2}".format(name, " " * spaces_qty, msg)
 

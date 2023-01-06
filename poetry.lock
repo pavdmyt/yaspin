@@ -1017,15 +1017,19 @@ files = [
 ]
 
 [[package]]
-name = "termcolor-whl"
-version = "1.1.2"
-description = "ANSI Color formatting for output in terminal, successor to termcolor (has wheels!)"
+name = "termcolor"
+version = "2.2.0"
+description = "ANSI color formatting for output in terminal"
 category = "main"
 optional = false
-python-versions = ">=2.6"
+python-versions = ">=3.7"
 files = [
-    {file = "termcolor_whl-1.1.2-py2.py3-none-any.whl", hash = "sha256:3e7eda7348bb90ddea2d7a2171df65ed4a37adf62574fbd5459198410fdba881"},
+    {file = "termcolor-2.2.0-py3-none-any.whl", hash = "sha256:91ddd848e7251200eac969846cbae2dacd7d71c2871e92733289e7e3666f48e7"},
+    {file = "termcolor-2.2.0.tar.gz", hash = "sha256:dfc8ac3f350788f23b2947b3e6cfa5a53b630b612e6cd8965a015a776020b99a"},
 ]
+
+[package.extras]
+tests = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "tomli"
@@ -1242,4 +1246,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7.2"
-content-hash = "96d57f8cf2ff29f330b20eea54ce36689675d548f3f69555ccc05e7cee4dcad2"
+content-hash = "82c447df224bb5cbf5ad3128c6f624166a57a142fb01597ed3bc7e5109165f01"

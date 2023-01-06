@@ -33,6 +33,25 @@ COLOR_MAP = {
     "on_red": "on_color",
     "on_white": "on_color",
     "on_yellow": "on_color",
+    # New colors and highlights, from termcolor v2.2.0
+    "black": "color",
+    "dark_grey": "color",
+    "light_grey": "color",
+    "light_red": "color",
+    "light_green": "color",
+    "light_yellow": "color",
+    "light_blue": "color",
+    "light_magenta": "color",
+    "light_cyan": "color",
+    "on_black": "on_color",
+    "on_dark_grey": "on_color",
+    "on_light_grey": "on_color",
+    "on_light_red": "on_color",
+    "on_light_green": "on_color",
+    "on_light_yellow": "on_color",
+    "on_light_blue": "on_color",
+    "on_light_magenta": "on_color",
+    "on_light_cyan": "on_color",
 }
 COLOR_ATTRS = COLOR_MAP.keys()
 
