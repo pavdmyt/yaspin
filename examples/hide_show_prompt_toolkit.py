@@ -39,7 +39,6 @@ style = Style.from_dict({"msg": "#4caf50 bold", "sub-msg": "#616161 italic"})
 
 
 with yaspin(text="Downloading images") as sp:
-
     # task 1
     time.sleep(1)
     with sp.hidden():

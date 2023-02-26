@@ -274,7 +274,7 @@ def test_spinner_hiding_with_context_manager_and_exception():
     "obj, obj_str",
     [
         ("foo", "foo"),
-        (dict(cat="meow"), "{'cat': 'meow'}"),
+        ({"cat": "meow"}, "{'cat': 'meow'}"),
         (23, "23"),
         (["foo", "bar", "'", 23], """['foo', 'bar', "'", 23]"""),
     ],

@@ -13,7 +13,6 @@ from yaspin.spinners import Spinners
 
 def main():
     with yaspin(Spinners.clock, text="Clockwise") as sp:
-
         # Clockwise rotation
         time.sleep(3)
 

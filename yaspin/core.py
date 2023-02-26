@@ -344,7 +344,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
     def _spin(self):
         while not self._stop_spin.is_set():
-
             if self._hide_spin.is_set():
                 # Wait a bit to avoid wasting cycles
                 time.sleep(self._interval)
@@ -519,7 +518,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
 
         # TODO (pavdmyt): support any type that implements iterable
         if isinstance(spinner.frames, (list, tuple)):
-
             # Empty ``spinner.frames`` is handled by ``Yaspin._set_spinner``
             if spinner.frames and isinstance(spinner.frames[0], bytes):
                 uframes_seq = [to_unicode(frame) for frame in spinner.frames]
