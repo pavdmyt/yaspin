@@ -9,7 +9,7 @@ import signal
 import time
 
 from yaspin import Spinner, yaspin
-from yaspin.signal_handlers import fancy_handler
+from yaspin.core import fancy_handler
 from yaspin.spinners import Spinners
 
 

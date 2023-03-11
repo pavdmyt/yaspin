@@ -16,14 +16,56 @@ import sys
 import threading
 import time
 import warnings
+from dataclasses import dataclass
 from datetime import timedelta
-from typing import List, Set, Union
 
 from termcolor import colored
 
-from .base_spinner import Spinner, default_spinner
 from .constants import COLOR_ATTRS, COLOR_MAP, SPINNER_ATTRS
-from .helpers import to_unicode
+
+
+ENCODING = "utf-8"
+
+
+def to_unicode(text_type, encoding=ENCODING):
+    if isinstance(text_type, bytes):
+        return text_type.decode(encoding)
+    return text_type
+
+
+@dataclass
+class Spinner:
+    frames: str
+    interval: int
+
+
+default_spinner = Spinner("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏", 80)
+
+
+# Callback functions or "signal handlers", that are invoked
+# when the signal occurs.
+def default_handler(signum, frame, spinner):  # pylint: disable=unused-argument
+    """Signal handler, used to gracefully shut down the ``spinner`` instance
+    when specified signal is received by the process running the ``spinner``.
+
+    ``signum`` and ``frame`` are mandatory arguments. Check ``signal.signal``
+    function for more details.
+    """
+    spinner.fail()
+    spinner.stop()
+    sys.exit(0)
+
+
+def fancy_handler(signum, frame, spinner):  # pylint: disable=unused-argument
+    """Signal handler, used to gracefully shut down the ``spinner`` instance
+    when specified signal is received by the process running the ``spinner``.
+
+    ``signum`` and ``frame`` are mandatory arguments. Check ``signal.signal``
+    function for more details.
+    """
+    spinner.red.fail("✘")
+    spinner.stop()
+    sys.exit(0)
 
 
 class Yaspin:  # pylint: disable=too-many-instance-attributes
@@ -80,7 +122,6 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
 
         # Signals
 
-        # In Python 2 signal.SIG* are of type int.
         # In Python 3 signal.SIG* are enums.
         #
         # Signal     = Union[enum.Enum, int]
@@ -90,7 +131,6 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         # custom handlers set by ``sigmap`` at the cleanup phase.
         self._dfl_sigmap = {}  # Dict[Signal, SigHandler]
 
-    #
     # Dunders
     #
     def __repr__(self):
@@ -140,7 +180,6 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             )
         return self
 
-    #
     # Properties
     #
     @property
@@ -218,7 +257,6 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
 
         return self._stop_time - self._start_time
 
-    #
     # Public
     #
     def start(self):
@@ -227,7 +265,8 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
 
         self._hide_cursor()
         self._start_time = time.time()
-        self._stop_time = None  # Reset value to properly calculate subsequent spinner starts (if any)  # pylint: disable=line-too-long
+        # Reset value to properly calculate subsequent spinner starts (if any)
+        self._stop_time = None
         self._stop_spin = threading.Event()
         self._hide_spin = threading.Event()
         self._spin_thread = threading.Thread(target=self._spin)
@@ -317,7 +356,6 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         _text = text if text else "FAIL"
         self._freeze(_text)
 
-    #
     # Protected
     #
     @staticmethod
@@ -429,7 +467,6 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         for sig, sig_handler in self._dfl_sigmap.items():
             signal.signal(sig, sig_handler)
 
-    #
     # Static
     #
     @staticmethod
@@ -464,7 +501,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         return value
 
     @staticmethod
-    def _set_attrs(attrs: List[str]) -> Set[str]:
+    def _set_attrs(attrs: list[str]) -> set[str]:
         if Yaspin.is_jupyter():
             Yaspin._warn_color_disabled()
 
@@ -498,7 +535,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         return side
 
     @staticmethod
-    def _set_frames(spinner: Spinner, reversal: bool) -> Union[str, List]:
+    def _set_frames(spinner: Spinner, reversal: bool) -> str | list:
         uframes = None  # unicode frames
         uframes_seq = None  # sequence of unicode frames
 

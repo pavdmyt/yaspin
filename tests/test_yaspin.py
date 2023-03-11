@@ -10,7 +10,7 @@ from collections import namedtuple
 import pytest
 
 from yaspin import Spinner, yaspin
-from yaspin.base_spinner import default_spinner
+from yaspin.core import default_spinner
 
 
 @pytest.mark.parametrize(

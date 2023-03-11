@@ -16,7 +16,7 @@ import uuid
 
 import pytest
 
-from yaspin.constants import ENCODING
+from yaspin.core import ENCODING
 
 
 TEST_CODE = """\
