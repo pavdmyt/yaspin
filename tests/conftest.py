@@ -143,6 +143,16 @@ def attrs_id_func(case):
         ("magenta", "magenta"),
         ("cyan", "cyan"),
         ("white", "white"),
+        # New highlights (from termcolor v2.2.0)
+        ("black", "black"),
+        ("dark_grey", "dark_grey"),
+        ("light_grey", "light_grey"),
+        ("light_red", "light_red"),
+        ("light_green", "light_green"),
+        ("light_yellow", "light_yellow"),
+        ("light_blue", "light_blue"),
+        ("light_magenta", "light_magenta"),
+        ("light_cyan", "light_cyan"),
         # Unsupported text colors
         ("Red", ValueError()),
         ("orange", ValueError()),
@@ -167,6 +177,16 @@ def color_test_cases(request):
         ("on_magenta", "on_magenta"),
         ("on_cyan", "on_cyan"),
         ("on_white", "on_white"),
+        # New highlights (from termcolor v2.2.0)
+        ("on_black", "on_black"),
+        ("on_dark_grey", "on_dark_grey"),
+        ("on_light_grey", "on_light_grey"),
+        ("on_light_red", "on_light_red"),
+        ("on_light_green", "on_light_green"),
+        ("on_light_yellow", "on_light_yellow"),
+        ("on_light_blue", "on_light_blue"),
+        ("on_light_magenta", "on_light_magenta"),
+        ("on_light_cyan", "on_light_cyan"),
         # Unsupported highlights
         ("on_foo", ValueError()),
     ],
