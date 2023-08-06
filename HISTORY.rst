@@ -1,6 +1,14 @@
 Release History
 ===============
 
+2.4.0 / 2023-08-06
+------------------
+
+* Add Python 3.12 support
+* Update cli-spinners to ``v2.9.0``
+* Update dependencies
+
+
 2.3.0 / 2023-01-06
 ------------------
 
