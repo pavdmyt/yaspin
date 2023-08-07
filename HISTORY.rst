@@ -1,6 +1,13 @@
 Release History
 ===============
 
+2.5.0 / 2023-08-07
+------------------
+
+* Drop Python 3.7 support
+* Update dependencies
+
+
 2.4.0 / 2023-08-06
 ------------------
 
