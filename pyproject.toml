@@ -30,7 +30,6 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -50,18 +49,18 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7.2"
-termcolor = "^2.2"
+python = "^3.8.1"
+termcolor = "^2.3"
 
 [tool.poetry.dev-dependencies]
-black = "^23.0"
+black = "^23.3"
 twine = "^4.0"
-flake8 = "^5.0"
+flake8 = "^6.1"
 isort = "^5.10"
-pytest = "^7.2"
-pytest-xdist = "^3.2"
-pytest-cov = "^4.0"
-pylint = "^2.16"
+pytest = "^7.4"
+pytest-xdist = "^3.3"
+pytest-cov = "^4.1"
+pylint = "^2.17"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/pavdmyt/yaspin/issues"
