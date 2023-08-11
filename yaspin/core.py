@@ -26,7 +26,7 @@ from .constants import COLOR_ATTRS, COLOR_MAP, SPINNER_ATTRS
 from .helpers import to_unicode
 
 
-class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-attributes
+class Yaspin:  # pylint: disable=too-many-instance-attributes
     """Implements a context manager that spawns a thread
     to write spinner frames into a tty (stdout) during
     context execution.
@@ -304,9 +304,6 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
             else:
                 _text = str(text)
 
-            # Ensure output is Unicode
-            assert isinstance(_text, str)
-
             sys.stdout.write(f"{_text}\n")
             self._cur_line_len = 0
 
@@ -376,11 +373,7 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         )
 
     def _compose_out(self, frame, mode=None):
-        # Ensure Unicode input
-        assert isinstance(frame, str)
-
         text = str(self._text)
-        assert isinstance(text, str)
 
         # Colors
         if self._color_func is not None:
@@ -389,21 +382,17 @@ class Yaspin:  # pylint: disable=useless-object-inheritance,too-many-instance-at
         # Position
         if self._side == "right":
             frame, text = text, frame
-
+        # Timer
         if self._timer:
             sec, fsec = divmod(round(100 * self.elapsed_time), 100)
             text += " ({}.{:02.0f})".format(  # pylint: disable=consider-using-f-string
                 timedelta(seconds=sec), fsec
             )
-
         # Mode
         if not mode:
             out = f"\r{frame} {text}"
         else:
             out = f"{frame} {text}\n"
-
-        # Ensure output is Unicode
-        assert isinstance(out, str)
 
         return out
 
