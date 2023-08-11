@@ -42,6 +42,10 @@ jobs:
           make flake
           make lint
 
+      - name: semgrep
+        run: |
+          make semgrep
+
   test:
     needs: lint
     runs-on: ubuntu-22.04
