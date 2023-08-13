@@ -100,3 +100,7 @@ export-requirements:
 .PHONY: semgrep
 semgrep:
 	poetry run semgrep --error --config "p/secrets" --config "p/bandit" --config "p/secrets" .
+
+.PHONY: mypy
+mypy:
+	@poetry run mypy $(name)/
