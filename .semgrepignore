@@ -1,0 +1,15 @@
+build/
+dist/
+.env/
+.venv/
+.tox/
+tests/
+
+# Semgrep
+.semgrep
+.semgrep_logs/
+
+# Custom
+examples/
+gifs/
+static/

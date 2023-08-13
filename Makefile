@@ -99,4 +99,4 @@ export-requirements:
 
 .PHONY: semgrep
 semgrep:
-	poetry run semgrep --error --config "p/secrets" --config "p/bandit" --config "p/secrets" --exclude="examples/*.py" .
+	poetry run semgrep --error --config "p/secrets" --config "p/bandit" --config "p/secrets" .
