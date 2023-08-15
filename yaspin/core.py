@@ -38,7 +38,6 @@ from termcolor import colored
 
 from .constants import COLOR_ATTRS, COLOR_MAP, SPINNER_ATTRS
 
-
 if TYPE_CHECKING:
     from types import FrameType, TracebackType
 

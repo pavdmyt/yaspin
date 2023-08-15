@@ -17,7 +17,6 @@ import time
 
 from yaspin import yaspin
 
-
 try:
     from prompt_toolkit import HTML, print_formatted_text
     from prompt_toolkit.styles import Style

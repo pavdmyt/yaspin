@@ -20,7 +20,7 @@ lint: flake
 
 .PHONY: isort
 isort:
-	@poetry run isort --atomic --verbose --only-modified --line-length=88 $(name)/ tests/ examples/
+	@poetry run isort --atomic --verbose ./$(name) ./tests ./examples
 
 .PHONY: fmt
 fmt: isort
@@ -28,7 +28,7 @@ fmt: isort
 
 .PHONY: check-fmt
 check-fmt:
-	@poetry run isort --check --line-length=88 $(name)/ tests/ examples/
+	@poetry run isort --check ./$(name) ./tests ./examples
 	@poetry run black --check ./$(name) ./tests ./examples
 
 .PHONY: spellcheck

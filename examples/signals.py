@@ -31,7 +31,6 @@ from yaspin import kbi_safe_yaspin, yaspin
 from yaspin.core import fancy_handler
 from yaspin.spinners import Spinners
 
-
 DEFAULT_TEXT = "Press Control+C to send SIGINT (Keyboard Interrupt) signal"
 
 

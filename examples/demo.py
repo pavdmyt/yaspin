@@ -12,7 +12,6 @@ from yaspin import yaspin
 from yaspin.constants import COLOR_MAP
 from yaspin.spinners import Spinners
 
-
 COLORS = (k for k, v in COLOR_MAP.items() if v == "color")
 HIGHLIGHTS = (k for k, v in COLOR_MAP.items() if v == "on_color")
 

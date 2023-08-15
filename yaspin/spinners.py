@@ -13,7 +13,6 @@ import pkgutil
 from collections import namedtuple
 from typing import Any
 
-
 spinners_json = pkgutil.get_data(__name__, "data/spinners.json")
 if spinners_json is not None:
     SPINNERS_DATA = spinners_json.decode("utf-8")

@@ -61,9 +61,7 @@ def test_on_color(monkeypatch, on_color_test_cases):
 
 
 # Values for ``attrs`` argument
-@pytest.mark.parametrize(
-    "attr", sorted([k for k, v in COLOR_MAP.items() if v == "attrs"])
-)
+@pytest.mark.parametrize("attr", sorted([k for k, v in COLOR_MAP.items() if v == "attrs"]))
 def test_attrs(monkeypatch, attr):
     monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin()

@@ -3,5 +3,4 @@
 from .api import kbi_safe_yaspin, yaspin
 from .core import Spinner
 
-
 __all__ = ("yaspin", "kbi_safe_yaspin", "Spinner")

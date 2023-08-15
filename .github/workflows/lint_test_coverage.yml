@@ -47,6 +47,7 @@ jobs:
           make semgrep
 
   mypy:
+    needs: lint
     runs-on: ubuntu-22.04
     strategy:
       matrix:
