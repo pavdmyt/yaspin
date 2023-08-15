@@ -11,12 +11,17 @@ A collection of cli spinners.
 import json
 import pkgutil
 from collections import namedtuple
+from typing import Any
 
 
-SPINNERS_DATA = pkgutil.get_data(__name__, "data/spinners.json").decode("utf-8")
+spinners_json = pkgutil.get_data(__name__, "data/spinners.json")
+if spinners_json is not None:
+    SPINNERS_DATA = spinners_json.decode("utf-8")
+else:
+    raise RuntimeError("Cannot load spinners.json")
 
 
-def _hook(dct):
+def _hook(dct: dict[str, Any]) -> Any:
     return namedtuple("Spinner", dct.keys())(*dct.values())
 
 
