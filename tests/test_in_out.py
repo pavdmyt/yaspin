@@ -44,9 +44,7 @@ def test_repr(text, frames, interval):
     assert isinstance(repr(sp), str)
 
 
-def test_compose_out_with_color(
-    color_test_cases, on_color_test_cases, attrs_test_cases
-):
+def test_compose_out_with_color(color_test_cases, on_color_test_cases, attrs_test_cases):
     color, color_exp = color_test_cases
     on_color, on_color_exp = on_color_test_cases
     attrs, attrs_exp = attrs_test_cases
@@ -217,9 +215,7 @@ def test_spinner_hiding_with_context_manager(monkeypatch, capsys, isatty_fixture
     assert f"{HIDDEN_START}\n{HIDDEN_END}" in out
 
 
-def test_spinner_nested_hiding_with_context_manager(
-    monkeypatch, capsys, isatty_fixture
-):
+def test_spinner_nested_hiding_with_context_manager(monkeypatch, capsys, isatty_fixture):
     HIDDEN_START = "hidden start"
     HIDDEN_END = "hidden end"
     monkeypatch.setattr(sys.stdout, "isatty", lambda: isatty_fixture)

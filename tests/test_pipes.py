@@ -16,8 +16,7 @@ import uuid
 
 import pytest
 
-from yaspin.constants import ENCODING
-
+from yaspin.core import ENCODING
 
 TEST_CODE = """\
 import time
@@ -46,9 +45,7 @@ def case_id():
     return str(uuid.uuid4())
 
 
-def test_piping_output(
-    text, frames, interval, case_id
-):  # pylint: disable=redefined-outer-name
+def test_piping_output(text, frames, interval, case_id):  # pylint: disable=redefined-outer-name
     py_fname = f"spin-{case_id}.py"
     fname = f"out-{case_id}.txt"
 

@@ -8,11 +8,9 @@ Test getters and setters.
 import pytest
 
 from yaspin import Spinner, yaspin
-from yaspin.base_spinner import default_spinner
-from yaspin.helpers import to_unicode
+from yaspin.core import default_spinner, to_unicode
 
 
-#
 # Yaspin.spinner
 #
 def test_spinner_getter(frames, interval):
@@ -44,7 +42,6 @@ def test_spinner_setter(frames, interval):
     assert isinstance(repr(sp), str)
 
 
-#
 # Yaspin.text
 #
 def test_text_getter(text):
@@ -59,7 +56,6 @@ def test_text_setter(text):
     assert sp._text == to_unicode(text)
 
 
-#
 # Yaspin.side
 #
 def test_side_getter(side):
@@ -83,7 +79,6 @@ def test_side_setter(side, expected):
         assert sp._side == expected
 
 
-#
 # Yaspin.reversal
 #
 def test_reversal_getter(reversal):
@@ -98,7 +93,6 @@ def test_reversal_setter(reversal):
     assert sp._reversal == reversal
 
 
-#
 # Yaspin.color
 #
 def test_color_getter(supported_colors):
@@ -119,7 +113,6 @@ def test_color_setter(color_test_cases):
         assert sp._color == expected
 
 
-#
 # Yaspin.on_color
 #
 def test_on_color_getter(supported_highlights):
@@ -140,7 +133,6 @@ def test_on_color_setter(on_color_test_cases):
         assert sp._on_color == expected
 
 
-#
 # Yaspin.attrs
 #
 def test_attrs_getter(supported_attrs):

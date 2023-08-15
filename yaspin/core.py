@@ -7,8 +7,8 @@ yaspin.yaspin
 
 A lightweight terminal spinner.
 """
+from __future__ import annotations
 
-import contextlib
 import functools
 import itertools
 import signal
@@ -16,14 +16,77 @@ import sys
 import threading
 import time
 import warnings
+from contextlib import contextmanager
+from dataclasses import dataclass
 from datetime import timedelta
-from typing import List, Set, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Final,
+    Generator,
+    Iterator,
+    Optional,
+    Sequence,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+)
 
 from termcolor import colored
 
-from .base_spinner import Spinner, default_spinner
 from .constants import COLOR_ATTRS, COLOR_MAP, SPINNER_ATTRS
-from .helpers import to_unicode
+
+if TYPE_CHECKING:
+    from types import FrameType, TracebackType
+
+    Fn = TypeVar("Fn", bound=Callable[..., Any])
+    # Callback functions or "signal handlers", that are invoked when the signal occurs.
+    CustomHandler = Callable[[int, Any, "Yaspin"], None]
+    SignalHandlers = Union[Callable[[int, Optional[FrameType]], Any], int, None]
+
+
+ENCODING: Final[str] = "utf-8"
+
+
+def to_unicode(text_type: Union[str, bytes], encoding: str = ENCODING) -> str:
+    if isinstance(text_type, bytes):
+        return text_type.decode(encoding)
+    return text_type
+
+
+@dataclass
+class Spinner:
+    frames: str
+    interval: int
+
+
+default_spinner = Spinner("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏", 80)
+
+
+def default_handler(signum: int, frame: Any, spinner: Yaspin) -> None:  # pylint: disable=unused-argument
+    """Signal handler, used to gracefully shut down the ``spinner`` instance
+    when specified signal is received by the process running the ``spinner``.
+
+    ``signum`` and ``frame`` are mandatory arguments. Check ``signal.signal``
+    function for more details.
+    """
+    spinner.fail()
+    spinner.stop()
+    sys.exit(0)
+
+
+def fancy_handler(signum: int, frame: Any, spinner: Yaspin) -> None:  # pylint: disable=unused-argument
+    """Signal handler, used to gracefully shut down the ``spinner`` instance
+    when specified signal is received by the process running the ``spinner``.
+
+    ``signum`` and ``frame`` are mandatory arguments. Check ``signal.signal``
+    function for more details.
+    """
+    spinner.red.fail("✘")
+    spinner.stop()
+    sys.exit(0)
 
 
 class Yaspin:  # pylint: disable=too-many-instance-attributes
@@ -36,19 +99,18 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
     # it sets the sys.stdout.encoding attribute to the terminal's encoding.
     # The print statement's handler will automatically encode unicode
     # arguments into bytes.
-
     def __init__(  # pylint: disable=too-many-arguments
         self,
-        spinner=None,
-        text="",
-        color=None,
-        on_color=None,
-        attrs=None,
-        reversal=False,
-        side="left",
-        sigmap=None,
-        timer=False,
-    ):
+        spinner: Spinner = default_spinner,
+        text: str = "",
+        color: Optional[str] = None,  # TODO: use COLORS dict from termcolor
+        on_color: Optional[str] = None,  # TODO: use HIGHLIGHTS dict from termcolor
+        attrs: Optional[Sequence[str]] = None,  # TODO: use ATTRIBUTES dict
+        reversal: bool = False,
+        side: str = "left",
+        sigmap: Optional[dict[signal.Signals, SignalHandlers]] = None,
+        timer: bool = False,
+    ) -> None:
         # Spinner
         self._spinner = self._set_spinner(spinner)
         self._frames = self._set_frames(self._spinner, reversal)
@@ -66,55 +128,54 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         self._side = self._set_side(side)
         self._reversal = reversal
         self._timer = timer
-        self._start_time = None
-        self._stop_time = None
+        self._start_time: Optional[float] = None
+        self._stop_time: Optional[float] = None
 
         # Helper flags
-        self._stop_spin = None
-        self._hide_spin = None
-        self._spin_thread = None
-        self._last_frame = None
+        self._stop_spin: Optional[threading.Event] = None
+        self._hide_spin: Optional[threading.Event] = None
+        self._spin_thread: Optional[threading.Thread] = None
+        self._last_frame: Optional[str] = None
         self._stdout_lock = threading.Lock()
         self._hidden_level = 0
         self._cur_line_len = 0
 
         # Signals
-
-        # In Python 2 signal.SIG* are of type int.
-        # In Python 3 signal.SIG* are enums.
-        #
-        # Signal     = Union[enum.Enum, int]
-        # SigHandler = Union[enum.Enum, Callable]
-        self._sigmap = sigmap if sigmap else {}  # Dict[Signal, SigHandler]
+        self._sigmap = sigmap if sigmap else {}
         # Maps signals to their default handlers in order to reset
         # custom handlers set by ``sigmap`` at the cleanup phase.
-        self._dfl_sigmap = {}  # Dict[Signal, SigHandler]
+        self._dfl_sigmap: dict[signal.Signals, SignalHandlers] = {}
 
-    #
     # Dunders
     #
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Yaspin frames={self._frames!s}>"
 
-    def __enter__(self):
+    def __enter__(self) -> Yaspin:
         self.start()
         return self
 
-    def __exit__(self, exc_type, exc_val, traceback):
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> None:
+        if self._spin_thread is None:
+            raise RuntimeError("spin thread is None")
         # Avoid stop() execution for the 2nd time
         if self._spin_thread.is_alive():
             self.stop()
-        return False  # nothing is handled
 
-    def __call__(self, fn):
+    def __call__(self, fn: Fn) -> Fn:
         @functools.wraps(fn)
-        def inner(*args, **kwargs):
+        def inner(*args: Any, **kwargs: Any) -> Fn:
             with self:
                 return fn(*args, **kwargs)
 
-        return inner
+        return cast(Fn, inner)
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Yaspin:
         # CLI spinners
         if name in SPINNER_ATTRS:
             from .spinners import Spinners  # pylint: disable=import-outside-toplevel
@@ -135,99 +196,94 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             self.side = name  # calls property setter
         # Common error for unsupported attributes
         else:
-            raise AttributeError(
-                f"'{self.__class__.__name__}' object has no attribute: '{name}'"
-            )
+            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute: '{name}'")
         return self
 
-    #
     # Properties
     #
     @property
-    def spinner(self):
+    def spinner(self) -> Spinner:
         return self._spinner
 
     @spinner.setter
-    def spinner(self, sp):
+    def spinner(self, sp: Spinner) -> None:
         self._spinner = self._set_spinner(sp)
         self._frames = self._set_frames(self._spinner, self._reversal)
         self._interval = self._set_interval(self._spinner)
         self._cycle = self._set_cycle(self._frames)
 
     @property
-    def text(self):
+    def text(self) -> str:
         return self._text
 
     @text.setter
-    def text(self, txt):
+    def text(self, txt: str) -> None:
         self._text = txt
 
     @property
-    def color(self):
+    def color(self) -> Optional[str]:
         return self._color
 
     @color.setter
-    def color(self, value):
+    def color(self, value: str) -> None:
         self._color = self._set_color(value) if value else value
         self._color_func = self._compose_color_func()  # update
 
     @property
-    def on_color(self):
+    def on_color(self) -> Optional[str]:
         return self._on_color
 
     @on_color.setter
-    def on_color(self, value):
+    def on_color(self, value: str) -> None:
         self._on_color = self._set_on_color(value) if value else value
         self._color_func = self._compose_color_func()  # update
 
     @property
-    def attrs(self):
+    def attrs(self) -> Sequence[str]:
         return list(self._attrs)
 
     @attrs.setter
-    def attrs(self, value):
+    def attrs(self, value: Sequence[str]) -> None:
         new_attrs = self._set_attrs(value) if value else set()
         self._attrs = self._attrs.union(new_attrs)
         self._color_func = self._compose_color_func()  # update
 
     @property
-    def side(self):
+    def side(self) -> str:
         return self._side
 
     @side.setter
-    def side(self, value):
+    def side(self, value: str) -> None:
         self._side = self._set_side(value)
 
     @property
-    def reversal(self):
+    def reversal(self) -> bool:
         return self._reversal
 
     @reversal.setter
-    def reversal(self, value):
+    def reversal(self, value: bool) -> None:
         self._reversal = value
         self._frames = self._set_frames(self._spinner, self._reversal)
         self._cycle = self._set_cycle(self._frames)
 
     @property
-    def elapsed_time(self):
+    def elapsed_time(self) -> float:
         if self._start_time is None:
             return 0
-
         if self._stop_time is None:
             return time.time() - self._start_time
-
         return self._stop_time - self._start_time
 
-    #
     # Public
     #
-    def start(self):
+    def start(self) -> None:
         if self._sigmap:
             self._register_signal_handlers()
 
         self._hide_cursor()
         self._start_time = time.time()
-        self._stop_time = None  # Reset value to properly calculate subsequent spinner starts (if any)  # pylint: disable=line-too-long
+        # Reset value to properly calculate subsequent spinner starts (if any)
+        self._stop_time = None
         self._stop_spin = threading.Event()
         self._hide_spin = threading.Event()
         self._spin_thread = threading.Thread(target=self._spin)
@@ -238,23 +294,27 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             # getting it back
             self._show_cursor()
 
-    def stop(self):
+    def stop(self) -> None:
         self._stop_time = time.time()
 
         if self._dfl_sigmap:
             # Reset registered signal handlers to default ones
             self._reset_signal_handlers()
 
-        if self._spin_thread:
+        if self._spin_thread is not None:
+            if self._stop_spin is None:
+                raise RuntimeError("stop_spin event is None")
             self._stop_spin.set()
             self._spin_thread.join()
 
         self._clear_line()
         self._show_cursor()
 
-    def hide(self):
+    def hide(self) -> None:
         """Hide the spinner to allow for custom writing to the terminal."""
         thr_is_alive = self._spin_thread and self._spin_thread.is_alive()
+        if self._hide_spin is None:
+            raise RuntimeError("hide_spin is None")
 
         if thr_is_alive and not self._hide_spin.is_set():
             with self._stdout_lock:
@@ -266,13 +326,12 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
                 # can be rewritten to
                 sys.stdout.flush()
 
-    @contextlib.contextmanager
-    def hidden(self):
+    @contextmanager
+    def hidden(self) -> Generator[None, None, None]:
         """Hide the spinner within a block, can be nested"""
         if self._hidden_level == 0:
             self.hide()
         self._hidden_level += 1
-
         try:
             yield
         finally:
@@ -280,54 +339,52 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             if self._hidden_level == 0:
                 self.show()
 
-    def show(self):
+    def show(self) -> None:
         """Show the hidden spinner."""
         thr_is_alive = self._spin_thread and self._spin_thread.is_alive()
+        if self._hide_spin is None:
+            raise RuntimeError("hide_spin is None")
 
         if thr_is_alive and self._hide_spin.is_set():
             with self._stdout_lock:
                 # clear the hidden spinner flag
                 self._hide_spin.clear()
-
                 # clear the current line so the spinner is not appended to it
                 self._clear_line()
 
-    def write(self, text):
+    def write(self, text: str) -> None:
         """Write text in the terminal without breaking the spinner."""
         # similar to tqdm.write()
         # https://pypi.python.org/pypi/tqdm#writing-messages
         with self._stdout_lock:
             self._clear_line()
-
             if isinstance(text, (str, bytes)):
                 _text = to_unicode(text)
             else:
                 _text = str(text)
-
             sys.stdout.write(f"{_text}\n")
             self._cur_line_len = 0
 
-    def ok(self, text="OK"):
+    def ok(self, text: str = "OK") -> None:
         """Set Ok (success) finalizer to a spinner."""
         _text = text if text else "OK"
         self._freeze(_text)
 
-    def fail(self, text="FAIL"):
+    def fail(self, text: str = "FAIL") -> None:
         """Set fail finalizer to a spinner."""
         _text = text if text else "FAIL"
         self._freeze(_text)
 
-    #
     # Protected
     #
     @staticmethod
-    def _warn_color_disabled():
+    def _warn_color_disabled() -> None:
         warnings.warn(
             "color, on_color and attrs are not supported when running in jupyter",
             stacklevel=3,
         )
 
-    def _freeze(self, final_text):
+    def _freeze(self, final_text: str) -> None:
         """Stop spinner, compose last frame and 'freeze' it."""
         text = to_unicode(final_text)
         self._last_frame = self._compose_out(text, mode="last")
@@ -336,12 +393,17 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         # self._freeze call will mess up the spinner
         self.stop()
         with self._stdout_lock:
+            if self._last_frame is None:
+                raise RuntimeError("last_frame is None")
             sys.stdout.write(self._last_frame)
             self._cur_line_len = 0
 
-    def _spin(self):
+    def _spin(self) -> None:
+        if self._stop_spin is None:
+            raise RuntimeError("stop_spin is None")
+
         while not self._stop_spin.is_set():
-            if self._hide_spin.is_set():
+            if self._hide_spin is not None and self._hide_spin.is_set():
                 # Wait a bit to avoid wasting cycles
                 time.sleep(self._interval)
                 continue
@@ -360,7 +422,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             # Wait
             self._stop_spin.wait(self._interval)
 
-    def _compose_color_func(self):
+    def _compose_color_func(self) -> Optional[Callable[..., str]]:
         if self.is_jupyter():
             # ANSI Color Control Sequences are problematic in Jupyter
             return None
@@ -372,7 +434,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             attrs=list(self._attrs),
         )
 
-    def _compose_out(self, frame, mode=None):
+    def _compose_out(self, frame: str, mode: Optional[str] = None) -> str:
         text = str(self._text)
 
         # Colors
@@ -389,14 +451,14 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
                 timedelta(seconds=sec), fsec
             )
         # Mode
-        if not mode:
+        if mode is None:
             out = f"\r{frame} {text}"
         else:
             out = f"{frame} {text}\n"
 
         return out
 
-    def _register_signal_handlers(self):
+    def _register_signal_handlers(self) -> None:
         # SIGKILL cannot be caught or ignored, and the receiving
         # process cannot perform any clean-up upon receiving this
         # signal.
@@ -405,7 +467,6 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
                 "Trying to set handler for SIGKILL signal. "
                 "SIGKILL cannot be caught or ignored in POSIX systems."
             )
-
         for sig, sig_handler in self._sigmap.items():
             # A handler for a particular signal, once set, remains
             # installed until it is explicitly reset. Store default
@@ -425,11 +486,10 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
 
             signal.signal(sig, sig_handler)
 
-    def _reset_signal_handlers(self):
+    def _reset_signal_handlers(self) -> None:
         for sig, sig_handler in self._dfl_sigmap.items():
             signal.signal(sig, sig_handler)
 
-    #
     # Static
     #
     @staticmethod
@@ -464,7 +524,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         return value
 
     @staticmethod
-    def _set_attrs(attrs: List[str]) -> Set[str]:
+    def _set_attrs(attrs: Sequence[str]) -> set[str]:
         if Yaspin.is_jupyter():
             Yaspin._warn_color_disabled()
 
@@ -478,7 +538,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         return set(attrs)
 
     @staticmethod
-    def _set_spinner(spinner):
+    def _set_spinner(spinner: Spinner) -> Spinner:
         if hasattr(spinner, "frames") and hasattr(spinner, "interval"):
             if not spinner.frames or not spinner.interval:
                 sp = default_spinner
@@ -492,13 +552,11 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def _set_side(side: str) -> str:
         if side not in ("left", "right"):
-            raise ValueError(
-                "'{0}': unsupported side value. Use either 'left' or 'right'."
-            )
+            raise ValueError("'{0}': unsupported side value. Use either 'left' or 'right'.")
         return side
 
     @staticmethod
-    def _set_frames(spinner: Spinner, reversal: bool) -> Union[str, List]:
+    def _set_frames(spinner: Spinner, reversal: bool) -> Union[str, Sequence[str]]:
         uframes = None  # unicode frames
         uframes_seq = None  # sequence of unicode frames
 
@@ -529,29 +587,29 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         return frames
 
     @staticmethod
-    def _set_interval(spinner):
+    def _set_interval(spinner: Spinner) -> float:
         # Milliseconds to Seconds
         return spinner.interval * 0.001
 
     @staticmethod
-    def _set_cycle(frames):
+    def _set_cycle(frames: Union[str, Sequence[str]]) -> Iterator[str]:
         return itertools.cycle(frames)
 
     @staticmethod
-    def _hide_cursor():
+    def _hide_cursor() -> None:
         if sys.stdout.isatty():
             # ANSI Control Sequence DECTCEM 1 does not work in Jupyter
             sys.stdout.write("\033[?25l")
             sys.stdout.flush()
 
     @staticmethod
-    def _show_cursor():
+    def _show_cursor() -> None:
         if sys.stdout.isatty():
             # ANSI Control Sequence DECTCEM 2 does not work in Jupyter
             sys.stdout.write("\033[?25h")
             sys.stdout.flush()
 
-    def _clear_line(self):
+    def _clear_line(self) -> None:
         if sys.stdout.isatty():
             # ANSI Control Sequence EL does not work in Jupyter
             sys.stdout.write("\r\033[K")

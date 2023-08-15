@@ -52,7 +52,7 @@ or as a function `decorator`_:
 Features
 --------
 
-- Runs at all major **CPython** versions (*3.8*, *3.9*, *3.10*, *3.11*, *3.12*), **PyPy**
+- Runs at all major **CPython** versions (*3.9*, *3.10*, *3.11*, *3.12*), **PyPy**
 - Supports all (70+) spinners from `cli-spinners`_
 - Supports all *colors*, *highlights*, *attributes* and their mixes from `termcolor`_ library
 - Easy to combine with other command-line libraries, e.g. `prompt-toolkit`_

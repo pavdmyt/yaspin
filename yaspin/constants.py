@@ -9,7 +9,6 @@ Some setups.
 """
 
 
-ENCODING = "utf-8"
 COLOR_MAP = {
     # name: type
     "blink": "attrs",

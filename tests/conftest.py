@@ -11,8 +11,7 @@ import sys
 import pytest
 
 from yaspin.constants import COLOR_MAP
-from yaspin.signal_handlers import default_handler, fancy_handler
-
+from yaspin.core import default_handler, fancy_handler
 
 frame_cases = [
     # XXX: try byte strings

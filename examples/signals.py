@@ -28,14 +28,12 @@ import sys
 import time
 
 from yaspin import kbi_safe_yaspin, yaspin
-from yaspin.signal_handlers import fancy_handler
+from yaspin.core import fancy_handler
 from yaspin.spinners import Spinners
-
 
 DEFAULT_TEXT = "Press Control+C to send SIGINT (Keyboard Interrupt) signal"
 
 
-#
 # Basic usage
 #
 def simple_keyboard_interrupt_handling():
@@ -51,7 +49,6 @@ def fancy_keyboard_interrupt_handler():
         time.sleep(5)
 
 
-#
 # Customizing signal handlers
 #
 def custom_signal_handler():
@@ -124,7 +121,6 @@ def default_os_handler_for_sigint():
         time.sleep(5)
 
 
-#
 # Real-world examples
 #
 def unpacker():

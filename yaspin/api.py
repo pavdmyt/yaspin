@@ -9,18 +9,18 @@ This module implements the Yaspin API.
 """
 
 import signal
+from typing import Any
 
-from .core import Yaspin
-from .signal_handlers import default_handler
+from .core import Yaspin, default_handler
 
 
-def yaspin(*args, **kwargs) -> Yaspin:
+def yaspin(*args: Any, **kwargs: Any) -> Yaspin:
     """Display spinner in stdout.
 
     Can be used as a context manager or as a function decorator.
 
     Arguments:
-        spinner (base_spinner.Spinner, optional): Spinner object to use.
+        spinner (core.Spinner, optional): Spinner object to use.
         text (str, optional): Text to show along with spinner.
         color (str, optional): Spinner color.
         on_color (str, optional): Color highlight for the spinner.
@@ -78,7 +78,7 @@ def yaspin(*args, **kwargs) -> Yaspin:
     return Yaspin(*args, **kwargs)
 
 
-def kbi_safe_yaspin(*args, **kwargs) -> Yaspin:
+def kbi_safe_yaspin(*args: Any, **kwargs: Any) -> Yaspin:
     kwargs["sigmap"] = {signal.SIGINT: default_handler}
     return Yaspin(*args, **kwargs)
 
