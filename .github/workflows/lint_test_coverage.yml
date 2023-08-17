@@ -76,7 +76,7 @@ jobs:
           make mypy
 
   test:
-    needs: lint
+    needs: [lint, mypy]
     runs-on: ubuntu-22.04
     env:
       PYTHONHASHSEED: 0

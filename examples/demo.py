@@ -8,12 +8,10 @@ Yaspin features demonstration.
 import random
 import time
 
-from yaspin import yaspin
-from yaspin.constants import COLOR_MAP
-from yaspin.spinners import Spinners
+from termcolor import COLORS, HIGHLIGHTS
 
-COLORS = (k for k, v in COLOR_MAP.items() if v == "color")
-HIGHLIGHTS = (k for k, v in COLOR_MAP.items() if v == "on_color")
+from yaspin import kbi_safe_yaspin
+from yaspin.spinners import Spinners
 
 
 def any_spinner_you_like():
@@ -51,7 +49,7 @@ def any_spinner_you_like():
         spaces_qty = max_len - len(name) - len(msg) - len(spinner.frames[0])
         text = "{0}{1}{2}".format(name, " " * spaces_qty, msg)
 
-        with yaspin(spinner, text=text, color="cyan"):
+        with kbi_safe_yaspin(spinner, text=text, color="cyan"):
             time.sleep(period)
 
 
@@ -60,7 +58,7 @@ def colors_simple(sleep=0.7):
     max_len = 25
     msg = "[Colors]"
 
-    with yaspin(Spinners.dots12) as sp:
+    with kbi_safe_yaspin(Spinners.dots12) as sp:
         for color in COLORS:
             spaces_qty = max_len - len(color) - len(msg)
             text = "{0}{1}{2}".format(color, " " * spaces_qty, msg)
@@ -75,7 +73,7 @@ def color_highlights(sleep=0.5):
     max_len = 40
     msg = "[Color Highlights]"
 
-    with yaspin(Spinners.bouncingBall) as sp:
+    with kbi_safe_yaspin(Spinners.bouncingBall) as sp:
         for highlight in HIGHLIGHTS:
             highlight_name = " ".join(highlight.split("_")[1:])
             name = "On {0} color".format(highlight_name)
@@ -101,7 +99,7 @@ def color_attributes(sleep=0.8):
     max_len = 42
     msg = "[Color Attributes]"
 
-    with yaspin(Spinners.bouncingBall) as sp:
+    with kbi_safe_yaspin(Spinners.bouncingBall) as sp:
         for descr in descriptions:
             spaces_qty = max_len - len(descr) - len(msg)
             text = "{0}{1}{2}".format(descr, " " * spaces_qty, msg)
@@ -126,7 +124,7 @@ def color_craziness(sleep=1.3):
         attrs = []
         for word in description.split():
             attr = word.lower()
-            sp = yaspin()
+            sp = kbi_safe_yaspin()
             try:
                 getattr(sp, attr)
             except AttributeError:
@@ -147,7 +145,7 @@ def color_craziness(sleep=1.3):
         spaces_qty = max_len - len(descr) - len(msg)
         text = "{0}{1}{2}".format(descr, " " * spaces_qty, msg)
 
-        with yaspin(Spinners.pong, text=text) as sp:
+        with kbi_safe_yaspin(Spinners.pong, text=text) as sp:
             # Apply all color attributes from description
             for attr in parse_attrs(descr):
                 getattr(sp, attr)
@@ -156,7 +154,7 @@ def color_craziness(sleep=1.3):
 
 
 def right_spinner(sleep=2):
-    with yaspin(text="Right spinner", side="right", color="cyan") as sp:
+    with kbi_safe_yaspin(text="Right spinner", side="right", color="cyan") as sp:
         time.sleep(sleep)
 
         # Switch to left spinner
@@ -167,7 +165,7 @@ def right_spinner(sleep=2):
 
 
 def reversed_spinner(sleep=1):
-    with yaspin(text="Reversed spinner", reversal=True, color="cyan") as sp:
+    with kbi_safe_yaspin(text="Reversed spinner", reversal=True, color="cyan") as sp:
         time.sleep(sleep)
 
         sp.spinner = Spinners.line

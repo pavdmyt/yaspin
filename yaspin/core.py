@@ -34,15 +34,14 @@ from typing import (
     cast,
 )
 
-from termcolor import colored
+from termcolor import ATTRIBUTES, COLORS, HIGHLIGHTS, colored
 
-from .constants import COLOR_ATTRS, COLOR_MAP, SPINNER_ATTRS
+from .constants import SPINNER_ATTRS
 
 if TYPE_CHECKING:
     from types import FrameType, TracebackType
 
     Fn = TypeVar("Fn", bound=Callable[..., Any])
-    # Callback functions or "signal handlers", that are invoked when the signal occurs.
     CustomHandler = Callable[[int, Any, "Yaspin"], None]
     SignalHandlers = Union[Callable[[int, Optional[FrameType]], Any], int, None]
 
@@ -103,9 +102,9 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         self,
         spinner: Spinner = default_spinner,
         text: str = "",
-        color: Optional[str] = None,  # TODO: use COLORS dict from termcolor
-        on_color: Optional[str] = None,  # TODO: use HIGHLIGHTS dict from termcolor
-        attrs: Optional[Sequence[str]] = None,  # TODO: use ATTRIBUTES dict
+        color: Optional[str] = None,
+        on_color: Optional[str] = None,
+        attrs: Optional[Sequence[str]] = None,
         reversal: bool = False,
         side: str = "left",
         sigmap: Optional[dict[signal.Signals, SignalHandlers]] = None,
@@ -183,14 +182,15 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             sp = getattr(Spinners, name)
             self.spinner = sp
         # Color Attributes: "color", "on_color", "attrs"
-        elif name in COLOR_ATTRS:
-            attr_type = COLOR_MAP[name]
+        elif name in set(key for d in [ATTRIBUTES, COLORS, HIGHLIGHTS] for key in d):
             # Call appropriate property setters;
             # _color_func is updated automatically by setters.
-            if attr_type == "attrs":
+            if name in ATTRIBUTES:
                 self.attrs = [name]  # calls property setter
-            if attr_type in ("color", "on_color"):
-                setattr(self, attr_type, name)  # calls property setter
+            if name in COLORS:
+                setattr(self, "color", name)  # calls property setter
+            if name in HIGHLIGHTS:
+                setattr(self, "on_color", name)  # calls property setter
         # Side: "left" or "right"
         elif name in ("left", "right"):
             self.side = name  # calls property setter
@@ -501,11 +501,10 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         if Yaspin.is_jupyter():
             Yaspin._warn_color_disabled()
 
-        available_values = [k for k, v in COLOR_MAP.items() if v == "color"]
-        if value not in available_values:
+        if value not in COLORS:
             raise ValueError(
                 "'{0}': unsupported color value. Use one of the: {1}".format(  # pylint: disable=consider-using-f-string
-                    value, ", ".join(available_values)
+                    value, ", ".join(COLORS.keys())
                 )
             )
         return value
@@ -515,11 +514,10 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         if Yaspin.is_jupyter():
             Yaspin._warn_color_disabled()
 
-        available_values = [k for k, v in COLOR_MAP.items() if v == "on_color"]
-        if value not in available_values:
+        if value not in HIGHLIGHTS:
             raise ValueError(
                 "'{0}': unsupported on_color value. "  # pylint: disable=consider-using-f-string
-                "Use one of the: {1}".format(value, ", ".join(available_values))
+                "Use one of the: {1}".format(value, ", ".join(HIGHLIGHTS.keys()))
             )
         return value
 
@@ -528,12 +526,11 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         if Yaspin.is_jupyter():
             Yaspin._warn_color_disabled()
 
-        available_values = [k for k, v in COLOR_MAP.items() if v == "attrs"]
         for attr in attrs:
-            if attr not in available_values:
+            if attr not in ATTRIBUTES:
                 raise ValueError(
                     "'{0}': unsupported attribute value. "  # pylint: disable=consider-using-f-string
-                    "Use one of the: {1}".format(attr, ", ".join(available_values))
+                    "Use one of the: {1}".format(attr, ", ".join(ATTRIBUTES.keys()))
                 )
         return set(attrs)
 
