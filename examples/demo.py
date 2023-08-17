@@ -8,12 +8,11 @@ Yaspin features demonstration.
 import random
 import time
 
-from yaspin import yaspin
-from yaspin.constants import COLOR_MAP
-from yaspin.spinners import Spinners
+from termcolor import COLORS, HIGHLIGHTS
 
-COLORS = (k for k, v in COLOR_MAP.items() if v == "color")
-HIGHLIGHTS = (k for k, v in COLOR_MAP.items() if v == "on_color")
+# TODO: use kbi_safe_yaspin here
+from yaspin import yaspin
+from yaspin.spinners import Spinners
 
 
 def any_spinner_you_like():

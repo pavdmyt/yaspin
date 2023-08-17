@@ -9,8 +9,8 @@ import signal
 import sys
 
 import pytest
+from termcolor import ATTRIBUTES, COLORS, HIGHLIGHTS
 
-from yaspin.constants import COLOR_MAP
 from yaspin.core import default_handler, fancy_handler
 
 frame_cases = [
@@ -220,7 +220,7 @@ def attrs_test_cases(request):
 @pytest.fixture(
     scope="session",
     ids=color_id_func,
-    params=sorted([k for k, v in COLOR_MAP.items() if v == "color"]),
+    params=sorted(COLORS.keys()),
 )
 def supported_colors(request):
     return request.param
@@ -229,7 +229,7 @@ def supported_colors(request):
 @pytest.fixture(
     scope="session",
     ids=color_id_func,
-    params=sorted([k for k, v in COLOR_MAP.items() if v == "on_color"]),
+    params=sorted(HIGHLIGHTS.keys()),
 )
 def supported_highlights(request):
     return request.param
@@ -239,7 +239,7 @@ def supported_highlights(request):
     scope="session",
     ids=attrs_id_func,
     params=sorted(
-        [[k] for k, v in COLOR_MAP.items() if v == "attrs"]
+        [[a] for a in ATTRIBUTES]
         + [  # noqa: W503
             ["bold", "dark"],
             ["blink", "concealed", "reverse"],

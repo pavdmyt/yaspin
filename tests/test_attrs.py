@@ -8,9 +8,10 @@ Test Yaspin attributes magic hidden in __getattr__.
 import sys
 
 import pytest
+from termcolor import ATTRIBUTES
 
 from yaspin import yaspin
-from yaspin.constants import COLOR_MAP, SPINNER_ATTRS
+from yaspin.constants import SPINNER_ATTRS
 from yaspin.spinners import Spinners
 
 
@@ -61,7 +62,7 @@ def test_on_color(monkeypatch, on_color_test_cases):
 
 
 # Values for ``attrs`` argument
-@pytest.mark.parametrize("attr", sorted([k for k, v in COLOR_MAP.items() if v == "attrs"]))
+@pytest.mark.parametrize("attr", sorted(ATTRIBUTES.keys()))
 def test_attrs(monkeypatch, attr):
     monkeypatch.setattr(sys.stdout, "isatty", lambda: True)
     sp = yaspin()
