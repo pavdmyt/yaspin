@@ -1,6 +1,18 @@
 Release History
 ===============
 
+3.0.0 / 2023-08-19
+------------------
+
+* Add type-annotations
+* Drop Python 3.8 support
+* Update dependencies
+* Breaking changes:
+  * remove small modules: ``base_spinner``, ``helpers``, ``signal_handlers``
+  * remove ``constants.COLOR_MAP``
+  * remove redundant assertions
+
+
 2.5.0 / 2023-08-07
 ------------------
 
