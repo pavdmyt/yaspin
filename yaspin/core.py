@@ -172,7 +172,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             with self:
                 return fn(*args, **kwargs)
 
-        return cast(Fn, inner)
+        return cast(fn, inner)
 
     def __getattr__(self, name: str) -> Yaspin:
         # CLI spinners
