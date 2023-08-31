@@ -451,9 +451,9 @@ License
    :target: https://github.com/pavdmyt/yaspin/tree/master/examples
 .. |black-fmt| image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/ambv/black
-.. |DownloadsTot| image:: https://pepy.tech/badge/yaspin
+.. |DownloadsTot| image:: https://static.pepy.tech/badge/yaspin
    :target: https://pepy.tech/project/yaspin
-.. |DownloadsW| image:: https://pepy.tech/badge/yaspin/week
+.. |DownloadsW| image:: https://static.pepy.tech/badge/yaspin/week
    :target: https://pepy.tech/project/yaspin
 
 
