@@ -44,3 +44,11 @@ from yaspin.core import default_spinner
 def test_set_spinner(spinner, expected):
     sp = yaspin(spinner)
     assert sp.spinner == expected
+
+
+def test_decorator_usage():
+    @yaspin()
+    def decorated_func():
+        ...
+
+    decorated_func()
