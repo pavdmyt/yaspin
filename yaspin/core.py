@@ -41,10 +41,10 @@ from .constants import SPINNER_ATTRS
 if TYPE_CHECKING:
     from types import FrameType, TracebackType
 
-    Fn = TypeVar("Fn", bound=Callable[..., Any])
     CustomHandler = Callable[[int, Any, "Yaspin"], None]
     SignalHandlers = Union[Callable[[int, Optional[FrameType]], Any], int, None]
 
+Fn = TypeVar("Fn", bound=Callable[..., Any])
 
 ENCODING: Final[str] = "utf-8"
 
