@@ -1,6 +1,13 @@
 Release History
 ===============
 
+3.0.1 / 2023-09-05
+------------------
+
+* Fix ``NameError`` when using ``yaspin`` as a decorator (#230)
+* Update dependencies
+
+
 3.0.0 / 2023-08-19
 ------------------
 
