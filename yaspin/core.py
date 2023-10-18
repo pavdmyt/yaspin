@@ -109,10 +109,10 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         side: str = "left",
         sigmap: Optional[dict[signal.Signals, SignalHandlers]] = None,
         timer: bool = False,
-        stream: TextIO = sys.stdout,
+        stream: Optional[TextIO] = None
     ) -> None:
         # Stream
-        self._stream = stream
+        self._stream = stream or sys.stdout
         self._stream_lock = threading.Lock()
 
         # Spinner
