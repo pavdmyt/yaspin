@@ -109,7 +109,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         side: str = "left",
         sigmap: Optional[dict[signal.Signals, SignalHandlers]] = None,
         timer: bool = False,
-        stream: TextIO = sys.stdout
+        stream: TextIO = sys.stdout,
     ) -> None:
         # Stream
         self._stream = stream
@@ -147,7 +147,6 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         # Maps signals to their default handlers in order to reset
         # custom handlers set by ``sigmap`` at the cleanup phase.
         self._dfl_sigmap: dict[signal.Signals, SignalHandlers] = {}
-
 
     # Dunders
     #
@@ -611,4 +610,3 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def _set_cycle(frames: Union[str, Sequence[str]]) -> Iterator[str]:
         return itertools.cycle(frames)
-
