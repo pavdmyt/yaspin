@@ -109,7 +109,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         side: str = "left",
         sigmap: Optional[dict[signal.Signals, SignalHandlers]] = None,
         timer: bool = False,
-        stream: Optional[TextIO] = None
+        stream: Optional[TextIO] = None,
     ) -> None:
         # Stream
         self._stream = stream or sys.stdout
