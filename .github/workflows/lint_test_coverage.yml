@@ -131,7 +131,9 @@ jobs:
 
       - name: submit-to-codecov-io
         if: "contains(env.USING_COVERAGE, matrix.python-version)"
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
