@@ -48,7 +48,6 @@ def test_set_spinner(spinner, expected):
 
 def test_decorator_usage():
     @yaspin()
-    def decorated_func():
-        ...
+    def decorated_func(): ...
 
     decorated_func()
