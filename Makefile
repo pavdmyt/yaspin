@@ -11,7 +11,7 @@ pypi_pwd := $(shell grep password ~/.pypirc | awk -F"= " '{ print $$2 }')
 
 .PHONY: flake
 flake:
-	@poetry run flake8 --ignore=F821,E501,W503 .
+	@poetry run flake8 --ignore=F821,E501,W503,E704 .
 
 .PHONY: lint
 lint: flake
