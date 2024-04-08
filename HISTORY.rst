@@ -1,6 +1,14 @@
 Release History
 ===============
 
+3.0.2 / 2024-04-08
+------------------
+
+* Add ``py.typed`` marker file to be compliant with PEP561 (#237)
+* Update cli-spinners to ``v2.9.2``
+* Update dependencies
+
+
 3.0.1 / 2023-09-05
 ------------------
 
