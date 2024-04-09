@@ -107,7 +107,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         reversal: bool = False,
         side: str = "left",
         sigmap: Optional[dict[signal.Signals, SignalHandlers]] = None,
-        timer: bool = False,
+        timer: Union[bool, str] = False,
     ) -> None:
         # Spinner
         self._spinner = self._set_spinner(spinner)
@@ -444,9 +444,11 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         if self._side == "right":
             frame, text = text, frame
         # Timer
-        if self._timer:
+        if self._timer is not False:
+            # TODO the format string should allow showing custom groupings (such as total seconds or HH:MM:SS)
+            timer_format = self._timer if isinstance(self._timer, str) else " ({}.{:02.0f})"
             sec, fsec = divmod(round(100 * self.elapsed_time), 100)
-            text += " ({}.{:02.0f})".format(  # pylint: disable=consider-using-f-string
+            text += timer_format.format(  # pylint: disable=consider-using-f-string
                 timedelta(seconds=sec), fsec
             )
         # Mode

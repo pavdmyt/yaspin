@@ -78,3 +78,13 @@ def test_timer_finished():
     sp._freeze("")
 
     assert re.search(r"\(\d+:\d{2}:\d{2}.\d{2}\)", sp._last_frame) is not None
+
+
+def test_timer_custom_format():
+    sp = yaspin(timer="#{}---{}#")
+
+    assert sp.elapsed_time == 0
+
+    sp._freeze("")
+
+    assert "#0:00:00---0#" in sp._last_frame
