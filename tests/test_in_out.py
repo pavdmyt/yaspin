@@ -120,7 +120,13 @@ def test_hide_show(monkeypatch, capsys, text, request, isatty_fixture):
 
     # Ensure that sp.stop() will be executed
     def teardown():
-        sp.stop()
+        try:
+            sp.stop()
+        except ValueError:
+            # Raised .stop() fails due to an already closed file
+            # Since this is a teardown function, it seems inappropriate to allow this
+            # to cause the test to fail
+            pass
 
     request.addfinalizer(teardown)
 
