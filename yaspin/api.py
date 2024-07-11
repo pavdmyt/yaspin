@@ -31,6 +31,8 @@ def yaspin(*args: Any, **kwargs: Any) -> Yaspin:
         sigmap (dict, optional): Maps POSIX signals to their respective
             handlers.
         timer (bool, optional): Prints a timer showing the elapsed time.
+        ellipsis (str, optional): Sets a custom ellipsis to signal text
+            truncation due to overflow.
 
     Returns:
         core.Yaspin: instance of the Yaspin class.
