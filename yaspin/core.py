@@ -129,6 +129,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         self._reversal = reversal
         self._timer = timer
         self._ellipsis = ellipsis
+        self._terminal_width: int = shutil.get_terminal_size().columns
         self._start_time: Optional[float] = None
         self._stop_time: Optional[float] = None
 
@@ -477,12 +478,11 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         return out
 
     def _get_max_text_length(self, frame_width: int, timer_width: int) -> int:
-        term_width = shutil.get_terminal_size().columns
         ellipsis_width = len(self._ellipsis)
         # There is always a space between frame and text
         frame_width += 1
 
-        return term_width - frame_width - timer_width - ellipsis_width
+        return self._terminal_width - frame_width - timer_width - ellipsis_width
 
     def _register_signal_handlers(self) -> None:
         # SIGKILL cannot be caught or ignored, and the receiving
