@@ -241,6 +241,18 @@ Spinner with timer
         time.sleep(3.1415)
         sp.ok()
 
+Custom Ellipsis
+///////////////
+
+If the text does not fit in the terminal it gets truncated, you can set a custom ellipsis to signal truncation.
+
+.. code:: python
+
+   import time
+   from yaspin import yaspin
+
+   with yaspin(text="some long text", ellipsis="...") as sp:
+        time.sleep(2)
 
 Dynamic text
 ////////////

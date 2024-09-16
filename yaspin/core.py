@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import functools
 import itertools
+import shutil
 import signal
 import sys
 import threading
@@ -108,6 +109,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         side: str = "left",
         sigmap: Optional[dict[signal.Signals, SignalHandlers]] = None,
         timer: bool = False,
+        ellipsis: str = "",
     ) -> None:
         # Spinner
         self._spinner = self._set_spinner(spinner)
@@ -126,6 +128,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         self._side = self._set_side(side)
         self._reversal = reversal
         self._timer = timer
+        self._ellipsis = ellipsis
         self._start_time: Optional[float] = None
         self._stop_time: Optional[float] = None
 
@@ -254,6 +257,14 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
     @side.setter
     def side(self, value: str) -> None:
         self._side = self._set_side(value)
+
+    @property
+    def ellipsis(self) -> str:
+        return self._ellipsis
+
+    @ellipsis.setter
+    def ellipsis(self, value: str) -> None:
+        self._ellipsis = value
 
     @property
     def reversal(self) -> bool:
@@ -436,6 +447,19 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
     def _compose_out(self, frame: str, mode: Optional[str] = None) -> str:
         text = str(self._text)
 
+        # Timer
+        if self._timer:
+            sec, fsec = divmod(round(100 * self.elapsed_time), 100)
+            timer = " ({}.{:02.0f})".format(  # pylint: disable=consider-using-f-string
+                timedelta(seconds=sec), fsec
+            )
+        else:
+            timer = ""
+
+        # Truncate
+        max_text_len = self._get_max_text_length(len(frame), len(timer))
+        text = text[:max_text_len] + self._ellipsis if len(text) > max_text_len else text
+
         # Colors
         if self._color_func is not None:
             frame = self._color_func(frame)
@@ -443,19 +467,22 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         # Position
         if self._side == "right":
             frame, text = text, frame
-        # Timer
-        if self._timer:
-            sec, fsec = divmod(round(100 * self.elapsed_time), 100)
-            text += " ({}.{:02.0f})".format(  # pylint: disable=consider-using-f-string
-                timedelta(seconds=sec), fsec
-            )
+
         # Mode
         if mode is None:
-            out = f"\r{frame} {text}"
+            out = f"\r{frame} {text}{timer}"
         else:
-            out = f"{frame} {text}\n"
+            out = f"{frame} {text}{timer}\n"
 
         return out
+
+    def _get_max_text_length(self, frame_width: int, timer_width: int) -> int:
+        term_width = shutil.get_terminal_size().columns
+        ellipsis_width = len(self._ellipsis)
+        # There is always a space between frame and text
+        frame_width += 1
+
+        return term_width - frame_width - timer_width - ellipsis_width
 
     def _register_signal_handlers(self) -> None:
         # SIGKILL cannot be caught or ignored, and the receiving
