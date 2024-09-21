@@ -508,9 +508,9 @@ pytest-cov==5.0.0 ; python_version >= "3.9" and python_version < "4.0" \
 pytest-xdist==3.6.1 ; python_version >= "3.9" and python_version < "4.0" \
     --hash=sha256:9ed4adfb68a016610848639bb7e02c9352d5d9f03d04809919e2dafc3be4cca7 \
     --hash=sha256:ead156a4db231eec769737f57668ef58a2084a34b2e55c4a8fa20d861107300d
-pytest==8.3.3 ; python_version >= "3.9" and python_version < "4.0" \
-    --hash=sha256:70b98107bd648308a7952b06e6ca9a50bc660be218d53c257cc1fc94fda10181 \
-    --hash=sha256:a6853c7375b2663155079443d2e45de913a911a11d669df02a50814944db57b2
+pytest==8.1.2 ; python_version >= "3.9" and python_version < "4.0" \
+    --hash=sha256:6c06dc309ff46a05721e6fd48e492a775ed8165d2ecdf57f156a80c7e95bb142 \
+    --hash=sha256:f3c45d1d5eed96b01a2aea70dee6a4a366d51d38f9957768083e4fecfc77f3ef
 pywin32-ctypes==0.2.3 ; python_version >= "3.9" and python_version < "4.0" and sys_platform == "win32" \
     --hash=sha256:8a1513379d709975552d202d942d9837758905c8d01eb82b8bcc30918929e7b8 \
     --hash=sha256:d162dc04946d704503b2edc4d55f3dba5c1d539ead017afa00142c38b9885755
