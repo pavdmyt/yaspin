@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version: ["3.12"]
 
     steps:
       - name: checkout-code
@@ -27,7 +27,7 @@ jobs:
       - name: install-poetry
         uses: snok/install-poetry@v1
         with:
-          version: 1.8.2
+          version: 1.8.3
 
       - name: install-dependencies
         run: |
@@ -65,7 +65,7 @@ jobs:
       - name: install-poetry
         uses: snok/install-poetry@v1
         with:
-          version: 1.8.2
+          version: 1.8.3
 
       - name: install-dependencies
         run: |
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       PYTHONHASHSEED: 0
-      USING_COVERAGE: '3.11'
+      USING_COVERAGE: '3.12'
     strategy:
       fail-fast: false
       matrix:
@@ -100,7 +100,7 @@ jobs:
         if: "!contains(matrix.python-version, 'pypy-3.9')"
         uses: snok/install-poetry@v1
         with:
-          version: 1.8.2
+          version: 1.8.3
 
       - name: install-dependencies
         if: "!contains(matrix.python-version, 'pypy-3.9')"
@@ -116,7 +116,7 @@ jobs:
       - name: install-dependencies
         if: "contains(matrix.python-version, 'pypy-3.9')"
         run: |
-          pip install termcolor==2.3.0 pytest==8.1.1 pytest-xdist==3.5.0
+          pip install termcolor==2.3.0 pytest==8.3.3 pytest-xdist==3.6.1
 
       - name: run-tests
         if: "contains(matrix.python-version, 'pypy-3.9')"
