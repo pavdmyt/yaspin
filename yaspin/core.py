@@ -28,11 +28,13 @@ from typing import (
     Generator,
     Iterator,
     Optional,
+    Protocol,
     Sequence,
     Type,
     TypeVar,
     Union,
     cast,
+    runtime_checkable,
 )
 
 from termcolor import ATTRIBUTES, COLORS, HIGHLIGHTS, colored
@@ -62,6 +64,11 @@ class Spinner:
 
 
 default_spinner = Spinner("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏", 80)
+
+
+@runtime_checkable
+class SignalHandlerProtocol(Protocol):
+    def __call__(self, signum: int, frame: Any, spinner: Yaspin) -> None: ...
 
 
 def default_handler(signum: int, frame: Any, spinner: Yaspin) -> None:  # pylint: disable=unused-argument
@@ -506,7 +513,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
 
             # ``signal.SIG_DFL`` and ``signal.SIG_IGN`` are also valid
             # signal handlers and are not callables.
-            if callable(sig_handler):
+            if callable(sig_handler) and isinstance(sig_handler, SignalHandlerProtocol):
                 # ``signal.signal`` accepts handler function which is
                 # called with two arguments: signal number and the
                 # interrupted stack frame. ``functools.partial`` solves
