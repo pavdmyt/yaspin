@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - name: checkout-code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: prepare-python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -51,16 +51,17 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
       - name: checkout-code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: prepare-python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
       - name: install-poetry
         uses: snok/install-poetry@v1
@@ -84,16 +85,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "pypy-3.10"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "pypy-3.10"]
 
     steps:
       - name: checkout-code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: prepare-python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
       # Normal Python
       - name: install-poetry
