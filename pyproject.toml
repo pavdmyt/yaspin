@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "yaspin"
-version = "3.0.2"
+version = "3.1.0"
 description = "Yet Another Terminal Spinner"
 license = "MIT"
 authors = ["Pavlo Dmytrenko <pavdmyt@aiven.io>"]
@@ -34,6 +34,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
@@ -49,19 +50,19 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-termcolor = "==2.3.0"
+termcolor = ">=2.2.0, <2.4.0"
 
 [tool.poetry.dev-dependencies]
-black = "^24.3"
-twine = "^5.0"
-flake8 = "^7.0"
+black = "^24.8"
+twine = "^5.1"
+flake8 = "^7.1"
 isort = "^5.13"
-mypy = "^1.9"
-pytest = "^8.0"
-pytest-xdist = "^3.4"
+mypy = "^1.11"
+pytest = "^8.1, <8.2"
+pytest-xdist = "^3.5, !=3.6.0"
 pytest-cov = "^5.0"
-pylint = "^3.0"
-semgrep = "^1.60"
+pylint = "^3.3"
+semgrep = "^1.89"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/pavdmyt/yaspin/issues"
