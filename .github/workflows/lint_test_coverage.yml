@@ -10,7 +10,7 @@ on:
 jobs:
 
   lint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         python-version: ["3.12"]
@@ -48,7 +48,7 @@ jobs:
 
   mypy:
     needs: lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
@@ -78,7 +78,7 @@ jobs:
 
   test:
     needs: [lint, mypy]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       PYTHONHASHSEED: 0
       USING_COVERAGE: '3.12'
