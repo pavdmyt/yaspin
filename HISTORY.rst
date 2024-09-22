@@ -1,6 +1,15 @@
 Release History
 ===============
 
+3.1.0 / 2024-09-22
+------------------
+
+* Fix long messages behavior by truncating them via custom ellipsis (#240)
+* Add Python 3.13 support
+* Update cli-spinners to ``v3.2.0``
+* Update dependencies
+
+
 3.0.2 / 2024-04-08
 ------------------
 
