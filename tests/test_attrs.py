@@ -7,8 +7,9 @@ Test Yaspin attributes magic hidden in __getattr__.
 
 import sys
 
-import pytest
 from termcolor import ATTRIBUTES
+
+import pytest
 
 from yaspin import yaspin
 from yaspin.constants import SPINNER_ATTRS

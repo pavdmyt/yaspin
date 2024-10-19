@@ -35,7 +35,7 @@ def all_highlights():
             "on_grey",
         )
         for highlight in highlights:
-            text = "On {0} color".format(highlight.split("_")[1])
+            text = "On {} color".format(highlight.split("_")[1])
             sp.on_color, sp.text = highlight, text
             time.sleep(2)
 

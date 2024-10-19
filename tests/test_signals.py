@@ -66,7 +66,7 @@ def test_default_handlers_are_set_at_cleanup_stage(sigmap_test_cases):
     sp.start()
     sp.stop()
 
-    for sig in sigmap.keys():
+    for sig in sigmap:
         handler = signal.getsignal(sig)
         assert handler == sp._dfl_sigmap[sig]
 

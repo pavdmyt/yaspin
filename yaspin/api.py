@@ -8,10 +8,11 @@ yaspin.api
 This module implements the Yaspin API.
 """
 
-import signal
 from typing import Any
 
-from .core import Yaspin, default_handler
+import signal
+
+from .core import default_handler, Yaspin
 
 
 def yaspin(*args: Any, **kwargs: Any) -> Yaspin:

@@ -5,12 +5,13 @@ tests.test_spinners
 Tests for spinners collection.
 """
 
-import json
 from collections import OrderedDict
+
+import json
 
 import pytest
 
-from yaspin.spinners import SPINNERS_DATA, Spinners
+from yaspin.spinners import Spinners, SPINNERS_DATA
 
 spinners_dict = OrderedDict(json.loads(SPINNERS_DATA))
 test_cases = [(name, v["frames"], v["interval"]) for name, v in spinners_dict.items()]

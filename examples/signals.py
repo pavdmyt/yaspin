@@ -65,7 +65,9 @@ def passing_additional_info_into_signal_handler():
     heads = random.randint(0, 1) == 1
     tails = not heads
 
-    def my_handler(signum, frame, spinner, context={"heads": heads, "tails": tails}):
+    def my_handler(signum, frame, spinner, context=None):
+        if context is None:
+            context = {"heads": heads, "tails": tails}
         if context["heads"]:
             spinner.text = "heads!"
             spinner.ok("🌕")

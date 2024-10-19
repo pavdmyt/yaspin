@@ -2,13 +2,30 @@
 # :license: MIT, see LICENSE for more details.
 
 """
-yaspin.yaspin
-~~~~~~~~~~~~~
+yaspin.core
+~~~~~~~~~~~
 
 A lightweight terminal spinner.
 """
 
 from __future__ import annotations
+
+from collections.abc import Generator, Iterator, Sequence
+from contextlib import contextmanager
+from dataclasses import dataclass
+from datetime import timedelta
+from typing import (
+    Any,
+    Callable,
+    cast,
+    Final,
+    Optional,
+    Protocol,
+    runtime_checkable,
+    TYPE_CHECKING,
+    TypeVar,
+    Union,
+)
 
 import functools
 import itertools
@@ -18,25 +35,8 @@ import sys
 import threading
 import time
 import warnings
-from collections.abc import Generator, Iterator, Sequence
-from contextlib import contextmanager
-from dataclasses import dataclass
-from datetime import timedelta
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Final,
-    Optional,
-    Protocol,
-    Type,
-    TypeVar,
-    Union,
-    cast,
-    runtime_checkable,
-)
 
-from termcolor import ATTRIBUTES, COLORS, HIGHLIGHTS, colored
+from termcolor import ATTRIBUTES, colored, COLORS, HIGHLIGHTS
 
 from .constants import SPINNER_ATTRS
 
@@ -50,7 +50,7 @@ Fn = TypeVar("Fn", bound=Callable[..., Any])
 ENCODING: Final[str] = "utf-8"
 
 
-def to_unicode(text_type: Union[str, bytes], encoding: str = ENCODING) -> str:
+def to_unicode(text_type: str | bytes, encoding: str = ENCODING) -> str:
     if isinstance(text_type, bytes):
         return text_type.decode(encoding)
     return text_type
@@ -70,7 +70,7 @@ class SignalHandlerProtocol(Protocol):
     def __call__(self, signum: int, frame: Any, spinner: Yaspin) -> None: ...
 
 
-def default_handler(signum: int, frame: Any, spinner: Yaspin) -> None:  # pylint: disable=unused-argument
+def default_handler(signum: int, frame: Any, spinner: Yaspin) -> None:
     """Signal handler, used to gracefully shut down the ``spinner`` instance
     when specified signal is received by the process running the ``spinner``.
 
@@ -82,7 +82,7 @@ def default_handler(signum: int, frame: Any, spinner: Yaspin) -> None:  # pylint
     sys.exit(0)
 
 
-def fancy_handler(signum: int, frame: Any, spinner: Yaspin) -> None:  # pylint: disable=unused-argument
+def fancy_handler(signum: int, frame: Any, spinner: Yaspin) -> None:
     """Signal handler, used to gracefully shut down the ``spinner`` instance
     when specified signal is received by the process running the ``spinner``.
 
@@ -94,7 +94,7 @@ def fancy_handler(signum: int, frame: Any, spinner: Yaspin) -> None:  # pylint: 
     sys.exit(0)
 
 
-class Yaspin:  # pylint: disable=too-many-instance-attributes
+class Yaspin:
     """Implements a context manager that spawns a thread
     to write spinner frames into a tty (stdout) during
     context execution.
@@ -104,16 +104,16 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
     # it sets the sys.stdout.encoding attribute to the terminal's encoding.
     # The print statement's handler will automatically encode unicode
     # arguments into bytes.
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
         spinner: Spinner = default_spinner,
         text: str = "",
-        color: Optional[str] = None,
-        on_color: Optional[str] = None,
-        attrs: Optional[Sequence[str]] = None,
+        color: str | None = None,
+        on_color: str | None = None,
+        attrs: Sequence[str] | None = None,
         reversal: bool = False,
         side: str = "left",
-        sigmap: Optional[dict[signal.Signals, SignalHandlers]] = None,
+        sigmap: dict[signal.Signals, SignalHandlers] | None = None,
         timer: bool = False,
         ellipsis: str = "",
     ) -> None:
@@ -136,14 +136,14 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         self._timer = timer
         self._ellipsis = ellipsis
         self._terminal_width: int = shutil.get_terminal_size().columns
-        self._start_time: Optional[float] = None
-        self._stop_time: Optional[float] = None
+        self._start_time: float | None = None
+        self._stop_time: float | None = None
 
         # Helper flags
-        self._stop_spin: Optional[threading.Event] = None
-        self._hide_spin: Optional[threading.Event] = None
-        self._spin_thread: Optional[threading.Thread] = None
-        self._last_frame: Optional[str] = None
+        self._stop_spin: threading.Event | None = None
+        self._hide_spin: threading.Event | None = None
+        self._spin_thread: threading.Thread | None = None
+        self._last_frame: str | None = None
         self._stdout_lock = threading.Lock()
         self._hidden_level = 0
         self._cur_line_len = 0
@@ -165,9 +165,9 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
     ) -> None:
         if self._spin_thread is None:
             raise RuntimeError("spin thread is None")
@@ -186,7 +186,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
     def __getattr__(self, name: str) -> Yaspin:
         # CLI spinners
         if name in SPINNER_ATTRS:
-            from .spinners import Spinners  # pylint: disable=import-outside-toplevel
+            from .spinners import Spinners
 
             sp = getattr(Spinners, name)
             self.spinner = sp
@@ -230,7 +230,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         self._text = txt
 
     @property
-    def color(self) -> Optional[str]:
+    def color(self) -> str | None:
         return self._color
 
     @color.setter
@@ -239,7 +239,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         self._color_func = self._compose_color_func()  # update
 
     @property
-    def on_color(self) -> Optional[str]:
+    def on_color(self) -> str | None:
         return self._on_color
 
     @on_color.setter
@@ -433,10 +433,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         # https://pypi.python.org/pypi/tqdm#writing-messages
         with self._stdout_lock:
             self._clear_line()
-            if isinstance(text, (str, bytes)):
-                _text = to_unicode(text)
-            else:
-                _text = str(text)
+            _text = to_unicode(text) if isinstance(text, (str, bytes)) else str(text)
             sys.stdout.write(f"{_text}\n")
             self._cur_line_len = 0
 
@@ -518,7 +515,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             # Wait
             self._stop_spin.wait(self._interval)
 
-    def _compose_color_func(self) -> Optional[Callable[..., str]]:
+    def _compose_color_func(self) -> Callable[..., str] | None:
         """
         Compose a color function based on the current environment.
 
@@ -537,7 +534,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             attrs=list(self._attrs),
         )
 
-    def _compose_out(self, frame: str, mode: Optional[str] = None) -> str:
+    def _compose_out(self, frame: str, mode: str | None = None) -> str:
         """
         Compose the output string for the spinner.
 
@@ -561,9 +558,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         # Timer
         if self._timer:
             sec, fsec = divmod(round(100 * self.elapsed_time), 100)
-            timer = " ({}.{:02.0f})".format(  # pylint: disable=consider-using-f-string
-                timedelta(seconds=sec), fsec
-            )
+            timer = f" ({timedelta(seconds=sec)}.{fsec:02.0f})"
         else:
             timer = ""
 
@@ -584,10 +579,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             frame, text = text, frame
 
         # Mode
-        if mode is None:
-            out = f"\r{frame} {text}{timer}"
-        else:
-            out = f"{frame} {text}{timer}\n"
+        out = f"\r{frame} {text}{timer}" if mode is None else f"{frame} {text}{timer}\n"
 
         return out
 
@@ -665,9 +657,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
 
         if value not in COLORS:
             raise ValueError(
-                "'{0}': unsupported color value. Use one of the: {1}".format(  # pylint: disable=consider-using-f-string
-                    value, ", ".join(COLORS.keys())
-                )
+                "'{}': unsupported color value. Use one of the: {}".format(value, ", ".join(COLORS.keys()))
             )
         return value
 
@@ -678,8 +668,9 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
 
         if value not in HIGHLIGHTS:
             raise ValueError(
-                "'{0}': unsupported on_color value. "  # pylint: disable=consider-using-f-string
-                "Use one of the: {1}".format(value, ", ".join(HIGHLIGHTS.keys()))
+                "'{}': unsupported on_color value. " "Use one of the: {}".format(
+                    value, ", ".join(HIGHLIGHTS.keys())
+                )
             )
         return value
 
@@ -691,18 +682,16 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         for attr in attrs:
             if attr not in ATTRIBUTES:
                 raise ValueError(
-                    "'{0}': unsupported attribute value. "  # pylint: disable=consider-using-f-string
-                    "Use one of the: {1}".format(attr, ", ".join(ATTRIBUTES.keys()))
+                    "'{}': unsupported attribute value. " "Use one of the: {}".format(
+                        attr, ", ".join(ATTRIBUTES.keys())
+                    )
                 )
         return set(attrs)
 
     @staticmethod
     def _set_spinner(spinner: Spinner) -> Spinner:
         if hasattr(spinner, "frames") and hasattr(spinner, "interval"):
-            if not spinner.frames or not spinner.interval:
-                sp = default_spinner
-            else:
-                sp = spinner
+            sp = default_spinner if not spinner.frames or not spinner.interval else spinner
         else:
             sp = default_spinner
 
@@ -715,7 +704,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         return side
 
     @staticmethod
-    def _set_frames(spinner: Spinner, reversal: bool) -> Union[str, Sequence[str]]:
+    def _set_frames(spinner: Spinner, reversal: bool) -> str | Sequence[str]:
         """
         Set the frames for the spinner, optionally reversing them.
 
@@ -765,7 +754,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         return spinner.interval * 0.001
 
     @staticmethod
-    def _set_cycle(frames: Union[str, Sequence[str]]) -> Iterator[str]:
+    def _set_cycle(frames: str | Sequence[str]) -> Iterator[str]:
         return itertools.cycle(frames)
 
     @staticmethod
