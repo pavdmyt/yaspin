@@ -96,7 +96,7 @@ def handling_multiple_signals():
 
     with yaspin(sigmap=sigmap, text="Handling SIGUSR1 and SIGTERM") as sp:
         sp.write("Send signals using `kill` command")
-        sp.write("E.g. $ kill -USR1 {0}".format(os.getpid()))
+        sp.write(f"E.g. $ kill -USR1 {os.getpid()}")
         time.sleep(60)
         sp.write("No signal received")
 
@@ -131,7 +131,7 @@ def unpacker():
     )
     with swirl as sp:
         for p in range(0, 101, 5):
-            sp.text = "{0}% Unpacking".format(p)
+            sp.text = f"{p}% Unpacking"
             time.sleep(random.random())
         sp.green.ok("✔")
 

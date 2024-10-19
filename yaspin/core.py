@@ -18,6 +18,7 @@ import sys
 import threading
 import time
 import warnings
+from collections.abc import Generator, Iterator, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import timedelta
@@ -26,11 +27,8 @@ from typing import (
     Any,
     Callable,
     Final,
-    Generator,
-    Iterator,
     Optional,
     Protocol,
-    Sequence,
     Type,
     TypeVar,
     Union,
@@ -199,9 +197,9 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             if name in ATTRIBUTES:
                 self.attrs = [name]  # calls property setter
             if name in COLORS:
-                setattr(self, "color", name)  # calls property setter
+                self.color = name  # calls property setter
             if name in HIGHLIGHTS:
-                setattr(self, "on_color", name)  # calls property setter
+                self.on_color = name  # calls property setter
         # Side: "left" or "right"
         elif name in ("left", "right"):
             self.side = name  # calls property setter

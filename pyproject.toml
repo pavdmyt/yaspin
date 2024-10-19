@@ -54,7 +54,6 @@ termcolor = ">=2.2.0, <2.4.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^7.1"
-isort = "^5.13"
 mypy = "^1.11"
 pytest = "^8.1, <8.2"
 pytest-xdist = "^3.5, !=3.6.0"
@@ -85,13 +84,28 @@ warn_redundant_casts = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
-[tool.isort]
-profile = "black"
-line_length = 110
-
 [tool.ruff]
 line-length = 110
+target-version = "py39"
 
 [tool.ruff.format]
 indent-style = "space"
 docstring-code-format = true
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # mutable-argument-default - Do not use mutable data structures for argument defaults.
+    "B006",
+]

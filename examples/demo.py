@@ -76,7 +76,7 @@ def color_highlights(sleep=0.5):
     with kbi_safe_yaspin(Spinners.bouncingBall) as sp:
         for highlight in HIGHLIGHTS:
             highlight_name = " ".join(highlight.split("_")[1:])
-            name = "On {0} color".format(highlight_name)
+            name = f"On {highlight_name} color"
             spaces_qty = max_len - len(name) - len(msg)
             text = "{0}{1}{2}".format(name, " " * spaces_qty, msg)
 
