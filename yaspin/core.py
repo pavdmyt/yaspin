@@ -295,6 +295,18 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
     # Public
     #
     def start(self) -> None:
+        """
+        Start the spinner animation in a separate thread.
+
+        Initializes and starts the spinner animation by hiding the cursor, recording
+        the start time, and creating a new thread to run the spinner. It also
+        sets up necessary threading events to control the spinner's behavior.
+
+        If signal handlers are registered, they will be set up before starting the spinner.
+
+        In case of any failure that prevents the spinner from starting, the cursor will
+        be shown to ensure it is not left hidden.
+        """
         if self._sigmap:
             self._register_signal_handlers()
 
@@ -313,6 +325,16 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             self._show_cursor()
 
     def stop(self) -> None:
+        """
+        Stops the spinner and performs necessary cleanup.
+
+        Records the stop time, resets signal handlers to their default if
+        they were modified, stops the spinning thread, clears the spinner
+        line, and shows the cursor.
+
+        Raises:
+            RuntimeError: If the stop_spin event is None.
+        """
         self._stop_time = time.time()
 
         if self._dfl_sigmap:
@@ -329,7 +351,17 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         self._show_cursor()
 
     def hide(self) -> None:
-        """Hide the spinner to allow for custom writing to the terminal."""
+        """
+        Hide the spinner to allow for custom writing to the terminal.
+
+        Sets a flag to indicate that the spinner should be hidden, clears
+        the current line in the terminal, and flushes the stdout buffer.
+        It ensures that the spinner thread is alive and the hide flag is
+        not already set before performing these actions.
+
+        Raises:
+            RuntimeError: If the hide_spin attribute is None.
+        """
         thr_is_alive = self._spin_thread and self._spin_thread.is_alive()
         if self._hide_spin is None:
             raise RuntimeError("hide_spin is None")
@@ -346,7 +378,15 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
 
     @contextmanager
     def hidden(self) -> Generator[None, None, None]:
-        """Hide the spinner within a block, can be nested"""
+        """
+        Temporarily hides the spinner within a context block. This method can be nested.
+
+        When the context is entered, the spinner is hidden if it is not already hidden.
+        When the context is exited, the spinner is shown again if it was hidden by this method.
+
+        Yields:
+            None: This method is a generator that yields control back to the caller.
+        """
         if self._hidden_level == 0:
             self.hide()
         self._hidden_level += 1
@@ -358,7 +398,17 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
                 self.show()
 
     def show(self) -> None:
-        """Show the hidden spinner."""
+        """
+        Show the hidden spinner.
+
+        Checks if the spinner thread is alive and if the spinner is currently
+        hidden. If both conditions are met, it clears the hidden spinner
+        flag and clears the current line to ensure the spinner is not
+        appended to it.
+
+        Raises:
+            RuntimeError: If the `_hide_spin` attribute is `None`.
+        """
         thr_is_alive = self._spin_thread and self._spin_thread.is_alive()
         if self._hide_spin is None:
             raise RuntimeError("hide_spin is None")
@@ -371,7 +421,15 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
                 self._clear_line()
 
     def write(self, text: str) -> None:
-        """Write text in the terminal without breaking the spinner."""
+        """
+        Write text in the terminal without breaking the spinner.
+
+        Ensures that the spinner is temporarily cleared, the text
+        is written to the terminal, and then the spinner is restored.
+
+        Args:
+            text (str): The text to be written to the terminal.
+        """
         # similar to tqdm.write()
         # https://pypi.python.org/pypi/tqdm#writing-messages
         with self._stdout_lock:
@@ -403,7 +461,18 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         )
 
     def _freeze(self, final_text: str) -> None:
-        """Stop spinner, compose last frame and 'freeze' it."""
+        """
+        Stop the spinner and display the final frame.
+
+        Stops the spinner, composes the last frame with the provided final text,
+        and 'freezes' it by writing the final frame to the standard output.
+
+        Args:
+            final_text (str): The final text to be displayed when the spinner stops.
+
+        Raises:
+            RuntimeError: If the last frame is None.
+        """
         text = to_unicode(final_text)
         self._last_frame = self._compose_out(text, mode="last")
 
@@ -417,6 +486,16 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             self._cur_line_len = 0
 
     def _spin(self) -> None:
+        """
+        Handles the spinning animation.
+
+        Continuously updates the spinner's output on the terminal until
+        the `_stop_spin` event is set. If the `_hide_spin` event is set,
+        it temporarily pauses the spinning.
+
+        Raises:
+            RuntimeError: If `_stop_spin` is None.
+        """
         if self._stop_spin is None:
             raise RuntimeError("stop_spin is None")
 
@@ -441,6 +520,13 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             self._stop_spin.wait(self._interval)
 
     def _compose_color_func(self) -> Optional[Callable[..., str]]:
+        """
+        Compose a color function based on the current environment.
+
+        If the environment is Jupyter, returns None as ANSI color control sequences
+        are problematic in Jupyter notebooks. Otherwise, returns a partial function
+        that applies the specified color, background color, and attributes to text.
+        """
         if self.is_jupyter():
             # ANSI Color Control Sequences are problematic in Jupyter
             return None
@@ -453,6 +539,24 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         )
 
     def _compose_out(self, frame: str, mode: Optional[str] = None) -> str:
+        """
+        Compose the output string for the spinner.
+
+        Args:
+            frame (str): The current frame of the spinner animation.
+            mode (str, optional): The mode in which the output is generated. If None,
+                                  the output is generated on the same line with a carriage
+                                  return. If a value is provided, the output is generated
+                                  on a new line.
+
+        Returns:
+            str: The composed output string including the spinner frame, text, timer,
+                 and any specified colors and positions.
+
+        Raises:
+            ValueError: If the terminal size is too small to display the spinner with
+                        the given settings.
+        """
         text = str(self._text)
 
         # Timer
@@ -489,6 +593,16 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         return out
 
     def _get_max_text_length(self, frame_width: int, timer_width: int) -> int:
+        """
+        Calculate the maximum length of text that can be displayed within the terminal width.
+
+        Args:
+            frame_width (int): The width of the frame.
+            timer_width (int): The width of the timer.
+
+        Returns:
+            int: The maximum length of text that can be displayed.
+        """
         ellipsis_width = len(self._ellipsis)
         # There is always a space between frame and text
         frame_width += 1
@@ -496,6 +610,17 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
         return self._terminal_width - frame_width - timer_width - ellipsis_width
 
     def _register_signal_handlers(self) -> None:
+        """
+        Registers custom signal handlers for the spinner.
+
+        Sets up signal handlers defined in the `_sigmap` attribute.
+        It ensures that SIGKILL is not included. For each signal in
+        `_sigmap`, stores the default signal handler for later restoration
+        during the cleanup phase.
+
+        Raises:
+            ValueError: If an attempt is made to set a handler for the SIGKILL signal.
+        """
         # SIGKILL cannot be caught or ignored, and the receiving
         # process cannot perform any clean-up upon receiving this
         # signal.
@@ -524,6 +649,7 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
             signal.signal(sig, sig_handler)
 
     def _reset_signal_handlers(self) -> None:
+        """Resets the signal handlers to their default values."""
         for sig, sig_handler in self._dfl_sigmap.items():
             signal.signal(sig, sig_handler)
 
@@ -591,6 +717,20 @@ class Yaspin:  # pylint: disable=too-many-instance-attributes
 
     @staticmethod
     def _set_frames(spinner: Spinner, reversal: bool) -> Union[str, Sequence[str]]:
+        """
+        Set the frames for the spinner, optionally reversing them.
+
+        Args:
+            spinner (Spinner): The spinner object containing the frames.
+            reversal (bool): If True, the frames will be reversed.
+
+        Returns:
+            Union[str, Sequence[str]]: The frames to be used for the spinner.
+            This can be a single string of frames or a sequence of frame strings.
+
+        Raises:
+            ValueError: If no frames are found in the spinner.
+        """
         uframes = None  # unicode frames
         uframes_seq = None  # sequence of unicode frames
 
