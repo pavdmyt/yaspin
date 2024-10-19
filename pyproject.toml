@@ -4,10 +4,10 @@ version = "3.1.0"
 description = "Yet Another Terminal Spinner"
 license = "MIT"
 authors = ["Pavlo Dmytrenko <pavdmyt@aiven.io>"]
-readme = "README.rst"
+readme = "README.md"
 homepage = "https://github.com/pavdmyt/yaspin"
 repository = "https://github.com/pavdmyt/yaspin"
-documentation = "https://github.com/pavdmyt/yaspin/blob/master/README.rst"
+documentation = "https://github.com/pavdmyt/yaspin/blob/master/README.md"
 keywords = ["spinner", "console", "terminal", "loader", "indicator"]
 include = [
     { path = "tests", format = "sdist" },

@@ -33,7 +33,7 @@ check-fmt:
 
 .PHONY: spellcheck
 spellcheck:
-	@cspell -c .cspell.json $(name)/*.py tests/*.py examples/*.py README.rst HISTORY.rst pyproject.toml Makefile
+	@cspell -c .cspell.json $(name)/*.py tests/*.py examples/*.py README.md HISTORY.rst pyproject.toml Makefile
 
 .PHONY: clean
 clean:
