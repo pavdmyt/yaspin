@@ -54,7 +54,6 @@ termcolor = ">=2.2.0, <2.4.0"
 
 [tool.poetry.dev-dependencies]
 black = "^24.8"
-twine = "^5.1"
 flake8 = "^7.1"
 isort = "^5.13"
 mypy = "^1.11"
