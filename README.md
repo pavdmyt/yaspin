@@ -66,6 +66,26 @@ $ python script_that_uses_yaspin.py > script.log
 $ python script_that_uses_yaspin.py | grep ERROR
 ```
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Basic Example](#basic-example)
+  - [Spinners from cli-spinners](#run-any-spinner-from-cli-spinners)
+  - [Colors](#any-colour-you-like-)
+  - [Advanced colors usage](#advanced-colors-usage)
+  - [Building custom spinners](#run-any-spinner-you-want)
+  - [Changing spinner properties on the fly](#change-spinner-properties-on-the-fly)
+  - [Timer](#spinner-with-timer)
+  - [Custom Ellipsis](#custom-ellipsis)
+  - [Dynamic text](#dynamic-text)
+  - [Writing messages](#writing-messages)
+  - [Integration with other libraries](#integration-with-other-libraries)
+  - [Handling POSIX signals](#handling-posix-signals)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Installation
 
 From [PyPI](https://pypi.org/) using `pip` package manager:
