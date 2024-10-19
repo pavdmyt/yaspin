@@ -81,6 +81,17 @@ def yaspin(*args: Any, **kwargs: Any) -> Yaspin:
 
 
 def kbi_safe_yaspin(*args: Any, **kwargs: Any) -> Yaspin:
+    """
+    Create a Yaspin instance with a default signal handler for SIGINT.
+
+    Wraps the Yaspin initialization to ensure that a default
+    signal handler for SIGINT is set, which allows for safe interruption
+    (KeyboardInterrupt) handling.
+
+    Returns:
+        Yaspin: An instance of the Yaspin spinner with the specified arguments and
+        a default SIGINT handler.
+    """
     kwargs["sigmap"] = {signal.SIGINT: default_handler}
     return Yaspin(*args, **kwargs)
 

@@ -33,7 +33,7 @@ check-fmt:
 
 .PHONY: spellcheck
 spellcheck:
-	@cspell -c .cspell.json $(name)/*.py tests/*.py examples/*.py README.rst HISTORY.rst pyproject.toml Makefile
+	@cspell -c .cspell.json $(name)/*.py tests/*.py examples/*.py README.md HISTORY.rst pyproject.toml Makefile
 
 .PHONY: clean
 clean:
@@ -63,18 +63,13 @@ coverage: clean-pyc
 rm-build:
 	@rm -rf build dist .egg $(name).egg-info
 
-.PHONY: check-rst
-check-rst:
-	@echo "$(OK_COLOR)==> Checking RST will render...$(NO_COLOR)"
-	@poetry run twine check dist/*
-
 .PHONY: build
 build: rm-build
 	@echo "$(OK_COLOR)==> Building...$(NO_COLOR)"
 	@poetry build
 
 .PHONY: publish
-publish: flake build check-rst
+publish: flake build
 	@echo "$(OK_COLOR)==> Publishing...$(NO_COLOR)"
 	@poetry publish -u $(pypi_usr) -p $(pypi_pwd)
 
