@@ -9,27 +9,21 @@ version := $(shell poetry version | awk '{ print $$2 }')
 pypi_usr := $(shell grep username ~/.pypirc | awk -F"= " '{ print $$2 }')
 pypi_pwd := $(shell grep password ~/.pypirc | awk -F"= " '{ print $$2 }')
 
-.PHONY: flake
-flake:
-	@poetry run flake8 --ignore=F821,E501,W503,E704 .
-
 .PHONY: lint
-lint: flake
-	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
-	@poetry run pylint $(name)/ ./tests -rn -f colorized
+lint:
+	@poetry run ruff check --fix ./$(name) ./tests ./examples
 
-.PHONY: isort
-isort:
-	@poetry run isort --atomic --verbose ./$(name) ./tests ./examples
+.PHONY: check-lint
+check-lint:
+	@poetry run ruff check --diff ./$(name) ./tests ./examples
 
 .PHONY: fmt
-fmt: isort
-	@poetry run black ./$(name) ./tests ./examples
+fmt:
+	@poetry run ruff format ./$(name) ./tests ./examples
 
 .PHONY: check-fmt
 check-fmt:
-	@poetry run isort --check ./$(name) ./tests ./examples
-	@poetry run black --check ./$(name) ./tests ./examples
+	@poetry run ruff format --check ./$(name) ./tests ./examples
 
 .PHONY: spellcheck
 spellcheck:
@@ -49,7 +43,7 @@ clean-pyc:
 	@find . -name '*~' -exec rm -f {} +
 
 .PHONY: test
-test: clean-pyc flake
+test: clean-pyc
 	@echo "$(OK_COLOR)==> Runnings tests ...$(NO_COLOR)"
 	@poetry run py.test -n auto -v
 
@@ -69,7 +63,7 @@ build: rm-build
 	@poetry build
 
 .PHONY: publish
-publish: flake build
+publish: build
 	@echo "$(OK_COLOR)==> Publishing...$(NO_COLOR)"
 	@poetry publish -u $(pypi_usr) -p $(pypi_pwd)
 

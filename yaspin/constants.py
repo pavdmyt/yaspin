@@ -8,7 +8,6 @@ yaspin.constants
 Some setups.
 """
 
-
 # Get spinner names:
 # $ < yaspin/data/spinners.json | jq '. | keys'
 SPINNER_ATTRS = [

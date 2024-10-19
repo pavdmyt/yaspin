@@ -47,7 +47,7 @@ def any_spinner_you_like():
         spinner = getattr(Spinners, name)
 
         spaces_qty = max_len - len(name) - len(msg) - len(spinner.frames[0])
-        text = "{0}{1}{2}".format(name, " " * spaces_qty, msg)
+        text = "{}{}{}".format(name, " " * spaces_qty, msg)
 
         with kbi_safe_yaspin(spinner, text=text, color="cyan"):
             time.sleep(period)
@@ -61,7 +61,7 @@ def colors_simple(sleep=0.7):
     with kbi_safe_yaspin(Spinners.dots12) as sp:
         for color in COLORS:
             spaces_qty = max_len - len(color) - len(msg)
-            text = "{0}{1}{2}".format(color, " " * spaces_qty, msg)
+            text = "{}{}{}".format(color, " " * spaces_qty, msg)
 
             sp.color = color
             sp.text = text
@@ -76,9 +76,9 @@ def color_highlights(sleep=0.5):
     with kbi_safe_yaspin(Spinners.bouncingBall) as sp:
         for highlight in HIGHLIGHTS:
             highlight_name = " ".join(highlight.split("_")[1:])
-            name = "On {0} color".format(highlight_name)
+            name = f"On {highlight_name} color"
             spaces_qty = max_len - len(name) - len(msg)
-            text = "{0}{1}{2}".format(name, " " * spaces_qty, msg)
+            text = "{}{}{}".format(name, " " * spaces_qty, msg)
 
             sp.on_color = highlight
             sp.text = text
@@ -102,7 +102,7 @@ def color_attributes(sleep=0.8):
     with kbi_safe_yaspin(Spinners.bouncingBall) as sp:
         for descr in descriptions:
             spaces_qty = max_len - len(descr) - len(msg)
-            text = "{0}{1}{2}".format(descr, " " * spaces_qty, msg)
+            text = "{}{}{}".format(descr, " " * spaces_qty, msg)
 
             attr, color, _ = descr.split()
             sp.attrs, sp.color = [attr.lower()], color
@@ -143,7 +143,7 @@ def color_craziness(sleep=1.3):
     # the existing list of previous attributes.
     for descr in descriptions:
         spaces_qty = max_len - len(descr) - len(msg)
-        text = "{0}{1}{2}".format(descr, " " * spaces_qty, msg)
+        text = "{}{}{}".format(descr, " " * spaces_qty, msg)
 
         with kbi_safe_yaspin(Spinners.pong, text=text) as sp:
             # Apply all color attributes from description

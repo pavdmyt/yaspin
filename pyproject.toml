@@ -53,15 +53,12 @@ python = "^3.9"
 termcolor = ">=2.2.0, <2.4.0"
 
 [tool.poetry.dev-dependencies]
-black = "^24.8"
-flake8 = "^7.1"
-isort = "^5.13"
 mypy = "^1.11"
 pytest = "^8.1, <8.2"
 pytest-xdist = "^3.5, !=3.6.0"
 pytest-cov = "^5.0"
-pylint = "^3.3"
 semgrep = "^1.89"
+ruff = "^0.7.0"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/pavdmyt/yaspin/issues"
@@ -85,9 +82,48 @@ warn_redundant_casts = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
-[tool.black]
+[tool.ruff]
 line-length = 110
+target-version = "py39"
 
-[tool.isort]
-profile = "black"
-line_length = 110
+[tool.ruff.format]
+indent-style = "space"
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # flake8-tidy-imports
+    "TID",
+    # isort
+    "I",
+    # mutable-argument-default - Do not use mutable data structures for argument defaults.
+    "B006",
+]
+
+[tool.ruff.lint.isort]
+
+# Combines as imports on the same line.
+combine-as-imports = true
+
+# Whether to place import from imports before straight imports when sorting.
+from-first = true
+
+# The number of lines to place between "direct" and 'import from' imports.
+lines-between-types = 1
+
+# Put all imports into the same section bucket.
+# This configuration breaks the Python convention.
+# no-sections = true
+
+# Order imports by type, which is determined by case, in addition to alphabetically.
+order-by-type = false
