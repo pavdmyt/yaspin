@@ -24,12 +24,12 @@ isort:
 
 .PHONY: fmt
 fmt: isort
-	@poetry run black ./$(name) ./tests ./examples
+	@poetry run ruff format ./$(name) ./tests ./examples
 
 .PHONY: check-fmt
 check-fmt:
 	@poetry run isort --check ./$(name) ./tests ./examples
-	@poetry run black --check ./$(name) ./tests ./examples
+	@poetry run ruff format --check ./$(name) ./tests ./examples
 
 .PHONY: spellcheck
 spellcheck:

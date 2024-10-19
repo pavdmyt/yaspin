@@ -66,13 +66,15 @@ def yaspin(*args: Any, **kwargs: Any) -> Yaspin:
             some_operations()
 
         # Context manager with custom sequence
-        with yaspin(Spinner('-\\|/', 150)):
+        with yaspin(Spinner("-\\|/", 150)):
             some_operations()
+
 
         # As decorator
         @yaspin(text="Loading...")
         def foo():
             time.sleep(5)
+
 
         foo()
 

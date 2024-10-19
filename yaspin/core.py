@@ -7,6 +7,7 @@ yaspin.yaspin
 
 A lightweight terminal spinner.
 """
+
 from __future__ import annotations
 
 import functools

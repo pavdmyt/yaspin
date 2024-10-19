@@ -6,12 +6,10 @@
 
 [![Coverage](https://codecov.io/gh/pavdmyt/yaspin/branch/master/graph/badge.svg)](https://codecov.io/gh/pavdmyt/yaspin)
 [![pypi](https://img.shields.io/pypi/v/yaspin.svg)](https://pypi.org/project/yaspin/)
-[![black-fmt](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-
 [![Versions](https://img.shields.io/pypi/pyversions/yaspin.svg)](https://pypi.org/project/yaspin/)
+
 [![Wheel](https://img.shields.io/pypi/wheel/yaspin.svg)](https://pypi.org/project/yaspin/)
 [![Examples](https://img.shields.io/badge/learn%20by-examples-0077b3.svg)](https://github.com/pavdmyt/yaspin/tree/master/examples)
-
 [![DownloadsTot](https://static.pepy.tech/badge/yaspin)](https://pepy.tech/project/yaspin)
 [![DownloadsW](https://static.pepy.tech/badge/yaspin/week)](https://pepy.tech/project/yaspin)
 
