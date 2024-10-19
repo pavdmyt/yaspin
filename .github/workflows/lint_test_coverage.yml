@@ -39,8 +39,7 @@ jobs:
 
       - name: lint-code
         run: |
-          make flake
-          make lint
+          make check-lint
 
       - name: semgrep
         run: |

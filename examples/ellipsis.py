@@ -10,10 +10,10 @@ import time
 from yaspin import yaspin
 
 LONG_TEXT = (
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer venenatis lectus quis tincidunt venenatis."
-    "Proin interdum neque eu lectus finibus malesuada. Nunc vel nisl quis tellus porta euismod. Aenean dignissim"
-    "tortor eu sapien gravida efficitur. Aliquam consectetur aliquam ex facilisis tincidunt. Nunc luctus arcu nec"
-    "justo gravida efficitur."
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer venenatis lectus quis tincidunt "
+    "venenatis. Proin interdum neque eu lectus finibus malesuada. Nunc vel nisl quis tellus porta euismod. "
+    "Aenean dignissim tortor eu sapien gravida efficitur. Aliquam consectetur aliquam ex facilisis "
+    "tincidunt. Nunc luctus arcu nec justo gravida efficitur."
 )
 
 

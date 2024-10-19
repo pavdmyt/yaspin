@@ -18,14 +18,12 @@ fsec
 getpid
 htmlcov
 isatty
-isort
 mngr
 noqa
 nother
 pavdmyt
 Pavlo
 Pipfile
-pylint
 pypirc
 pyproject
 PYTHONOPTIMIZE

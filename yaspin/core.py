@@ -566,7 +566,8 @@ class Yaspin:
         max_text_len = self._get_max_text_length(len(frame), len(timer))
         if max_text_len < 1:
             raise ValueError(
-                f"Terminal size {self._terminal_width} is too small to display spinner with the given settings."
+                f"Terminal size {self._terminal_width} is too small to display spinner "
+                "with the given settings."
             )
         text = text[:max_text_len] + self._ellipsis if len(text) > max_text_len else text
 
