@@ -8,11 +8,14 @@ yaspin.api
 This module implements the Yaspin API.
 """
 
-from typing import Any
+from typing import Any, Callable, TypeVar
 
+import functools
 import signal
 
 from .core import default_handler, Yaspin
+
+T = TypeVar("T")
 
 
 def yaspin(*args: Any, **kwargs: Any) -> Yaspin:
@@ -81,6 +84,31 @@ def yaspin(*args: Any, **kwargs: Any) -> Yaspin:
 
     """
     return Yaspin(*args, **kwargs)
+
+
+def inject_spinner(*args: Any, **kwargs: Any) -> Callable[[Callable[..., T]], Callable[..., T]]:
+    """
+    Decorator that injects a yaspin spinner into the decorated function.
+    The spinner is passed as the first argument to the decorated function.
+
+    Example:
+        @inject_spinner(Spinners.dots, text="Processing...", color="green")
+        def process_data(spinner: Yaspin, data: list) -> None:
+            for i, item in enumerate(data):
+                spinner.text = f"Processing item {i+1}/{len(data)}"
+                # Process item...
+            spinner.ok("✓")
+    """
+
+    def decorator(func: Callable[..., T]) -> Callable[..., T]:
+        @functools.wraps(func)
+        def wrapper(*func_args: Any, **func_kwargs: Any) -> T:
+            with yaspin(*args, **kwargs) as spinner:
+                return func(spinner, *func_args, **func_kwargs)
+
+        return wrapper
+
+    return decorator
 
 
 def kbi_safe_yaspin(*args: Any, **kwargs: Any) -> Yaspin:
