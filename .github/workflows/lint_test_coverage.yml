@@ -48,9 +48,11 @@ jobs:
   mypy:
     needs: lint
     runs-on: ubuntu-24.04
+    env:
+      PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
       - name: checkout-code
@@ -81,10 +83,11 @@ jobs:
     env:
       PYTHONHASHSEED: 0
       USING_COVERAGE: '3.12'
+      PYO3_USE_ABI3_FORWARD_COMPATIBILITY: 1
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "pypy-3.10"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy-3.10"]
 
     steps:
       - name: checkout-code
