@@ -669,7 +669,7 @@ class Yaspin:
 
         if value not in HIGHLIGHTS:
             raise ValueError(
-                "'{}': unsupported on_color value. " "Use one of the: {}".format(
+                "'{}': unsupported on_color value. Use one of the: {}".format(
                     value, ", ".join(HIGHLIGHTS.keys())
                 )
             )
@@ -683,7 +683,7 @@ class Yaspin:
         for attr in attrs:
             if attr not in ATTRIBUTES:
                 raise ValueError(
-                    "'{}': unsupported attribute value. " "Use one of the: {}".format(
+                    "'{}': unsupported attribute value. Use one of the: {}".format(
                         attr, ", ".join(ATTRIBUTES.keys())
                     )
                 )

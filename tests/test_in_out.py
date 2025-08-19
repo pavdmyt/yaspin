@@ -44,7 +44,10 @@ def test_repr(text, frames, interval):
     assert isinstance(repr(sp), str)
 
 
-def test_compose_out_with_color(color_test_cases, on_color_test_cases, attrs_test_cases):
+def test_compose_out_with_color(monkeypatch, color_test_cases, on_color_test_cases, attrs_test_cases):
+    # Starting from v2.3.0, termcolor respects $NO_COLOR env var
+    # https://github.com/termcolor/termcolor/pull/38
+    monkeypatch.setenv("FORCE_COLOR", "1")
     color, color_exp = color_test_cases
     on_color, on_color_exp = on_color_test_cases
     attrs, attrs_exp = attrs_test_cases
