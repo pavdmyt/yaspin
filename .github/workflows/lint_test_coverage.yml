@@ -117,7 +117,7 @@ jobs:
       - name: install-dependencies
         if: "contains(matrix.python-version, 'pypy-3.11')"
         run: |
-          pip install termcolor==3.1.0 pytest==8.4.1 pytest-xdist==3.8.0
+          pip install termcolor==3.1.0 pytest==8.4.1 pytest-xdist==3.8.0 pytest-mock==3.14.1
 
       - name: run-tests
         if: "contains(matrix.python-version, 'pypy-3.11')"
