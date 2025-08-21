@@ -80,6 +80,7 @@ $ python script_that_uses_yaspin.py | grep ERROR
   - [Writing messages](#writing-messages)
   - [Integration with other libraries](#integration-with-other-libraries)
   - [Handling POSIX signals](#handling-posix-signals)
+  - [Injecting spinner into a function](#injecting-spinner-into-a-function)
 - [Development](#development)
 - [Contributing](#contributing)
 - [License](#license)
@@ -375,6 +376,26 @@ with yaspin(sigmap=sigmap, text="Handling SIGUSR1 and SIGTERM signals") as sp:
     sp.write("Send signals using `kill` command")
     sp.write("E.g. $ kill -USR1 {0}".format(os.getpid()))
     time.sleep(20)  # time consuming code
+```
+
+### Injecting spinner into a function
+
+The `@inject_spinner` decorator provides access to the spinner instance from within the decorated function
+by injecting it as the first argument. This gives you the flexibility to control the spinner's behavior directly.
+
+```python
+import time
+from yaspin import inject_spinner
+from yaspin.core import Yaspin
+
+@inject_spinner()
+def simple_task(spinner: Yaspin, items: list) -> None:
+    for i, _ in enumerate(items, 1):
+        spinner.text = f"Processing item {i}/{len(items)}"
+        time.sleep(1)
+    spinner.ok("✓")
+
+simple_task(["item1", "item2", "item3"])
 ```
 
 More [examples](https://github.com/pavdmyt/yaspin/tree/master/examples).
