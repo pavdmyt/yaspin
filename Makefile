@@ -82,10 +82,6 @@ bump:
 bump-minor:
 	@poetry version minor
 
-.PHONY: export-requirements
-export-requirements:
-	@poetry export -f requirements.txt --with dev > requirements.txt
-
 .PHONY: semgrep
 semgrep:
 	poetry run semgrep --error --config "p/secrets" --config "p/bandit" --config "p/secrets" .
