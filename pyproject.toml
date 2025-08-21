@@ -58,6 +58,7 @@ mypy = "^1.17"
 pytest = "^8.4"
 pytest-xdist = "^3.8"
 pytest-cov = "^6.2"
+pytest-mock = "^3.14.0"
 semgrep = "^1.132"
 ruff = "^0.12"
 
