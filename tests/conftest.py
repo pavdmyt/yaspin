@@ -238,7 +238,7 @@ def supported_highlights(request):
     ids=attrs_id_func,
     params=sorted(
         [[a] for a in ATTRIBUTES]
-        + [  # noqa: W503
+        + [
             ["bold", "dark"],
             ["blink", "concealed", "reverse"],
             ["underline", "concealed", "bold", "dark", "blink", "reverse"],
