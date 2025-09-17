@@ -1,6 +1,16 @@
 Release History
 ===============
 
+3.2.0 / 2025-09-17
+------------------
+
+* Add Python 3.14 support (#253)
+* Add ``@inject_spinner`` decorator (#256)
+* Update cli-spinners to ``v3.2.1``
+* ``termcolor`` version ``>=3`` support (#254)
+* Update dependencies
+
+
 3.1.0 / 2024-09-22
 ------------------
 
