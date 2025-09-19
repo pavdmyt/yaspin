@@ -9,31 +9,25 @@ version := $(shell poetry version | awk '{ print $$2 }')
 pypi_usr := $(shell grep username ~/.pypirc | awk -F"= " '{ print $$2 }')
 pypi_pwd := $(shell grep password ~/.pypirc | awk -F"= " '{ print $$2 }')
 
-.PHONY: flake
-flake:
-	@poetry run flake8 --ignore=F821,E501,W503 .
-
 .PHONY: lint
-lint: flake
-	@echo "$(OK_COLOR)==> Linting code ...$(NO_COLOR)"
-	@poetry run pylint $(name)/ ./tests -rn -f colorized
+lint:
+	@poetry run ruff check --fix ./$(name) ./tests ./examples
 
-.PHONY: isort
-isort:
-	@poetry run isort --atomic --verbose ./$(name) ./tests ./examples
+.PHONY: check-lint
+check-lint:
+	@poetry run ruff check --diff ./$(name) ./tests ./examples
 
 .PHONY: fmt
-fmt: isort
-	@poetry run black ./$(name) ./tests ./examples
+fmt:
+	@poetry run ruff format ./$(name) ./tests ./examples
 
 .PHONY: check-fmt
 check-fmt:
-	@poetry run isort --check ./$(name) ./tests ./examples
-	@poetry run black --check ./$(name) ./tests ./examples
+	@poetry run ruff format --check ./$(name) ./tests ./examples
 
 .PHONY: spellcheck
 spellcheck:
-	@cspell -c .cspell.json $(name)/*.py tests/*.py examples/*.py README.rst HISTORY.rst pyproject.toml Makefile
+	@cspell -c .cspell.json $(name)/*.py tests/*.py examples/*.py README.md HISTORY.rst pyproject.toml Makefile
 
 .PHONY: clean
 clean:
@@ -49,7 +43,7 @@ clean-pyc:
 	@find . -name '*~' -exec rm -f {} +
 
 .PHONY: test
-test: clean-pyc flake
+test: clean-pyc
 	@echo "$(OK_COLOR)==> Runnings tests ...$(NO_COLOR)"
 	@poetry run py.test -n auto -v
 
@@ -63,18 +57,13 @@ coverage: clean-pyc
 rm-build:
 	@rm -rf build dist .egg $(name).egg-info
 
-.PHONY: check-rst
-check-rst:
-	@echo "$(OK_COLOR)==> Checking RST will render...$(NO_COLOR)"
-	@poetry run twine check dist/*
-
 .PHONY: build
 build: rm-build
 	@echo "$(OK_COLOR)==> Building...$(NO_COLOR)"
 	@poetry build
 
 .PHONY: publish
-publish: flake build check-rst
+publish: build
 	@echo "$(OK_COLOR)==> Publishing...$(NO_COLOR)"
 	@poetry publish -u $(pypi_usr) -p $(pypi_pwd)
 
@@ -92,10 +81,6 @@ bump:
 .PHONY: bump-minor
 bump-minor:
 	@poetry version minor
-
-.PHONY: export-requirements
-export-requirements:
-	@poetry export -f requirements.txt --with dev > requirements.txt
 
 .PHONY: semgrep
 semgrep:

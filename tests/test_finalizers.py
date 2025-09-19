@@ -1,7 +1,6 @@
 """
 tests.test_finalizers
 ~~~~~~~~~~~~~~~~~~~~~
-
 """
 
 from yaspin import yaspin

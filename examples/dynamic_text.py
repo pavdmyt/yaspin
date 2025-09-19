@@ -5,8 +5,9 @@ examples.dynamic_text
 Evaluates text on every spinner frame.
 """
 
-import time
 from datetime import datetime
+
+import time
 
 from yaspin import yaspin
 

@@ -10,24 +10,24 @@ on:
 jobs:
 
   lint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: ["3.13"]
 
     steps:
       - name: checkout-code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: prepare-python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: install-poetry
         uses: snok/install-poetry@v1
         with:
-          version: 1.5.1
+          version: 2.1.4
 
       - name: install-dependencies
         run: |
@@ -39,8 +39,7 @@ jobs:
 
       - name: lint-code
         run: |
-          make flake
-          make lint
+          make check-lint
 
       - name: semgrep
         run: |
@@ -48,24 +47,25 @@ jobs:
 
   mypy:
     needs: lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
       - name: checkout-code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: prepare-python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
       - name: install-poetry
         uses: snok/install-poetry@v1
         with:
-          version: 1.5.1
+          version: 2.1.4
 
       - name: install-dependencies
         run: |
@@ -77,49 +77,50 @@ jobs:
 
   test:
     needs: [lint, mypy]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       PYTHONHASHSEED: 0
-      USING_COVERAGE: '3.10'
+      USING_COVERAGE: '3.13'
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12-dev", "pypy-3.9"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy-3.11"]
 
     steps:
       - name: checkout-code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: prepare-python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
 
       # Normal Python
       - name: install-poetry
-        if: "!contains(matrix.python-version, 'pypy-3.9')"
+        if: "!contains(matrix.python-version, 'pypy-3.11')"
         uses: snok/install-poetry@v1
         with:
-          version: 1.5.1
+          version: 2.1.4
 
       - name: install-dependencies
-        if: "!contains(matrix.python-version, 'pypy-3.9')"
+        if: "!contains(matrix.python-version, 'pypy-3.11')"
         run: |
           poetry install
 
       - name: run-tests
-        if: "!contains(matrix.python-version, 'pypy-3.9')"
+        if: "!contains(matrix.python-version, 'pypy-3.11')"
         run: |
           make test
 
       # PyPy
       - name: install-dependencies
-        if: "contains(matrix.python-version, 'pypy-3.9')"
+        if: "contains(matrix.python-version, 'pypy-3.11')"
         run: |
-          pip install termcolor==2.3.0 pytest==7.4.1 pytest-xdist==3.3.1
+          pip install termcolor==3.1.0 pytest==8.4.2 pytest-xdist==3.8.0 pytest-mock==3.15.1
 
       - name: run-tests
-        if: "contains(matrix.python-version, 'pypy-3.9')"
+        if: "contains(matrix.python-version, 'pypy-3.11')"
         run: |
           py.test -n auto -v
 
@@ -131,7 +132,9 @@ jobs:
 
       - name: submit-to-codecov-io
         if: "contains(env.USING_COVERAGE, matrix.python-version)"
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 

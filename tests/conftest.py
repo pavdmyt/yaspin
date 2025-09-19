@@ -8,8 +8,9 @@ Tests data.
 import signal
 import sys
 
-import pytest
 from termcolor import ATTRIBUTES, COLORS, HIGHLIGHTS
+
+import pytest
 
 from yaspin.core import default_handler, fancy_handler
 
@@ -110,10 +111,7 @@ def color_id_func(case):
     else:
         color = case
 
-    if not color or callable(color):
-        val = repr(color)
-    else:
-        val = color
+    val = repr(color) if not color or callable(color) else color
 
     return val
 
@@ -240,7 +238,7 @@ def supported_highlights(request):
     ids=attrs_id_func,
     params=sorted(
         [[a] for a in ATTRIBUTES]
-        + [  # noqa: W503
+        + [
             ["bold", "dark"],
             ["blink", "concealed", "reverse"],
             ["underline", "concealed", "bold", "dark", "blink", "reverse"],

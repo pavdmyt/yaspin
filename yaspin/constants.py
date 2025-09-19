@@ -8,7 +8,6 @@ yaspin.constants
 Some setups.
 """
 
-
 # Get spinner names:
 # $ < yaspin/data/spinners.json | jq '. | keys'
 SPINNER_ATTRS = [
@@ -37,6 +36,7 @@ SPINNER_ATTRS = [
     "dots11",
     "dots12",
     "dots13",
+    "dots14",
     "dots2",
     "dots3",
     "dots4",
@@ -46,6 +46,7 @@ SPINNER_ATTRS = [
     "dots8",
     "dots8Bit",
     "dots9",
+    "dotsCircle",
     "dqpb",
     "dwarfFortress",
     "earth",

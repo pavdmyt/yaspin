@@ -8,10 +8,11 @@ yaspin.spinners
 A collection of cli spinners.
 """
 
-import json
-import pkgutil
 from collections import namedtuple
 from typing import Any
+
+import json
+import pkgutil
 
 spinners_json = pkgutil.get_data(__name__, "data/spinners.json")
 if spinners_json is not None:

@@ -1,6 +1,33 @@
 Release History
 ===============
 
+3.2.0 / 2025-09-17
+------------------
+
+* Add Python 3.14 support (#253)
+* Add ``@inject_spinner`` decorator (#256)
+* Update cli-spinners to ``v3.2.1``
+* ``termcolor`` version ``>=3`` support (#254)
+* Update dependencies
+
+
+3.1.0 / 2024-09-22
+------------------
+
+* Fix long messages behavior by truncating them via custom ellipsis (#240)
+* Add Python 3.13 support
+* Update cli-spinners to ``v3.2.0``
+* Update dependencies
+
+
+3.0.2 / 2024-04-08
+------------------
+
+* Add ``py.typed`` marker file to be compliant with PEP561 (#237)
+* Update cli-spinners to ``v2.9.2``
+* Update dependencies
+
+
 3.0.1 / 2023-09-05
 ------------------
 

@@ -7,8 +7,9 @@ Test Yaspin attributes magic hidden in __getattr__.
 
 import sys
 
-import pytest
 from termcolor import ATTRIBUTES
+
+import pytest
 
 from yaspin import yaspin
 from yaspin.constants import SPINNER_ATTRS
@@ -37,7 +38,7 @@ def test_color(monkeypatch, color_test_cases):
     else:
         getattr(sp, color)
         assert sp.color == expected
-        assert sp._color_func.keywords["color"] == expected  # pylint: disable=no-member
+        assert sp._color_func.keywords["color"] == expected
 
 
 # Values for ``on_color`` argument
@@ -56,9 +57,7 @@ def test_on_color(monkeypatch, on_color_test_cases):
     else:
         getattr(sp, on_color)
         assert sp.on_color == expected
-        assert (
-            sp._color_func.keywords["on_color"] == expected  # pylint: disable=no-member
-        )  # pylint: disable=no-member
+        assert sp._color_func.keywords["on_color"] == expected
 
 
 # Values for ``attrs`` argument
@@ -68,7 +67,7 @@ def test_attrs(monkeypatch, attr):
     sp = yaspin()
     getattr(sp, attr)
     assert sp.attrs == [attr]
-    assert sp._color_func.keywords["attrs"] == [attr]  # pylint: disable=no-member
+    assert sp._color_func.keywords["attrs"] == [attr]
 
 
 def id_func(case):

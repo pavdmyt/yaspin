@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "yaspin"
-version = "3.0.1"
+version = "3.2.0"
 description = "Yet Another Terminal Spinner"
 license = "MIT"
 authors = ["Pavlo Dmytrenko <pavdmyt@aiven.io>"]
-readme = "README.rst"
+readme = "README.md"
 homepage = "https://github.com/pavdmyt/yaspin"
 repository = "https://github.com/pavdmyt/yaspin"
-documentation = "https://github.com/pavdmyt/yaspin/blob/master/README.rst"
+documentation = "https://github.com/pavdmyt/yaspin/blob/master/README.md"
 keywords = ["spinner", "console", "terminal", "loader", "indicator"]
 include = [
     { path = "tests", format = "sdist" },
@@ -34,6 +34,8 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
@@ -49,19 +51,16 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-termcolor = "^2.3"
+termcolor = "^3.1"
 
-[tool.poetry.dev-dependencies]
-black = "^23.3"
-twine = "^4.0"
-flake8 = "^6.1"
-isort = "^5.10"
-mypy = "^1.5"
-pytest = "^7.4"
-pytest-xdist = "^3.3"
-pytest-cov = "^4.1"
-pylint = "^2.17"
-semgrep = "^1.35"
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.17"
+pytest = "^8.4"
+pytest-xdist = "^3.8"
+pytest-cov = "^6.2"
+pytest-mock = "^3.14.0"
+semgrep = "^1.132"
+ruff = "^0.12"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/pavdmyt/yaspin/issues"
@@ -85,9 +84,48 @@ warn_redundant_casts = true
 warn_unused_configs = true
 warn_unused_ignores = true
 
-[tool.black]
+[tool.ruff]
 line-length = 110
+target-version = "py39"
 
-[tool.isort]
-profile = "black"
-line_length = 110
+[tool.ruff.format]
+indent-style = "space"
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # flake8-tidy-imports
+    "TID",
+    # isort
+    "I",
+    # mutable-argument-default - Do not use mutable data structures for argument defaults.
+    "B006",
+]
+
+[tool.ruff.lint.isort]
+
+# Combines as imports on the same line.
+combine-as-imports = true
+
+# Whether to place import from imports before straight imports when sorting.
+from-first = true
+
+# The number of lines to place between "direct" and 'import from' imports.
+lines-between-types = 1
+
+# Put all imports into the same section bucket.
+# This configuration breaks the Python convention.
+# no-sections = true
+
+# Order imports by type, which is determined by case, in addition to alphabetically.
+order-by-type = false

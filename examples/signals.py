@@ -65,7 +65,9 @@ def passing_additional_info_into_signal_handler():
     heads = random.randint(0, 1) == 1
     tails = not heads
 
-    def my_handler(signum, frame, spinner, context={"heads": heads, "tails": tails}):
+    def my_handler(signum, frame, spinner, context=None):
+        if context is None:
+            context = {"heads": heads, "tails": tails}
         if context["heads"]:
             spinner.text = "heads!"
             spinner.ok("🌕")
@@ -96,7 +98,7 @@ def handling_multiple_signals():
 
     with yaspin(sigmap=sigmap, text="Handling SIGUSR1 and SIGTERM") as sp:
         sp.write("Send signals using `kill` command")
-        sp.write("E.g. $ kill -USR1 {0}".format(os.getpid()))
+        sp.write(f"E.g. $ kill -USR1 {os.getpid()}")
         time.sleep(60)
         sp.write("No signal received")
 
@@ -131,7 +133,7 @@ def unpacker():
     )
     with swirl as sp:
         for p in range(0, 101, 5):
-            sp.text = "{0}% Unpacking".format(p)
+            sp.text = f"{p}% Unpacking"
             time.sleep(random.random())
         sp.green.ok("✔")
 

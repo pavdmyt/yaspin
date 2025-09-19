@@ -44,7 +44,10 @@ def test_repr(text, frames, interval):
     assert isinstance(repr(sp), str)
 
 
-def test_compose_out_with_color(color_test_cases, on_color_test_cases, attrs_test_cases):
+def test_compose_out_with_color(monkeypatch, color_test_cases, on_color_test_cases, attrs_test_cases):
+    # Starting from v2.3.0, termcolor respects $NO_COLOR env var
+    # https://github.com/termcolor/termcolor/pull/38
+    monkeypatch.setenv("FORCE_COLOR", "1")
     color, color_exp = color_test_cases
     on_color, on_color_exp = on_color_test_cases
     attrs, attrs_exp = attrs_test_cases
@@ -89,10 +92,7 @@ def test_write(monkeypatch, capsys, text, isatty_fixture):
 
     out, _ = capsys.readouterr()
     # cleans stdout from _clear_line
-    if isatty_fixture:
-        out = out.replace("\r\033[K", "")
-    else:
-        out = out.replace("\r", "")
+    out = out.replace("\r\x1b[K", "") if isatty_fixture else out.replace("\r", "")
 
     assert isinstance(out, (str, bytes))
     assert out[-1] == "\n"
@@ -151,10 +151,7 @@ def test_hide_show(monkeypatch, capsys, text, request, isatty_fixture):
     out, _ = capsys.readouterr()
 
     # cleans stdout from _clear_line
-    if isatty_fixture:
-        out = out.replace("\r\033[K", "")
-    else:
-        out = out.replace("\r", "")
+    out = out.replace("\r\x1b[K", "") if isatty_fixture else out.replace("\r", "")
 
     assert isinstance(out, (str, bytes))
     assert out[-1] == "\n"
@@ -214,10 +211,7 @@ def test_spinner_hiding_with_context_manager(monkeypatch, capsys, isatty_fixture
 
     # make sure no spinner text was printed while the spinner was hidden
     out, _ = capsys.readouterr()
-    if isatty_fixture:
-        out = out.replace("\r\033[K", "")
-    else:
-        out = out.replace("\r", "")
+    out = out.replace("\r\x1b[K", "") if isatty_fixture else out.replace("\r", "")
     assert f"{HIDDEN_START}\n{HIDDEN_END}" in out
 
 
@@ -246,10 +240,7 @@ def test_spinner_nested_hiding_with_context_manager(monkeypatch, capsys, isatty_
 
     # make sure no spinner text was printed while the spinner was hidden
     out, _ = capsys.readouterr()
-    if isatty_fixture:
-        out = out.replace("\r\033[K", "")
-    else:
-        out = out.replace("\r", "")
+    out = out.replace("\r\x1b[K", "") if isatty_fixture else out.replace("\r", "")
     assert f"{HIDDEN_START}\n{HIDDEN_END}" in out
 
 
@@ -263,7 +254,7 @@ def test_spinner_hiding_with_context_manager_and_exception():
     except ValueError:
         pass
     else:
-        assert False, "Expected a ValueError, something has eaten the exception"
+        raise AssertionError("Expected a ValueError, something has eaten the exception")
 
     # make sure spinner is unhidden again
     assert sp._hidden_level == 0
