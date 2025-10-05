@@ -6,6 +6,7 @@ Checks that all input data is converted to unicode.
 And all output data is converted to builtin str type.
 """
 
+import contextlib
 import re
 import sys
 import time
@@ -120,13 +121,11 @@ def test_hide_show(monkeypatch, capsys, text, request, isatty_fixture):
 
     # Ensure that sp.stop() will be executed
     def teardown():
-        try:
+        # Raised .stop() fails due to an already closed file
+        # Since this is a teardown function, it seems inappropriate to allow this
+        # to cause the test to fail
+        with contextlib.suppress(ValueError):
             sp.stop()
-        except ValueError:
-            # Raised .stop() fails due to an already closed file
-            # Since this is a teardown function, it seems inappropriate to allow this
-            # to cause the test to fail
-            pass
 
     request.addfinalizer(teardown)
 
