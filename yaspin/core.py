@@ -451,8 +451,24 @@ class Yaspin:
         _text = text if text else "FAIL"
         self._freeze(_text)
 
+    def _supports_ansi_codes(self) -> bool:
+        """Check if the stream supports ANSI escape sequences.
+
+        Returns True for TTY streams where ANSI codes work properly,
+        False for non-TTY streams (files, StringIO, etc.) where ANSI
+        codes would appear as literal text.
+        """
+        return self._stream.isatty()
+
     def is_jupyter(self) -> bool:
-        return not self._stream.isatty()
+        warnings.warn(
+            "is_jupyter() is deprecated and misleading. "
+            "It detects non-TTY streams, not Jupyter environments. "
+            "Use _supports_ansi_codes() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return not self._supports_ansi_codes()
 
     # Protected
     #
@@ -523,8 +539,8 @@ class Yaspin:
         are problematic in Jupyter notebooks. Otherwise, returns a partial function
         that applies the specified color, background color, and attributes to text.
         """
-        if self.is_jupyter():
-            # ANSI Color Control Sequences are problematic in Jupyter
+        if not self._supports_ansi_codes():
+            # ANSI Color Control Sequences are problematic in non-TTY streams
             return None
 
         return functools.partial(
@@ -666,7 +682,7 @@ class Yaspin:
             self._stream.write(f"\r{fill}\r")
 
     def _set_color(self, value: str) -> str:
-        if self.is_jupyter():
+        if not self._supports_ansi_codes():
             Yaspin._warn_color_disabled()
 
         if value not in COLORS:
@@ -676,7 +692,7 @@ class Yaspin:
         return value
 
     def _set_on_color(self, value: str) -> str:
-        if self.is_jupyter():
+        if not self._supports_ansi_codes():
             Yaspin._warn_color_disabled()
 
         if value not in HIGHLIGHTS:
@@ -688,7 +704,7 @@ class Yaspin:
         return value
 
     def _set_attrs(self, attrs: Sequence[str]) -> set[str]:
-        if self.is_jupyter():
+        if not self._supports_ansi_codes():
             Yaspin._warn_color_disabled()
 
         for attr in attrs:
@@ -705,7 +721,7 @@ class Yaspin:
     @staticmethod
     def _warn_color_disabled() -> None:
         warnings.warn(
-            "color, on_color and attrs are not supported when running in jupyter",
+            "color, on_color and attrs are not supported when output stream is not a TTY",
             stacklevel=3,
         )
 
