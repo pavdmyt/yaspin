@@ -19,7 +19,7 @@ T = TypeVar("T")
 
 
 def yaspin(*args: Any, **kwargs: Any) -> Yaspin:
-    """Display spinner in stdout.
+    """Display spinner in stdout (default) or a custom stream.
 
     Can be used as a context manager or as a function decorator.
 
@@ -37,6 +37,9 @@ def yaspin(*args: Any, **kwargs: Any) -> Yaspin:
         timer (bool, optional): Prints a timer showing the elapsed time.
         ellipsis (str, optional): Sets a custom ellipsis to signal text
             truncation due to overflow.
+        stream (TextIO, optional): Output stream for the spinner. Defaults
+            to sys.stdout. Use sys.stderr to display spinner on stderr while
+            redirecting stdout to a file.
 
     Returns:
         core.Yaspin: instance of the Yaspin class.

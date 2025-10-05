@@ -149,7 +149,6 @@ class Yaspin:
         self._hide_spin: threading.Event | None = None
         self._spin_thread: threading.Thread | None = None
         self._last_frame: str | None = None
-        self._stdout_lock = threading.Lock()
         self._hidden_level = 0
         self._cur_line_len = 0
 
