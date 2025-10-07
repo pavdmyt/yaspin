@@ -75,6 +75,7 @@ $ python script_that_uses_yaspin.py | grep ERROR
   - [Building custom spinners](#run-any-spinner-you-want)
   - [Changing spinner properties on the fly](#change-spinner-properties-on-the-fly)
   - [Timer](#spinner-with-timer)
+  - [Custom streams](#custom-streams)
   - [Custom Ellipsis](#custom-ellipsis)
   - [Dynamic text](#dynamic-text)
   - [Writing messages](#writing-messages)
@@ -241,6 +242,41 @@ with yaspin(text="elapsed time", timer=True) as sp:
     time.sleep(3.1415)
     sp.ok()
 ```
+
+### Custom streams
+
+By default, yaspin outputs to `sys.stdout`. You can redirect spinner output to any stream using the `stream` parameter:
+
+```python
+import sys
+import time
+from io import StringIO
+from yaspin import yaspin
+
+# Output to stderr instead of stdout
+with yaspin(text="Processing...", stream=sys.stderr):
+    time.sleep(2)
+
+# Capture spinner output in a string
+output_buffer = StringIO()
+with yaspin(text="Buffered output", stream=output_buffer):
+    time.sleep(1)
+
+print("Captured:", output_buffer.getvalue())
+```
+
+For debugging stream lifecycle issues, enable warnings when operations are attempted on closed streams:
+
+```python
+import time
+from yaspin import yaspin
+
+# Enable warnings for debugging (disabled by default)
+with yaspin(text="Debug mode", warn_on_closed_stream=True):
+    time.sleep(2)
+```
+
+This is particularly useful in testing environments or when integrating with libraries that manage stream lifecycles.
 
 ### Custom Ellipsis
 
