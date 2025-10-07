@@ -51,6 +51,36 @@ Fn = TypeVar("Fn", bound=Callable[..., Any])
 ENCODING: Final[str] = "utf-8"
 
 
+class SafeStreamWrapper:
+    """A wrapper that handles closed streams gracefully."""
+
+    def __init__(self, stream: TextIO) -> None:
+        self._stream = stream
+
+    def write(self, text: str) -> None:
+        """Write to stream, silently ignoring if stream is closed."""
+        if not self._stream.closed:
+            self._stream.write(text)
+
+    def flush(self) -> None:
+        """Flush stream, silently ignoring if stream is closed."""
+        if not self._stream.closed:
+            self._stream.flush()
+
+    def isatty(self) -> bool:
+        """Check if stream is a TTY, returning False if closed."""
+        return not self._stream.closed and self._stream.isatty()
+
+    @property
+    def closed(self) -> bool:
+        """Check if the underlying stream is closed."""
+        return self._stream.closed
+
+    def __getattr__(self, name: str) -> Any:
+        """Delegate other attributes to the underlying stream."""
+        return getattr(self._stream, name)
+
+
 def to_unicode(text_type: str | bytes, encoding: str = ENCODING) -> str:
     if isinstance(text_type, bytes):
         return text_type.decode(encoding)
@@ -120,7 +150,8 @@ class Yaspin:
         stream: TextIO | None = None,
     ) -> None:
         # Stream
-        self._stream = stream or sys.stdout
+        raw_stream = stream or sys.stdout
+        self._stream = SafeStreamWrapper(raw_stream)
         self._stream_lock = threading.Lock()
 
         # Spinner

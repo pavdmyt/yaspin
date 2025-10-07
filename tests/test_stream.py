@@ -18,33 +18,33 @@ from yaspin import yaspin
 def test_stream_parameter_default():
     """Test that default stream parameter uses sys.stdout"""
     sp = yaspin()
-    assert sp._stream == sys.stdout
+    assert sp._stream._stream == sys.stdout  # Check underlying stream
     assert sp._stream_lock is not None
 
 
 def test_stream_parameter_explicit_stdout():
     """Test explicit sys.stdout stream parameter."""
     sp = yaspin(stream=sys.stdout)
-    assert sp._stream == sys.stdout
+    assert sp._stream._stream == sys.stdout
 
 
 def test_stream_parameter_explicit_stderr():
     """Test explicit sys.stderr stream parameter."""
     sp = yaspin(stream=sys.stderr)
-    assert sp._stream == sys.stderr
+    assert sp._stream._stream == sys.stderr
 
 
 def test_stream_parameter_custom_stringio():
     """Test custom StringIO stream parameter."""
     custom_stream = io.StringIO()
     sp = yaspin(stream=custom_stream)
-    assert sp._stream == custom_stream
+    assert sp._stream._stream == custom_stream
 
 
 def test_stream_parameter_none():
     """Test that None stream parameter defaults to sys.stdout"""
     sp = yaspin(stream=None)
-    assert sp._stream == sys.stdout
+    assert sp._stream._stream == sys.stdout
 
 
 def test_stream_write_method_uses_custom_stream():
@@ -166,7 +166,7 @@ def test_stream_parameter_with_other_parameters(kwargs):
     kwargs["stream"] = custom_stream
 
     sp = yaspin(**kwargs)
-    assert sp._stream == custom_stream
+    assert sp._stream._stream == custom_stream
 
     # Test that it can start and stop without issues
     assert sp._spin_thread is None
@@ -194,7 +194,7 @@ def test_stream_parameter_with_other_parameters(kwargs):
 def test_stream_backward_compatibility(kwargs):
     """Test that existing code without stream parameter still works."""
     sp = yaspin(**kwargs)
-    assert sp._stream == sys.stdout  # Should default to stdout
+    assert sp._stream._stream == sys.stdout  # Should default to stdout
 
     # Should be able to start and stop
     assert sp._spin_thread is None
@@ -217,7 +217,7 @@ def test_stream_backward_compatibility(kwargs):
 def test_stream_parameter_types(stream_obj):
     """Test that different stream types work correctly."""
     sp = yaspin(stream=stream_obj)
-    assert sp._stream == stream_obj
+    assert sp._stream._stream == stream_obj
 
     # Should be able to use basic functionality
     with sp:
