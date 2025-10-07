@@ -54,18 +54,29 @@ ENCODING: Final[str] = "utf-8"
 class SafeStreamWrapper:
     """A wrapper that handles closed streams gracefully."""
 
-    def __init__(self, stream: TextIO) -> None:
+    def __init__(self, stream: TextIO, warn_on_closed: bool = False) -> None:
         self._stream = stream
+        self._warn_on_closed = warn_on_closed
+        self._warned_already = False  # Avoid warning spam
 
     def write(self, text: str) -> None:
-        """Write to stream, silently ignoring if stream is closed."""
+        """Write to stream, optionally warning if stream is closed."""
         if not self._stream.closed:
             self._stream.write(text)
+        elif self._warn_on_closed and not self._warned_already:
+            warnings.warn(
+                "Attempted to write to closed stream. Output ignored. "
+                "This may indicate a stream lifecycle management issue.",
+                UserWarning,
+                stacklevel=3,
+            )
+            self._warned_already = True
 
     def flush(self) -> None:
         """Flush stream, silently ignoring if stream is closed."""
         if not self._stream.closed:
             self._stream.flush()
+        # Note: don't warn on flush - it is often called during cleanup
 
     def isatty(self) -> bool:
         """Check if stream is a TTY, returning False if closed."""
@@ -148,10 +159,11 @@ class Yaspin:
         timer: bool = False,
         ellipsis: str = "",
         stream: TextIO | None = None,
+        warn_on_closed_stream: bool = False,
     ) -> None:
         # Stream
         raw_stream = stream or sys.stdout
-        self._stream = SafeStreamWrapper(raw_stream)
+        self._stream = SafeStreamWrapper(raw_stream, warn_on_closed=warn_on_closed_stream)
         self._stream_lock = threading.Lock()
 
         # Spinner

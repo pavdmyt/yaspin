@@ -9,6 +9,7 @@ import io
 import sys
 import threading
 import time
+import warnings
 
 import pytest
 
@@ -222,3 +223,35 @@ def test_stream_parameter_types(stream_obj):
     # Should be able to use basic functionality
     with sp:
         time.sleep(0.01)
+
+
+def test_warn_on_closed_stream_disabled():
+    # Test with warnings disabled (default)
+    custom_stream = io.StringIO()
+    sp = yaspin(stream=custom_stream, warn_on_closed_stream=False)
+    custom_stream.close()
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        sp.write("test message")
+        # Should not emit any warnings
+        assert len(w) == 0
+
+
+def test_warn_on_closed_stream_enabled():
+    # Test with warnings enabled
+    custom_stream = io.StringIO()
+    sp = yaspin(stream=custom_stream, warn_on_closed_stream=True)
+    custom_stream.close()
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        sp.write("test message")
+        # Should emit exactly one warning
+        assert len(w) == 1
+        assert issubclass(w[0].category, UserWarning)
+        assert "closed stream" in str(w[0].message)
+
+        # Second write should not emit another warning (rate limiting)
+        sp.write("second message")
+        assert len(w) == 1  # Still just one warning

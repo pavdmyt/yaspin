@@ -40,6 +40,9 @@ def yaspin(*args: Any, **kwargs: Any) -> Yaspin:
         stream (TextIO, optional): Output stream for the spinner. Defaults
             to sys.stdout. Use sys.stderr to display spinner on stderr while
             redirecting stdout to a file.
+        warn_on_closed_stream (bool, optional): If True, emits a warning
+            when attempting to write to a closed stream. Useful for debugging
+            stream lifecycle issues. Defaults to False for silent operation.
 
     Returns:
         core.Yaspin: instance of the Yaspin class.
