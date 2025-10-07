@@ -22,6 +22,7 @@ from typing import (
     Optional,
     Protocol,
     runtime_checkable,
+    TextIO,
     TYPE_CHECKING,
     TypeVar,
     Union,
@@ -48,6 +49,47 @@ if TYPE_CHECKING:
 Fn = TypeVar("Fn", bound=Callable[..., Any])
 
 ENCODING: Final[str] = "utf-8"
+
+
+class SafeStreamWrapper:
+    """A wrapper that handles closed streams gracefully."""
+
+    def __init__(self, stream: TextIO, warn_on_closed: bool = False) -> None:
+        self._stream = stream
+        self._warn_on_closed = warn_on_closed
+        self._warned_already = False  # Avoid warning spam
+
+    def write(self, text: str) -> None:
+        """Write to stream, optionally warning if stream is closed."""
+        if not self._stream.closed:
+            self._stream.write(text)
+        elif self._warn_on_closed and not self._warned_already:
+            warnings.warn(
+                "Attempted to write to closed stream. Output ignored. "
+                "This may indicate a stream lifecycle management issue.",
+                UserWarning,
+                stacklevel=3,
+            )
+            self._warned_already = True
+
+    def flush(self) -> None:
+        """Flush stream, silently ignoring if stream is closed."""
+        if not self._stream.closed:
+            self._stream.flush()
+        # Note: don't warn on flush - it is often called during cleanup
+
+    def isatty(self) -> bool:
+        """Check if stream is a TTY, returning False if closed."""
+        return not self._stream.closed and self._stream.isatty()
+
+    @property
+    def closed(self) -> bool:
+        """Check if the underlying stream is closed."""
+        return self._stream.closed
+
+    def __getattr__(self, name: str) -> Any:
+        """Delegate other attributes to the underlying stream."""
+        return getattr(self._stream, name)
 
 
 def to_unicode(text_type: str | bytes, encoding: str = ENCODING) -> str:
@@ -96,8 +138,8 @@ def fancy_handler(signum: int, frame: Any, spinner: Yaspin) -> None:
 
 class Yaspin:
     """Implements a context manager that spawns a thread
-    to write spinner frames into a tty (stdout) during
-    context execution.
+    to write spinner frames into a tty (stdout by default)
+    during context execution.
     """
 
     # When Python finds its output attached to a terminal,
@@ -116,13 +158,19 @@ class Yaspin:
         sigmap: dict[signal.Signals, SignalHandlers] | None = None,
         timer: bool = False,
         ellipsis: str = "",
+        stream: TextIO | None = None,
+        warn_on_closed_stream: bool = False,
     ) -> None:
+        # Stream
+        raw_stream = stream or sys.stdout
+        self._stream = SafeStreamWrapper(raw_stream, warn_on_closed=warn_on_closed_stream)
+        self._stream_lock = threading.Lock()
+
         # Spinner
         self._spinner = self._set_spinner(spinner)
         self._frames = self._set_frames(self._spinner, reversal)
         self._interval = self._set_interval(self._spinner)
         self._cycle = self._set_cycle(self._frames)
-
         # Color Specification
         self._color = self._set_color(color) if color else color
         self._on_color = self._set_on_color(on_color) if on_color else on_color
@@ -144,7 +192,6 @@ class Yaspin:
         self._hide_spin: threading.Event | None = None
         self._spin_thread: threading.Thread | None = None
         self._last_frame: str | None = None
-        self._stdout_lock = threading.Lock()
         self._hidden_level = 0
         self._cur_line_len = 0
 
@@ -366,14 +413,14 @@ class Yaspin:
             raise RuntimeError("hide_spin is None")
 
         if thr_is_alive and not self._hide_spin.is_set():
-            with self._stdout_lock:
+            with self._stream_lock:
                 # set the hidden spinner flag
                 self._hide_spin.set()
                 self._clear_line()
 
-                # flush the stdout buffer so the current line
+                # flush the stream buffer so the current line
                 # can be rewritten to
-                sys.stdout.flush()
+                self._stream.flush()
 
     @contextmanager
     def hidden(self) -> Generator[None, None, None]:
@@ -413,7 +460,7 @@ class Yaspin:
             raise RuntimeError("hide_spin is None")
 
         if thr_is_alive and self._hide_spin.is_set():
-            with self._stdout_lock:
+            with self._stream_lock:
                 # clear the hidden spinner flag
                 self._hide_spin.clear()
                 # clear the current line so the spinner is not appended to it
@@ -431,10 +478,10 @@ class Yaspin:
         """
         # similar to tqdm.write()
         # https://pypi.python.org/pypi/tqdm#writing-messages
-        with self._stdout_lock:
+        with self._stream_lock:
             self._clear_line()
             _text = to_unicode(text) if isinstance(text, (str, bytes)) else str(text)
-            sys.stdout.write(f"{_text}\n")
+            self._stream.write(f"{_text}\n")
             self._cur_line_len = 0
 
     def ok(self, text: str = "OK") -> None:
@@ -447,15 +494,27 @@ class Yaspin:
         _text = text if text else "FAIL"
         self._freeze(_text)
 
+    def _supports_ansi_codes(self) -> bool:
+        """Check if the stream supports ANSI escape sequences.
+
+        Returns True for TTY streams where ANSI codes work properly,
+        False for non-TTY streams (files, StringIO, etc.) where ANSI
+        codes would appear as literal text.
+        """
+        return self._stream.isatty()
+
+    def is_jupyter(self) -> bool:
+        warnings.warn(
+            "is_jupyter() is deprecated and misleading. "
+            "It detects non-TTY streams, not Jupyter environments. "
+            "Use _supports_ansi_codes() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return not self._supports_ansi_codes()
+
     # Protected
     #
-    @staticmethod
-    def _warn_color_disabled() -> None:
-        warnings.warn(
-            "color, on_color and attrs are not supported when running in jupyter",
-            stacklevel=3,
-        )
-
     def _freeze(self, final_text: str) -> None:
         """
         Stop the spinner and display the final frame.
@@ -475,10 +534,10 @@ class Yaspin:
         # Should be stopped here, otherwise prints after
         # self._freeze call will mess up the spinner
         self.stop()
-        with self._stdout_lock:
+        with self._stream_lock:
             if self._last_frame is None:
                 raise RuntimeError("last_frame is None")
-            sys.stdout.write(self._last_frame)
+            self._stream.write(self._last_frame)
             self._cur_line_len = 0
 
     def _spin(self) -> None:
@@ -506,10 +565,10 @@ class Yaspin:
             out = self._compose_out(spin_phase)
 
             # Write
-            with self._stdout_lock:
+            with self._stream_lock:
                 self._clear_line()
-                sys.stdout.write(out)
-                sys.stdout.flush()
+                self._stream.write(out)
+                self._stream.flush()
                 self._cur_line_len = max(self._cur_line_len, len(out))
 
             # Wait
@@ -523,8 +582,8 @@ class Yaspin:
         are problematic in Jupyter notebooks. Otherwise, returns a partial function
         that applies the specified color, background color, and attributes to text.
         """
-        if self.is_jupyter():
-            # ANSI Color Control Sequences are problematic in Jupyter
+        if not self._supports_ansi_codes():
+            # ANSI Color Control Sequences are problematic in non-TTY streams
             return None
 
         return functools.partial(
@@ -645,15 +704,28 @@ class Yaspin:
         for sig, sig_handler in self._dfl_sigmap.items():
             signal.signal(sig, sig_handler)
 
-    # Static
-    #
-    @staticmethod
-    def is_jupyter() -> bool:
-        return not sys.stdout.isatty()
+    def _hide_cursor(self) -> None:
+        if self._stream.isatty():
+            # ANSI Control Sequence DECTCEM 1 does not work in Jupyter
+            self._stream.write("\033[?25l")
+            self._stream.flush()
 
-    @staticmethod
-    def _set_color(value: str) -> str:
-        if Yaspin.is_jupyter():
+    def _show_cursor(self) -> None:
+        if self._stream.isatty():
+            # ANSI Control Sequence DECTCEM 2 does not work in Jupyter
+            self._stream.write("\033[?25h")
+            self._stream.flush()
+
+    def _clear_line(self) -> None:
+        if self._stream.isatty():
+            # ANSI Control Sequence EL does not work in Jupyter
+            self._stream.write("\r\033[K")
+        else:
+            fill = " " * self._cur_line_len
+            self._stream.write(f"\r{fill}\r")
+
+    def _set_color(self, value: str) -> str:
+        if not self._supports_ansi_codes():
             Yaspin._warn_color_disabled()
 
         if value not in COLORS:
@@ -662,9 +734,8 @@ class Yaspin:
             )
         return value
 
-    @staticmethod
-    def _set_on_color(value: str) -> str:
-        if Yaspin.is_jupyter():
+    def _set_on_color(self, value: str) -> str:
+        if not self._supports_ansi_codes():
             Yaspin._warn_color_disabled()
 
         if value not in HIGHLIGHTS:
@@ -675,9 +746,8 @@ class Yaspin:
             )
         return value
 
-    @staticmethod
-    def _set_attrs(attrs: Sequence[str]) -> set[str]:
-        if Yaspin.is_jupyter():
+    def _set_attrs(self, attrs: Sequence[str]) -> set[str]:
+        if not self._supports_ansi_codes():
             Yaspin._warn_color_disabled()
 
         for attr in attrs:
@@ -688,6 +758,15 @@ class Yaspin:
                     )
                 )
         return set(attrs)
+
+    # Static
+    #
+    @staticmethod
+    def _warn_color_disabled() -> None:
+        warnings.warn(
+            "color, on_color and attrs are not supported when output stream is not a TTY",
+            stacklevel=3,
+        )
 
     @staticmethod
     def _set_spinner(spinner: Spinner) -> Spinner:
@@ -757,25 +836,3 @@ class Yaspin:
     @staticmethod
     def _set_cycle(frames: str | Sequence[str]) -> Iterator[str]:
         return itertools.cycle(frames)
-
-    @staticmethod
-    def _hide_cursor() -> None:
-        if sys.stdout.isatty():
-            # ANSI Control Sequence DECTCEM 1 does not work in Jupyter
-            sys.stdout.write("\033[?25l")
-            sys.stdout.flush()
-
-    @staticmethod
-    def _show_cursor() -> None:
-        if sys.stdout.isatty():
-            # ANSI Control Sequence DECTCEM 2 does not work in Jupyter
-            sys.stdout.write("\033[?25h")
-            sys.stdout.flush()
-
-    def _clear_line(self) -> None:
-        if sys.stdout.isatty():
-            # ANSI Control Sequence EL does not work in Jupyter
-            sys.stdout.write("\r\033[K")
-        else:
-            fill = " " * self._cur_line_len
-            sys.stdout.write(f"\r{fill}\r")

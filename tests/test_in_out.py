@@ -120,6 +120,7 @@ def test_hide_show(monkeypatch, capsys, text, request, isatty_fixture):
 
     # Ensure that sp.stop() will be executed
     def teardown():
+        # Stop the spinner in teardown to ensure cleanup
         sp.stop()
 
     request.addfinalizer(teardown)
