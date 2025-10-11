@@ -51,7 +51,7 @@ with yaspin().white.bold.shark.on_blue as sp:
 
 ## Features
 
-- Runs at all major **CPython** versions (*3.9*, *3.10*, *3.11*, *3.12*, *3.13*, *3.14*), **PyPy**
+- Runs at all major **CPython** versions (*3.10*, *3.11*, *3.12*, *3.13*, *3.14*), **PyPy**
 - Supports all (70+) spinners from [cli-spinners](https://github.com/sindresorhus/cli-spinners)
 - Supports all *colors*, *highlights*, *attributes* and their mixes from [termcolor](https://pypi.org/project/termcolor/) library
 - Easy to combine with other command-line libraries, e.g. [prompt-toolkit](https://github.com/jonathanslenders/python-prompt-toolkit/)
