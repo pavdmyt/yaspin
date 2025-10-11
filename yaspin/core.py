@@ -10,22 +10,19 @@ A lightweight terminal spinner.
 
 from __future__ import annotations
 
-from collections.abc import Generator, Iterator, Sequence
+from collections.abc import Callable, Generator, Iterator, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import timedelta
 from typing import (
     Any,
-    Callable,
     cast,
     Final,
-    Optional,
     Protocol,
     runtime_checkable,
     TextIO,
     TYPE_CHECKING,
     TypeVar,
-    Union,
 )
 
 import functools
@@ -44,7 +41,7 @@ from .constants import SPINNER_ATTRS
 if TYPE_CHECKING:
     from types import FrameType, TracebackType
 
-    SignalHandlers = Union[Callable[[int, Optional[FrameType]], Any], int, None]
+    SignalHandlers = Callable[[int, FrameType | None], Any] | int | None
 
 Fn = TypeVar("Fn", bound=Callable[..., Any])
 
@@ -480,7 +477,7 @@ class Yaspin:
         # https://pypi.python.org/pypi/tqdm#writing-messages
         with self._stream_lock:
             self._clear_line()
-            _text = to_unicode(text) if isinstance(text, (str, bytes)) else str(text)
+            _text = to_unicode(text) if isinstance(text, str | bytes) else str(text)
             self._stream.write(f"{_text}\n")
             self._cur_line_len = 0
 
@@ -806,7 +803,7 @@ class Yaspin:
             uframes = spinner.frames
 
         # TODO (pavdmyt): support any type that implements iterable
-        if isinstance(spinner.frames, (list, tuple)):
+        if isinstance(spinner.frames, list | tuple):
             # Empty ``spinner.frames`` is handled by ``Yaspin._set_spinner``
             if spinner.frames and isinstance(spinner.frames[0], bytes):
                 uframes_seq = [to_unicode(frame) for frame in spinner.frames]
