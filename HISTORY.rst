@@ -1,6 +1,15 @@
 Release History
 ===============
 
+3.3.0 / 2025-10-11
+------------------
+
+* Support custom streams via ``stream`` argument (#235)
+* Update cli-spinners to ``v3.3.0``
+* Update dependencies
+* Deprecate ``is_jupyter()`` method
+
+
 3.2.0 / 2025-09-17
 ------------------
 
