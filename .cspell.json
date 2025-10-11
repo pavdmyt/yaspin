@@ -16,7 +16,8 @@
     "ignorePaths": [
         "dist/*",
         "gifs/*",
-        "static/*"
+        "static/*",
+        "examples/ellipsis.py"
     ],
     "language": "en"
 }

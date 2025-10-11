@@ -71,6 +71,7 @@ SPINNER_ATTRS = [
     "pipe",
     "point",
     "pong",
+    "rollingLine",
     "runner",
     "sand",
     "shark",
