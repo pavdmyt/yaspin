@@ -5,7 +5,7 @@ examples.hide_show_prompt_toolkit
 Usage of the ``hide`` and ``show`` methods with prompt_toolkit's printing.
 Starting from yaspin v1.1.0 handled by ``hidden`` context manager.
 
-Requires python-prompt-tooklit >= 2.0.1
+Requires python-prompt-toolkit >= 2.0.1
 https://github.com/jonathanslenders/python-prompt-toolkit/
 
 .. code:: bash
@@ -22,7 +22,7 @@ try:
     from prompt_toolkit.styles import Style
 except ImportError:
     print(
-        "This example requires python-prompt-tooklit >= 2.0.1:\n"
+        "This example requires python-prompt-toolkit >= 2.0.1:\n"
         "https://github.com/jonathanslenders/python-prompt-toolkit/\n"
         "\nTo install it, run:\n"
         'pip install "prompt_toolkit>=2.0.1"'
