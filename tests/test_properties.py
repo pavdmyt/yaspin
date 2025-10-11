@@ -35,7 +35,7 @@ def test_spinner_setter(frames, interval):
 
     assert not isinstance(sp._frames, bytes)
 
-    if isinstance(sp._frames, (list, tuple)):
+    if isinstance(sp._frames, list | tuple):
         assert isinstance(sp._frames[0], str)
 
     assert sp._interval == sp._spinner.interval * 0.001

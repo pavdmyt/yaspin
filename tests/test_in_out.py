@@ -21,7 +21,7 @@ def test_input_converted_to_unicode(text, frames, interval, reversal, side):
 
     assert not isinstance(sp._frames, bytes)
 
-    if isinstance(sp._frames, (list, tuple)):
+    if isinstance(sp._frames, list | tuple):
         assert isinstance(sp._frames[0], str)
 
     assert isinstance(sp._text, str)
@@ -94,7 +94,7 @@ def test_write(monkeypatch, capsys, text, isatty_fixture):
     # cleans stdout from _clear_line
     out = out.replace("\r\x1b[K", "") if isatty_fixture else out.replace("\r", "")
 
-    assert isinstance(out, (str, bytes))
+    assert isinstance(out, str | bytes)
     assert out[-1] == "\n"
     if text:
         assert out[:-1] == text
@@ -148,7 +148,7 @@ def test_hide_show(monkeypatch, capsys, text, request, isatty_fixture):
     # cleans stdout from _clear_line
     out = out.replace("\r\x1b[K", "") if isatty_fixture else out.replace("\r", "")
 
-    assert isinstance(out, (str, bytes))
+    assert isinstance(out, str | bytes)
     assert out[-1] == "\n"
     if text:
         assert out[:-1] == text
