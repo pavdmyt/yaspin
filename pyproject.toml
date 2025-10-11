@@ -60,6 +60,7 @@ pytest-cov = "^6.2"
 pytest-mock = "^3.14.0"
 semgrep = "^1.132"
 ruff = "^0.12"
+ruamel-yaml-clib = "^0.2.14"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/pavdmyt/yaspin/issues"
