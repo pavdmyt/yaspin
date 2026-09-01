@@ -1,3 +1,0 @@
-[report]
-omit =
-    yaspin/signal_handlers.py
