@@ -27,7 +27,7 @@ jobs:
       - name: install-poetry
         uses: snok/install-poetry@v1
         with:
-          version: 2.2.1
+          version: 2.4.2
 
       - name: install-dependencies
         run: |
@@ -65,7 +65,7 @@ jobs:
       - name: install-poetry
         uses: snok/install-poetry@v1
         with:
-          version: 2.2.1
+          version: 2.4.2
 
       - name: install-dependencies
         run: |
@@ -101,7 +101,7 @@ jobs:
         if: "!contains(matrix.python-version, 'pypy-3.11')"
         uses: snok/install-poetry@v1
         with:
-          version: 2.2.1
+          version: 2.4.2
 
       - name: install-dependencies
         if: "!contains(matrix.python-version, 'pypy-3.11')"
@@ -117,7 +117,7 @@ jobs:
       - name: install-dependencies
         if: "contains(matrix.python-version, 'pypy-3.11')"
         run: |
-          pip install termcolor==3.2.0 pytest==8.4.2 pytest-xdist==3.8.0 pytest-mock==3.15.1
+          pip install termcolor==3.3.0 pytest==9.1.1 pytest-xdist==3.8.0 pytest-mock==3.15.1
 
       - name: run-tests
         if: "contains(matrix.python-version, 'pypy-3.11')"
@@ -137,4 +137,3 @@ jobs:
           fail_ci_if_error: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
