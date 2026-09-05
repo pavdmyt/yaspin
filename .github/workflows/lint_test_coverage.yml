@@ -13,14 +13,14 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        python-version: ["3.13"]
+        python-version: ["3.14"]
 
     steps:
       - name: checkout-code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: prepare-python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -54,10 +54,10 @@ jobs:
 
     steps:
       - name: checkout-code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: prepare-python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       PYTHONHASHSEED: 0
-      USING_COVERAGE: '3.13'
+      USING_COVERAGE: '3.14'
     strategy:
       fail-fast: false
       matrix:
@@ -88,10 +88,10 @@ jobs:
 
     steps:
       - name: checkout-code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: prepare-python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
@@ -132,7 +132,7 @@ jobs:
 
       - name: submit-to-codecov-io
         if: "contains(env.USING_COVERAGE, matrix.python-version)"
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v7
         with:
           fail_ci_if_error: true
         env:

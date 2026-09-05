@@ -12,26 +12,26 @@ jobs:
 
     steps:
       - name: checkout-code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
       - name: prepare-python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
-          python-version: 3.13
+          python-version: 3.14
 
       - name: install-poetry
         uses: snok/install-poetry@v1
         with:
-          version: 2.2.1
+          version: 2.4.2
 
       - name: build-package
         run: |
           poetry build
 
       - name: upload-build-artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: python-package-distributions
           path: dist/
@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - name: download-build-artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: python-package-distributions
           path: dist/
