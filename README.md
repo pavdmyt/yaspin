@@ -244,6 +244,19 @@ with yaspin(text="elapsed time", timer=True) as sp:
     sp.ok()
 ```
 
+To omit the fractions of a second, pass a format string with one automatic
+replacement field. It receives the elapsed time as a `datetime.timedelta`.
+Use a second field to receive hundredths of a second.
+
+```python
+with yaspin(text="elapsed time", timer=" ({})") as sp:
+    time.sleep(3.1415)
+    sp.ok()
+```
+
+The default `timer=True` format is ` ({}.{:02.0f})`. Custom formats must
+contain one or two automatic replacement fields.
+
 ### Custom streams
 
 By default, yaspin outputs to `sys.stdout`. You can redirect spinner output to any stream using the `stream` parameter:

@@ -5,6 +5,8 @@ tests.test_timer
 Test timer feature.
 """
 
+from io import StringIO
+
 import re
 import time
 
@@ -28,6 +30,52 @@ def test_timer_idle():
     sp._freeze("")
 
     assert "(0:00:00.00)" in sp._last_frame
+
+
+@pytest.mark.parametrize(
+    "timer, expected",
+    [
+        pytest.param(" ({})", " (0:00:00)", id="elapsed-time-only"),
+        pytest.param(" [{}.{:02.0f}]", " [0:00:00.00]", id="elapsed-time-and-hundredths"),
+        pytest.param(" {{{}}}", " {0:00:00}", id="escaped-braces"),
+    ],
+)
+def test_timer_custom_format(timer, expected):
+    sp = yaspin(timer=timer)
+    sp._freeze("")
+
+    assert expected in sp._last_frame
+
+
+@pytest.mark.parametrize(
+    "timer",
+    [
+        pytest.param("", id="no-fields"),
+        pytest.param("elapsed", id="literal-only"),
+        pytest.param("{} {} {}", id="three-fields"),
+        pytest.param("{0}", id="indexed-field"),
+        pytest.param("{elapsed}", id="named-field"),
+        pytest.param("{", id="malformed-brace"),
+        pytest.param("{!s:{}<}", id="nested-field"),
+        pytest.param("{:02.0f}", id="incompatible-format-spec"),
+    ],
+)
+def test_timer_custom_format_validation(timer):
+    with pytest.raises(ValueError, match="timer format"):
+        yaspin(timer=timer)
+
+
+@pytest.mark.parametrize("timer", [pytest.param(0, id="integer"), pytest.param(None, id="none")])
+def test_timer_rejects_non_bool_or_str_value(timer):
+    with pytest.raises(TypeError, match="timer must be a bool or str"):
+        yaspin(timer=timer)
+
+
+def test_custom_timer_format_is_included_in_text_truncation():
+    sp = yaspin(text="abc", timer=" ({})", stream=StringIO())
+    sp._terminal_width = len("* ") + len(" (0:00:00)") + 2
+
+    assert sp._compose_out("*") == "\r* ab (0:00:00)"
 
 
 def test_timer_in_progress():

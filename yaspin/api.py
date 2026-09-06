@@ -35,7 +35,11 @@ def yaspin(*args: Any, **kwargs: Any) -> Yaspin:
             of the text string.
         sigmap (dict, optional): Maps POSIX signals to their respective
             handlers.
-        timer (bool, optional): Prints a timer showing the elapsed time.
+        timer (bool | str, optional): Prints a timer showing the elapsed time.
+            Pass True for the default `` (H:MM:SS.hh)`` format. A custom
+            string must contain one or two automatic replacement fields: the
+            first receives elapsed time as a ``datetime.timedelta`` and the
+            optional second receives hundredths of a second.
         ellipsis (str, optional): Sets a custom ellipsis to signal text
             truncation due to overflow.
         stream (TextIO, optional): Output stream for the spinner. Defaults
@@ -55,6 +59,8 @@ def yaspin(*args: Any, **kwargs: Any) -> Yaspin:
             is specified.
         ValueError: If trying to register handler for SIGKILL signal.
         ValueError: If unsupported ``side`` is specified.
+        ValueError: If ``timer`` has an invalid custom format.
+        TypeError: If ``timer`` is not a bool or str.
 
     Available text colors:
         red, green, yellow, blue, magenta, cyan, white.
