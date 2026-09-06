@@ -46,6 +46,9 @@ syntax newer than 3.10.
 Every commit message must use a descriptive prefix followed by a colon, for example
 `deps: update`. Use the `ai:` prefix for commits that update this `AGENTS.md` file.
 
+Keep the subject concise. Put motivation and relevant context in a multi-line commit body, with
+each line wrapped to 90 characters or fewer.
+
 ## Architecture
 
 A single-purpose library: a threaded terminal spinner. Four modules under `yaspin/`.
