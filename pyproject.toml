@@ -50,16 +50,16 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-termcolor = "^3.2"
+termcolor = "^3.3"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.17"
-pytest = "^8.4"
+mypy = "^2.3"
+pytest = "^9.1"
 pytest-xdist = "^3.8"
-pytest-cov = "^6.2"
-pytest-mock = "^3.14.0"
-semgrep = "^1.132"
-ruff = "^0.12"
+pytest-cov = "^7.1"
+pytest-mock = "^3.15"
+semgrep = "^1.176"
+ruff = "^0.16"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/pavdmyt/yaspin/issues"

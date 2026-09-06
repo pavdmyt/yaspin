@@ -8,7 +8,7 @@ All development goes through Poetry + the Makefile:
 
 ```bash
 poetry install         # install dev dependencies
-make test              # pytest -n auto -v (clears .pyc first)
+make test              # pytest -n auto -v (clears .pyc first; verbose output)
 make coverage          # term + html + xml coverage reports
 make lint              # ruff check --fix
 make check-lint        # ruff check --diff (what CI runs)
@@ -21,19 +21,30 @@ make build             # poetry build
 make bump / bump-minor # poetry version patch/minor
 ```
 
-Run a single test or a subset:
+Run the full suite with compact output to avoid filling the context window:
 
 ```bash
-poetry run pytest tests/test_stream.py -v
-poetry run pytest tests/test_in_out.py::test_compose_out_with_timer -v
-poetry run pytest -k "ellipsis" -v
+poetry run py.test -n auto
 ```
+
+If a test fails, probe the relevant subset with pytest's `-k` expression:
+
+```bash
+poetry run py.test -k "ellipsis"
+```
+
+`-k EXPRESSION` only runs tests whose names match the given substring.
 
 Note `make test` uses `pytest-xdist` (`-n auto`); drop `-n` when debugging with breakpoints or when
 test ordering matters. CI sets `PYTHONHASHSEED=0`.
 
 Supported Python: 3.10–3.14 plus PyPy 3.11. `ruff` targets py310 with `line-length = 110`; do not use
 syntax newer than 3.10.
+
+## Commits
+
+Every commit message must use a descriptive prefix followed by a colon, for example
+`deps: update`. Use the `ai:` prefix for commits that update this `AGENTS.md` file.
 
 ## Architecture
 

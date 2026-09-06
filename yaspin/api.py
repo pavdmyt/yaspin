@@ -64,7 +64,7 @@ def yaspin(*args: Any, **kwargs: Any) -> Yaspin:
         on_white, on_grey.
 
     Available attributes:
-        bold, dark, underline, blink, reverse, concealed.
+        bold, dark, underline, blink, reverse, concealed, italic, strike.
 
     Example::
 

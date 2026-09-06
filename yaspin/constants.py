@@ -51,6 +51,7 @@ SPINNER_ATTRS = [
     "dwarfFortress",
     "earth",
     "fingerDance",
+    "fish",
     "fistBump",
     "flip",
     "grenade",
