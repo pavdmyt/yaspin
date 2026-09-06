@@ -1,6 +1,14 @@
 Release History
 ===============
 
+3.5.0 / 2026-09-06
+------------------
+
+* Support custom timer formats (#236)
+* Update cli-spinners to ``v3.4.0``
+* Update dependencies
+
+
 3.4.0 / 2025-12-06
 ------------------
 
