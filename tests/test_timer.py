@@ -56,6 +56,7 @@ def test_timer_custom_format(timer, expected):
         pytest.param("{0}", id="indexed-field"),
         pytest.param("{elapsed}", id="named-field"),
         pytest.param("{", id="malformed-brace"),
+        pytest.param("{!s:{}<}", id="nested-field"),
         pytest.param("{:02.0f}", id="incompatible-format-spec"),
     ],
 )

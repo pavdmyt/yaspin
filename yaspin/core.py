@@ -814,9 +814,12 @@ class Yaspin:
     def _get_format_fields(format_string: str) -> list[str]:
         """Return the replacement field names from a Python format string."""
         fields = []
-        for _, field_name, _, _ in Formatter().parse(format_string):
-            if field_name is not None:
-                fields.append(field_name)
+        for _, field_name, format_spec, _ in Formatter().parse(format_string):
+            if field_name is None:
+                continue
+            if format_spec and ("{" in format_spec or "}" in format_spec):
+                raise ValueError("nested replacement fields are not supported")
+            fields.append(field_name)
         return fields
 
     @staticmethod
