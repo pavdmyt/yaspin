@@ -14,6 +14,7 @@ from collections.abc import Callable, Generator, Iterator, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import timedelta
+from string import Formatter
 from typing import (
     Any,
     cast,
@@ -46,6 +47,7 @@ if TYPE_CHECKING:
 Fn = TypeVar("Fn", bound=Callable[..., Any])
 
 ENCODING: Final[str] = "utf-8"
+DEFAULT_TIMER_FORMAT: Final[str] = " ({}.{:02.0f})"
 
 
 class SafeStreamWrapper:
@@ -153,7 +155,7 @@ class Yaspin:
         reversal: bool = False,
         side: str = "left",
         sigmap: dict[signal.Signals, SignalHandlers] | None = None,
-        timer: bool = False,
+        timer: bool | str = False,
         ellipsis: str = "",
         stream: TextIO | None = None,
         warn_on_closed_stream: bool = False,
@@ -178,7 +180,7 @@ class Yaspin:
         self._text = text
         self._side = self._set_side(side)
         self._reversal = reversal
-        self._timer = timer
+        self._timer = self._set_timer(timer)
         self._ellipsis = ellipsis
         self._terminal_width: int = shutil.get_terminal_size().columns
         self._start_time: float | None = None
@@ -612,11 +614,7 @@ class Yaspin:
         text = str(self._text)
 
         # Timer
-        if self._timer:
-            sec, fsec = divmod(round(100 * self.elapsed_time), 100)
-            timer = f" ({timedelta(seconds=sec)}.{fsec:02.0f})"
-        else:
-            timer = ""
+        timer = self._format_timer()
 
         # Truncate
         max_text_len = self._get_max_text_length(len(frame), len(timer))
@@ -656,6 +654,15 @@ class Yaspin:
         frame_width += 1
 
         return self._terminal_width - frame_width - timer_width - ellipsis_width
+
+    def _format_timer(self) -> str:
+        """Render the elapsed time according to the configured timer format."""
+        if self._timer is False:
+            return ""
+
+        sec, fsec = divmod(round(100 * self.elapsed_time), 100)
+        timer_format = DEFAULT_TIMER_FORMAT if self._timer is True else self._timer
+        return timer_format.format(timedelta(seconds=sec), fsec)
 
     def _register_signal_handlers(self) -> None:
         """
@@ -779,6 +786,38 @@ class Yaspin:
         if side not in ("left", "right"):
             raise ValueError("'{0}': unsupported side value. Use either 'left' or 'right'.")
         return side
+
+    @staticmethod
+    def _set_timer(timer: bool | str) -> bool | str:
+        """Validate a timer setting and return it unchanged."""
+        if isinstance(timer, bool):
+            return timer
+        if not isinstance(timer, str):
+            raise TypeError("timer must be a bool or str")
+
+        try:
+            fields = Yaspin._get_format_fields(timer)
+        except ValueError as exc:
+            raise ValueError("timer format must contain one or two automatic replacement fields") from exc
+
+        if not 1 <= len(fields) <= 2 or any(field_name != "" for field_name in fields):
+            raise ValueError("timer format must contain one or two automatic replacement fields")
+
+        try:
+            timer.format(timedelta(), 0)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("timer format must be compatible with elapsed time values") from exc
+
+        return timer
+
+    @staticmethod
+    def _get_format_fields(format_string: str) -> list[str]:
+        """Return the replacement field names from a Python format string."""
+        fields = []
+        for _, field_name, _, _ in Formatter().parse(format_string):
+            if field_name is not None:
+                fields.append(field_name)
+        return fields
 
     @staticmethod
     def _set_frames(spinner: Spinner, reversal: bool) -> str | Sequence[str]:
