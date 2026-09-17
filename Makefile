@@ -70,7 +70,7 @@ bump-minor:
 
 .PHONY: semgrep
 semgrep:
-	poetry run semgrep --error --config "p/secrets" --config "p/bandit" --config "p/secrets" .
+	poetry run semgrep --error --config "p/secrets" --config "p/bandit" .
 
 .PHONY: mypy
 mypy:

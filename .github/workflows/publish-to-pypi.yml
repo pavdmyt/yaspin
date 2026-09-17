@@ -24,7 +24,7 @@ jobs:
       - name: install-poetry
         uses: snok/install-poetry@v1
         with:
-          version: 2.4.2
+          version: 2.4.3
 
       - name: build-package
         run: |
