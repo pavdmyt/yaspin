@@ -27,11 +27,11 @@ jobs:
       - name: install-poetry
         uses: snok/install-poetry@v1
         with:
-          version: 2.4.2
+          version: 2.4.3
 
       - name: install-dependencies
         run: |
-          poetry install
+          poetry install --with security
 
       - name: check-fmt
         run: |
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "3.15-dev"]
 
     steps:
       - name: checkout-code
@@ -65,7 +65,7 @@ jobs:
       - name: install-poetry
         uses: snok/install-poetry@v1
         with:
-          version: 2.4.2
+          version: 2.4.3
 
       - name: install-dependencies
         run: |
@@ -84,7 +84,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "pypy-3.11"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "3.15-dev", "pypy-3.11"]
 
     steps:
       - name: checkout-code
@@ -101,7 +101,7 @@ jobs:
         if: "!contains(matrix.python-version, 'pypy-3.11')"
         uses: snok/install-poetry@v1
         with:
-          version: 2.4.2
+          version: 2.4.3
 
       - name: install-dependencies
         if: "!contains(matrix.python-version, 'pypy-3.11')"
