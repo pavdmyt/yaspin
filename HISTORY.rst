@@ -1,6 +1,12 @@
 Release History
 ===============
 
+3.5.1 / 2026-09-18
+------------------
+
+* Prevent a stale spinner frame from being written after ``hide()``
+
+
 3.5.0 / 2026-09-06
 ------------------
 
