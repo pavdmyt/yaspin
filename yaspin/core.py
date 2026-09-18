@@ -565,6 +565,11 @@ class Yaspin:
 
             # Write
             with self._stream_lock:
+                # Invariant: a live frame may be written only after observing
+                # _hide_spin unset while holding _stream_lock. hide() sets the
+                # flag under this lock, so stale pre-hide frames are rejected.
+                if self._hide_spin is not None and self._hide_spin.is_set():
+                    continue
                 self._clear_line()
                 self._stream.write(out)
                 self._stream.flush()

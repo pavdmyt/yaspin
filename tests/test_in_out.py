@@ -8,11 +8,28 @@ And all output data is converted to builtin str type.
 
 import re
 import sys
+import threading
 import time
+
+from termcolor import can_colorize
 
 import pytest
 
 from yaspin import Spinner, yaspin
+
+
+@pytest.fixture
+def force_color(monkeypatch):
+    """Force and isolate termcolor's process-cached color decision."""
+    monkeypatch.delenv("ANSI_COLORS_DISABLED", raising=False)
+    monkeypatch.delenv("NO_COLOR", raising=False)
+    monkeypatch.delenv("TERM", raising=False)
+    monkeypatch.setenv("FORCE_COLOR", "1")
+    can_colorize.cache_clear()
+
+    yield
+
+    can_colorize.cache_clear()
 
 
 def test_input_converted_to_unicode(text, frames, interval, reversal, side):
@@ -44,10 +61,7 @@ def test_repr(text, frames, interval):
     assert isinstance(repr(sp), str)
 
 
-def test_compose_out_with_color(monkeypatch, color_test_cases, on_color_test_cases, attrs_test_cases):
-    # Starting from v2.3.0, termcolor respects $NO_COLOR env var
-    # https://github.com/termcolor/termcolor/pull/38
-    monkeypatch.setenv("FORCE_COLOR", "1")
+def test_compose_out_with_color(force_color, color_test_cases, on_color_test_cases, attrs_test_cases):
     color, color_exp = color_test_cases
     on_color, on_color_exp = on_color_test_cases
     attrs, attrs_exp = attrs_test_cases
@@ -74,6 +88,41 @@ def test_compose_out_with_color(monkeypatch, color_test_cases, on_color_test_cas
     out = sp._compose_out(frame="/")
     assert out.startswith("\r\033")
     assert isinstance(out, str)
+
+
+@pytest.mark.parametrize("stream_isatty", [True, False], ids=["tty", "non-tty"])
+def test_spinner_does_not_write_frame_after_hide(monkeypatch, capsys, stream_isatty):
+    frame = "frame composed before hide"
+    compose_started = threading.Event()
+    allow_compose = threading.Event()
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: stream_isatty)
+    sp = yaspin()
+
+    def compose_out(_spin_phase):
+        compose_started.set()
+        allow_compose.wait()
+        return frame
+
+    monkeypatch.setattr(sp, "_compose_out", compose_out)
+    sp.start()
+
+    try:
+        assert compose_started.wait(timeout=1)
+        sp.hide()
+
+        assert sp._stop_spin is not None
+        assert sp._spin_thread is not None
+        sp._stop_spin.set()
+        allow_compose.set()
+        sp._spin_thread.join(timeout=1)
+
+        assert not sp._spin_thread.is_alive()
+    finally:
+        allow_compose.set()
+        sp.stop()
+
+    out, _ = capsys.readouterr()
+    assert frame not in out
 
 
 def test_color_jupyter(monkeypatch):
