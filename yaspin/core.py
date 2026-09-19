@@ -17,8 +17,8 @@ from datetime import timedelta
 from string import Formatter
 from typing import (
     Any,
-    cast,
     Final,
+    ParamSpec,
     Protocol,
     runtime_checkable,
     TextIO,
@@ -44,7 +44,8 @@ if TYPE_CHECKING:
 
     SignalHandlers = Callable[[int, FrameType | None], Any] | int | None
 
-Fn = TypeVar("Fn", bound=Callable[..., Any])
+P = ParamSpec("P")
+T = TypeVar("T")
 
 ENCODING: Final[str] = "utf-8"
 DEFAULT_TIMER_FORMAT: Final[str] = " ({}.{:02.0f})"
@@ -221,13 +222,13 @@ class Yaspin:
         if self._spin_thread.is_alive():
             self.stop()
 
-    def __call__(self, fn: Fn) -> Fn:
+    def __call__(self, fn: Callable[P, T]) -> Callable[P, T]:
         @functools.wraps(fn)
-        def inner(*args: Any, **kwargs: Any) -> Fn:
+        def inner(*args: P.args, **kwargs: P.kwargs) -> T:
             with self:
                 return fn(*args, **kwargs)
 
-        return cast(Fn, inner)
+        return inner
 
     def __getattr__(self, name: str) -> Yaspin:
         # CLI spinners
