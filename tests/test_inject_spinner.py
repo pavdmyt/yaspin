@@ -130,7 +130,8 @@ def test_signal_handling() -> None:
     def handler(signum: int, frame: Any, spinner: Yaspin) -> None:
         spinner.fail("Interrupted")
 
-    @inject_spinner(sigmap={signal.SIGUSR1: handler})
+    # SIGTERM exists on both POSIX and Windows; SIGUSR1 is POSIX-only.
+    @inject_spinner(sigmap={signal.SIGTERM: handler})
     def sample_func(spinner: Yaspin) -> None:
         # Signal handling setup should work without raising errors
         pass

@@ -125,6 +125,18 @@ def attrs_id_func(case):
     return val
 
 
+def _sig(name):
+    """Return the signal by name, or None on platforms that lack it (e.g. Windows)."""
+    return getattr(signal, name, None)
+
+
+SIGUSR1 = _sig("SIGUSR1")
+SIGUSR2 = _sig("SIGUSR2")
+SIGHUP = _sig("SIGHUP")
+SIGINT = _sig("SIGINT")
+SIGTERM = _sig("SIGTERM")
+
+
 @pytest.fixture(
     scope="session",
     ids=color_id_func,
@@ -272,34 +284,46 @@ def final_text(request):
     return request.param
 
 
+# Build the sigmap test cases at module level, dropping cases that rely on
+# signals unavailable on the current platform (SIGUSR1/SIGUSR2/SIGHUP on Windows).
+_sigmap_params = [None]
+_sigmap_ids = ["no sigmap"]
+if SIGUSR1 is not None:
+    _sigmap_params.append({SIGUSR1: signal.SIG_DFL})
+    _sigmap_ids.append("SIGUSR1 - SIG_DFL")
+if SIGTERM is not None:
+    _sigmap_params.append({SIGTERM: signal.SIG_IGN})
+    _sigmap_ids.append("SIGTERM - SIG_IGN")
+    _sigmap_params.append({SIGTERM: signal.default_int_handler})
+    _sigmap_ids.append("SIGTERM - default_int_handler")
+if SIGHUP is not None:
+    _sigmap_params.append({SIGHUP: default_handler})
+    _sigmap_ids.append("SIGHUP - default_handler")
+if SIGINT is not None:
+    _sigmap_params.append({SIGINT: fancy_handler})
+    _sigmap_ids.append("SIGINT - fancy_handler")
+    _sigmap_params.append({SIGINT: lambda signum, frame: sys.exit(1)})
+    _sigmap_ids.append("SIGINT - custom handler")
+_multi = {}
+if SIGUSR1 is not None:
+    _multi[SIGUSR1] = signal.SIG_DFL
+if SIGTERM is not None:
+    _multi[SIGTERM] = signal.SIG_IGN
+if SIGHUP is not None:
+    _multi[SIGHUP] = default_handler
+if SIGUSR2 is not None:
+    _multi[SIGUSR2] = fancy_handler
+if SIGINT is not None:
+    _multi[SIGINT] = lambda signum, frame: sys.exit(1)
+if len(_multi) > 1:
+    _sigmap_params.append(_multi)
+    _sigmap_ids.append("Multiple signals-handlers map")
+
+
 @pytest.fixture(
     scope="session",
-    params=[
-        None,
-        {signal.SIGUSR1: signal.SIG_DFL},
-        {signal.SIGTERM: signal.SIG_IGN},
-        {signal.SIGTERM: signal.default_int_handler},
-        {signal.SIGHUP: default_handler},
-        {signal.SIGINT: fancy_handler},
-        {signal.SIGINT: lambda signum, frame: sys.exit(1)},
-        {
-            signal.SIGUSR1: signal.SIG_DFL,
-            signal.SIGTERM: signal.SIG_IGN,
-            signal.SIGHUP: default_handler,
-            signal.SIGUSR2: fancy_handler,
-            signal.SIGINT: lambda signum, frame: sys.exit(1),
-        },
-    ],
-    ids=[
-        "no sigmap",
-        "SIGUSR1 - SIG_DFL",
-        "SIGTERM - SIG_IGN",
-        "SIGTERM - default_int_handler",
-        "SIGHUP - default_handler",
-        "SIGINT - fancy_handler",
-        "SIGINT - custom handler",
-        "Multiple signals-handlers map",
-    ],
+    params=_sigmap_params,
+    ids=_sigmap_ids,
 )
 def sigmap_test_cases(request):
     return request.param
