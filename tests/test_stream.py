@@ -255,3 +255,46 @@ def test_warn_on_closed_stream_enabled():
         # Second write should not emit another warning (rate limiting)
         sp.write("second message")
         assert len(w) == 1  # Still just one warning
+
+
+class _MinimalStream:
+    """A minimal duck-typed stream without a ``closed`` attribute."""
+
+    def __init__(self) -> None:
+        self.buffer: list[str] = []
+        self.flush_count = 0
+
+    def write(self, text: str) -> None:
+        self.buffer.append(text)
+
+    def flush(self) -> None:
+        self.flush_count += 1
+
+    def isatty(self) -> bool:
+        return False
+
+
+def test_minimal_stream_without_closed_attribute():
+    # Regression test for #286: SafeStreamWrapper must not require a
+    # ``closed`` attribute on the underlying stream.
+    stream = _MinimalStream()
+    sp = yaspin(stream=stream)
+    sp.start()
+    time.sleep(0.05)
+    sp.write("hello")
+    sp.stop()
+    assert "hello" in "".join(stream.buffer)
+    assert stream.flush_count > 0
+
+
+def test_write_flushes_stream():
+    # Regression test for #287: write() must flush the stream,
+    # consistent with _spin() and hide().
+    stream = _MinimalStream()
+    sp = yaspin(stream=stream)
+    sp.start()
+    time.sleep(0.05)
+    flushes_before = stream.flush_count
+    sp.write("flushed?")
+    assert stream.flush_count == flushes_before + 1
+    sp.stop()
