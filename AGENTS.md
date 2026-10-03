@@ -38,8 +38,8 @@ poetry run py.test -k "ellipsis"
 Note `make test` uses `pytest-xdist` (`-n auto`); drop `-n` when debugging with breakpoints or when
 test ordering matters. CI sets `PYTHONHASHSEED=0`.
 
-Supported Python: 3.10–3.14 plus PyPy 3.11. `ruff` targets py310 with `line-length = 110`; do not use
-syntax newer than 3.10.
+Supported Python: 3.11–3.14 plus PyPy 3.11. `ruff` targets py311 with `line-length = 110`; do not use
+syntax newer than 3.11.
 
 ## Commits
 
