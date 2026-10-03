@@ -46,8 +46,12 @@ syntax newer than 3.11.
 Every commit message must use a descriptive prefix followed by a colon, for example
 `deps: update`. Use the `ai:` prefix for commits that update this `AGENTS.md` file.
 
-Keep the subject concise. Put motivation and relevant context in a multi-line commit body, with
-each line wrapped to 90 characters or fewer.
+Keep the subject concise. Follow it with one blank line and a descriptive body containing the
+motivation and relevant context, with every body line wrapped to 90 characters or fewer. Use
+further blank lines only to separate genuinely distinct paragraphs, not merely to split or wrap
+the body. When creating a multiline message programmatically, pass real line breaks rather than
+the literal `\n` sequence. After committing, inspect `git show -s --format=%B HEAD` to verify the
+rendered message.
 
 ## Architecture
 
