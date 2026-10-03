@@ -49,6 +49,8 @@ def test_sigmap_signals_get_registered(sigmap_test_cases):
 
 
 def test_raise_exception_for_sigkill():
+    if not hasattr(signal, "SIGKILL"):
+        pytest.skip("SIGKILL is not available on this platform")
     sp = yaspin(sigmap={signal.SIGKILL: signal.SIG_IGN})
     try:
         with pytest.raises(ValueError):
@@ -69,6 +71,20 @@ def test_default_handlers_are_set_at_cleanup_stage(sigmap_test_cases):
     for sig in sigmap:
         handler = signal.getsignal(sig)
         assert handler == sp._dfl_sigmap[sig]
+
+
+def test_sigmap_without_sigkill_available():
+    # On platforms without SIGKILL (e.g. Windows), registering a handler for
+    # a signal that does exist must not fail in the SIGKILL guard.
+    if not hasattr(signal, "SIGTERM"):
+        pytest.skip("SIGTERM is not available on this platform")
+
+    sp = yaspin(sigmap={signal.SIGTERM: signal.SIG_IGN})
+    try:
+        sp.start()
+        assert signal.getsignal(signal.SIGTERM) == signal.SIG_IGN
+    finally:
+        sp.stop()
 
 
 def test_kbi_safe_yaspin():
