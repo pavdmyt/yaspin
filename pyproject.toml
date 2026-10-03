@@ -1,14 +1,23 @@
-[tool.poetry]
+[project]
 name = "yaspin"
 version = "3.5.1"
 description = "Yet Another Terminal Spinner"
 license = "MIT"
-authors = ["Pavlo Dmytrenko <pavdmyt@aiven.io>"]
+authors = [{ name = "Pavlo Dmytrenko", email = "gh@pavdmyt.mozmail.com" }]
 readme = "README.md"
-homepage = "https://github.com/pavdmyt/yaspin"
-repository = "https://github.com/pavdmyt/yaspin"
-documentation = "https://github.com/pavdmyt/yaspin/blob/master/README.md"
 keywords = ["spinner", "console", "terminal", "loader", "indicator"]
+requires-python = ">=3.11,<4.0"
+dependencies = ["termcolor (>=3.3,<4.0)"]
+dynamic = ["classifiers"]
+
+[project.urls]
+Homepage = "https://github.com/pavdmyt/yaspin"
+Repository = "https://github.com/pavdmyt/yaspin"
+Documentation = "https://github.com/pavdmyt/yaspin/blob/master/README.md"
+"Bug Tracker" = "https://github.com/pavdmyt/yaspin/issues"
+Changelog = "https://github.com/pavdmyt/yaspin/releases"
+
+[tool.poetry]
 include = [
     { path = "tests", format = "sdist" },
     { path = "examples", format = "sdist" },
@@ -23,7 +32,6 @@ classifiers = [
     "Intended Audience :: End Users/Desktop",
     "Intended Audience :: Other Audience",
     "Intended Audience :: System Administrators",
-    "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: POSIX :: Linux",
@@ -48,10 +56,6 @@ classifiers = [
     "Topic :: Utilities",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-termcolor = "^3.3"
-
 [tool.poetry.group.dev.dependencies]
 mypy = "^2.3"
 pytest = "^9.1"
@@ -66,12 +70,8 @@ optional = true
 [tool.poetry.group.security.dependencies]
 semgrep = "^1.176"
 
-[tool.poetry.urls]
-"Bug Tracker" = "https://github.com/pavdmyt/yaspin/issues"
-"Changelog" = "https://github.com/pavdmyt/yaspin/releases"
-
 [build-system]
-requires = ["poetry_core>=1.0.0"]
+requires = ["poetry-core>=2.2.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
