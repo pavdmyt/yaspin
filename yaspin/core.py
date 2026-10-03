@@ -61,7 +61,7 @@ class SafeStreamWrapper:
 
     def write(self, text: str) -> None:
         """Write to stream, optionally warning if stream is closed."""
-        if not self._stream.closed:
+        if not self._closed:
             self._stream.write(text)
         elif self._warn_on_closed and not self._warned_already:
             warnings.warn(
@@ -74,18 +74,30 @@ class SafeStreamWrapper:
 
     def flush(self) -> None:
         """Flush stream, silently ignoring if stream is closed."""
-        if not self._stream.closed:
+        if not self._closed:
             self._stream.flush()
         # Note: don't warn on flush - it is often called during cleanup
 
     def isatty(self) -> bool:
         """Check if stream is a TTY, returning False if closed."""
-        return not self._stream.closed and self._stream.isatty()
+        return not self._closed and self._stream.isatty()
+
+    @property
+    def _closed(self) -> bool:
+        """Whether the stream is closed.
+
+        Minimal duck-typed streams may not expose a ``closed`` attribute;
+        treat that as open and let the stream's own methods report errors.
+        """
+        try:
+            return bool(self._stream.closed)
+        except AttributeError:
+            return False
 
     @property
     def closed(self) -> bool:
         """Check if the underlying stream is closed."""
-        return self._stream.closed
+        return self._closed
 
     def __getattr__(self, name: str) -> Any:
         """Delegate other attributes to the underlying stream."""
@@ -182,7 +194,7 @@ class Yaspin:
         self._side = self._set_side(side)
         self._reversal = reversal
         self._timer = self._set_timer(timer)
-        self._ellipsis = ellipsis
+        self._ellipsis = self._set_ellipsis(ellipsis)
         self._terminal_width: int = shutil.get_terminal_size().columns
         self._start_time: float | None = None
         self._stop_time: float | None = None
@@ -318,7 +330,7 @@ class Yaspin:
 
     @ellipsis.setter
     def ellipsis(self, value: str) -> None:
-        self._ellipsis = value
+        self._ellipsis = self._set_ellipsis(value)
 
     @property
     def reversal(self) -> bool:
@@ -483,6 +495,9 @@ class Yaspin:
             _text = to_unicode(text) if isinstance(text, str | bytes) else str(text)
             self._stream.write(f"{_text}\n")
             self._cur_line_len = 0
+            # flush so the text is not left in the buffer,
+            # consistent with _spin() and hide()
+            self._stream.flush()
 
     def ok(self, text: str = "OK") -> None:
         """Set Ok (success) finalizer to a spinner."""
@@ -685,7 +700,7 @@ class Yaspin:
         # SIGKILL cannot be caught or ignored, and the receiving
         # process cannot perform any clean-up upon receiving this
         # signal.
-        if signal.SIGKILL in self._sigmap:
+        if hasattr(signal, "SIGKILL") and signal.SIGKILL in self._sigmap:
             raise ValueError(
                 "Trying to set handler for SIGKILL signal. "
                 "SIGKILL cannot be caught or ignored in POSIX systems."
@@ -792,6 +807,12 @@ class Yaspin:
         if side not in ("left", "right"):
             raise ValueError("'{0}': unsupported side value. Use either 'left' or 'right'.")
         return side
+
+    @staticmethod
+    def _set_ellipsis(ellipsis: str) -> str:
+        if not isinstance(ellipsis, str):
+            raise TypeError("ellipsis must be a str")
+        return ellipsis
 
     @staticmethod
     def _set_timer(timer: bool | str) -> bool | str:

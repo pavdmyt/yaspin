@@ -49,6 +49,8 @@ def test_sigmap_signals_get_registered(sigmap_test_cases):
 
 
 def test_raise_exception_for_sigkill():
+    if not hasattr(signal, "SIGKILL"):
+        pytest.skip("SIGKILL is not available on this platform")
     sp = yaspin(sigmap={signal.SIGKILL: signal.SIG_IGN})
     try:
         with pytest.raises(ValueError):
@@ -83,3 +85,16 @@ def test_kbi_safe_yaspin():
         assert handler.func == sp._sigmap[signal.SIGINT]
     finally:
         sp.stop()
+
+
+def test_kbi_safe_yaspin_preserves_user_sigmap():
+    # Regression test for #285: kbi_safe_yaspin must not silently
+    # discard a user-provided sigmap.
+    def user_handler(signum, frame):
+        pass
+
+    sp = kbi_safe_yaspin(sigmap={signal.SIGTERM: user_handler})
+    assert sp._sigmap == {signal.SIGTERM: user_handler, signal.SIGINT: sp._sigmap[signal.SIGINT]}
+    assert sp._sigmap[signal.SIGTERM] is user_handler
+    # SIGINT still gets the default handler for safe interruption
+    assert signal.SIGINT in sp._sigmap
