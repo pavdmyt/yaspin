@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        python-version: ["3.11", "3.12", "3.13", "3.14", "3.15-dev"]
+        python-version: ["3.11", "3.12", "3.13", "3.14", "3.15"]
 
     steps:
       - name: checkout-code
@@ -60,7 +60,6 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
-          allow-prereleases: true
 
       - name: install-poetry
         uses: snok/install-poetry@v1
@@ -84,7 +83,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12", "3.13", "3.14", "3.15-dev", "pypy-3.11"]
+        python-version: ["3.11", "3.12", "3.13", "3.14", "3.15", "pypy-3.11"]
 
     steps:
       - name: checkout-code
@@ -94,7 +93,6 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
-          allow-prereleases: true
 
       # Normal Python
       - name: install-poetry
