@@ -136,7 +136,11 @@ def kbi_safe_yaspin(*args: Any, **kwargs: Any) -> Yaspin:
         Yaspin: An instance of the Yaspin spinner with the specified arguments and
         a default SIGINT handler.
     """
-    kwargs["sigmap"] = {signal.SIGINT: default_handler}
+    # Preserve any user-provided sigmap, only ensuring a default SIGINT
+    # handler is present (without overriding an explicit user choice).
+    sigmap = dict(kwargs.get("sigmap") or {})
+    sigmap.setdefault(signal.SIGINT, default_handler)
+    kwargs["sigmap"] = sigmap
     return Yaspin(*args, **kwargs)
 
 

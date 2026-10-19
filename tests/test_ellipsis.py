@@ -38,6 +38,24 @@ def test_terminal_size_called_once(mock_get_terminal_size):
     mock_get_terminal_size.assert_called_once()
 
 
+@pytest.mark.parametrize("bad_value", [None, 123, b"..."])
+def test_ellipsis_rejects_non_str(bad_value):
+    # Regression test for #284: ellipsis must be validated like the
+    # other setters (side, color, timer, attrs), otherwise a bad value
+    # kills the spin thread silently at the first frame.
+    with pytest.raises(TypeError):
+        yaspin(ellipsis=bad_value)
+    with pytest.raises(TypeError):
+        yaspin().ellipsis = bad_value
+
+
+def test_ellipsis_accepts_str():
+    sp = yaspin(ellipsis="...")
+    assert sp.ellipsis == "..."
+    sp.ellipsis = ""
+    assert sp.ellipsis == ""
+
+
 @patch("shutil.get_terminal_size")
 def test_raises_when_term_is_too_small(mock_get_terminal_size):
     mock_get_terminal_size.return_value.columns = 10
