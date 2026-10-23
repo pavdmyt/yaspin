@@ -629,7 +629,8 @@ class Yaspin:
                 f"Terminal size {self._terminal_width} is too small to display spinner "
                 "with the given settings."
             )
-        text = text[:max_text_len] + self._ellipsis if len(text) > max_text_len else text
+        if len(text) > max_text_len + len(self._ellipsis):
+            text = text[:max_text_len] + self._ellipsis
 
         # Colors
         if self._color_func is not None:
