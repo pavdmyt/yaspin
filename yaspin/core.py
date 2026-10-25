@@ -365,10 +365,11 @@ class Yaspin:
         self._spin_thread = threading.Thread(target=self._spin)
         try:
             self._spin_thread.start()
-        finally:
+        except BaseException:
             # Ensure cursor is not hidden if any failure occurs that prevents
             # getting it back
             self._show_cursor()
+            raise
 
     def stop(self) -> None:
         """
@@ -417,6 +418,7 @@ class Yaspin:
                 # set the hidden spinner flag
                 self._hide_spin.set()
                 self._clear_line()
+                self._show_cursor()
 
                 # flush the stream buffer so the current line
                 # can be rewritten to
@@ -465,6 +467,7 @@ class Yaspin:
                 self._hide_spin.clear()
                 # clear the current line so the spinner is not appended to it
                 self._clear_line()
+                self._hide_cursor()
 
     def write(self, text: str) -> None:
         """
@@ -685,7 +688,7 @@ class Yaspin:
         # SIGKILL cannot be caught or ignored, and the receiving
         # process cannot perform any clean-up upon receiving this
         # signal.
-        if signal.SIGKILL in self._sigmap:
+        if hasattr(signal, "SIGKILL") and signal.SIGKILL in self._sigmap:
             raise ValueError(
                 "Trying to set handler for SIGKILL signal. "
                 "SIGKILL cannot be caught or ignored in POSIX systems."

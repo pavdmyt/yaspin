@@ -183,9 +183,9 @@ def test_hide_show(monkeypatch, capsys, text, request, isatty_fixture):
     assert sp._hide_spin.is_set()
     out, _ = capsys.readouterr()
 
-    # ensure that text was cleared with the hide method
+    # ensure that text was cleared and the cursor restored with the hide method
     if isatty_fixture:
-        assert out[-4:] == "\r\033[K"
+        assert out.endswith("\r\033[K\033[?25h")
     else:
         assert out[-1:] == "\r"
 
