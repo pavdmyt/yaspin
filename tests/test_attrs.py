@@ -110,3 +110,10 @@ def test_side(side, expected):
     else:
         getattr(sp, side)
         assert sp.side == expected
+
+
+def test_invalid_side_error_names_value():
+    # Regression: the error message rendered a literal "{0}" instead of
+    # the offending value because str.format was never called.
+    with pytest.raises(ValueError, match="bogus"):
+        yaspin(side="bogus")
