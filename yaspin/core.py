@@ -790,7 +790,9 @@ class Yaspin:
     @staticmethod
     def _set_side(side: str) -> str:
         if side not in ("left", "right"):
-            raise ValueError("'{0}': unsupported side value. Use either 'left' or 'right'.")
+            raise ValueError(
+                "'{0}': unsupported side value. Use either 'left' or 'right'.".format(side)
+            )
         return side
 
     @staticmethod
